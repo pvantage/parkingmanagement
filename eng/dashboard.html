@@ -20,6 +20,7 @@ jQuery(document).ready(function(){
 	jQuery.support.cors = true;
     
 	var uid=gup('uid', window.location.href);
+	alert(uid);
 	var usertype=gup('usertype', window.location.href);
 	checkloggedin(uid);
 	if(jQuery.trim(uid)=='' || jQuery.trim(uid)=='0')
