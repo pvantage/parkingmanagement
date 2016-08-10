@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Users</title>
+<link href='https://fonts.googleapis.com/css?family=Roboto:400,100italic,300,100,300italic,400italic,500,500italic,700,700italic,900italic,900' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" type="text/css" href="../css/font-awesome.css">
+</head>
+
+<script type="text/javascript" src="../js/jquery.js"></script>
+<script type="text/javascript" src="../js/config.js"></script>
+<script type="text/javascript" src="../js/validate.js"></script>
+<script type="text/javascript">
+jQuery(document).ready(function(){
+	
+	
+	jQuery( document ).on( "mobileinit", function() {
+		jQuery.mobile.allowCrossDomainPages = true;
+	});
+	var contentType ="application/x-www-form-urlencoded; charset=utf-8";
+    if(window.XDomainRequest){contentType = "text/plain";}
+	jQuery.support.cors = true;
+	checkloggedin(uid);
+	var url=siteurl+'/api/users';
+    
+	var uid=gup('uid', window.location.href);
+	var usertype=gup('usertype', window.location.href);
+	var addnewuser=jQuery('#addnewuser').attr('href');
+	jQuery('#addnewuser').attr('href',addnewuser+'?uid='+uid+'&usertype='+usertype);
+	
+	jQuery('#usid').val(uid);
+	jQuery('#usertype').val(usertype);
+	jQuery.ajax({  
+         type: 'POST',  
+         url: url,  
+         //contentType: contentType,  
+         dataType: 'json',  
+         data: {uid:uid},  
+         crossDomain: true,  
+		 beforeSend: function() {
+			jQuery('body .bodyoverlay').remove();
+			jQuery('body .preloader').remove();
+			var html='<div class="bodyoverlay"></div><div class="preloader"></div>';
+			jQuery('body').append(html);					
+		 },		
+		 complete: function() {
+			jQuery('body .bodyoverlay').remove();
+			jQuery('body .preloader').remove();					
+		 },
+         success: function(res) {  
+           if(res['users']['userlist'])
+		   {
+            	var html='';
+				jQuery(res['users']['userlist']).each(function(index){
+					html+='<div class="mnger_frst"><div class="list"><ul><li><strong>ID:</strong> <p>'+res['users']['userlist'][index]['id']+'</p></li><li><strong>Name:</strong> <p>'+res['users']['userlist'][index]['name']+'</p></li><li><strong>Username:</strong> <p>'+res['users']['userlist'][index]['username']+'</p></li><li><strong>Email:</strong> <p>'+res['users']['userlist'][index]['email']+'</p></li><li><strong>Phone Number:</strong> <p>'+res['users']['userlist'][index]['phone']+'</p></li></ul></div><div class="overlay_div">';
+					if(res['users']['userlist'][index]['status']!='24' && res['users']['userlist'][index]['status']!='25'){
+						if(res['users']['userlist'][index]['status']=='0'){
+							html+='<a href="javascript:;" class="activdeactivuser" coords="0" vid="'+res['users']['userlist'][index]['id']+'"><i class="fa fa-times"></i></a>';
+						}
+						else if(res['users']['userlist'][index]['status']=='1'){
+							html+='<a href="javascript:;" class="activdeactivuser" coords="1" vid="'+res['users']['userlist'][index]['id']+'"><i class="fa fa-check"></i></a>';
+						}
+					}
+					if(usertype=='admin' || usertype=='user')
+					{
+						html+='<a href="edit-user.html?uid='+uid+'&v='+res['users']['userlist'][index]['id']+'&usertype='+usertype+'"><i class="fa fa-pencil"></i></a>';
+					}
+					else
+					{
+						html+='<a href="user-detail.html?uid='+uid+'&v='+res['users']['userlist'][index]['id']+'&usertype='+usertype+'"><i class="fa fa-eye"></i></a>';
+					}
+					html+='</div></div>';
+			   });
+			   jQuery('.userlisting').html(html);
+				
+				activdeactivuser();
+			}
+			
+         },  
+         error: function(response, d, a){
+            jQuery('body .bodyoverlay').remove();
+			jQuery('body .popupbox').remove();
+			var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Server Error.</h1><button class="okbox">OK</button></div>';
+			jQuery('body').append(html);
+			
+			jQuery('.okbox').click(function(){
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .popupbox').remove();
+			}); 
+         } 
+       });
+});		
+</script>
+<body>
+<div class="wrapper">
+	<div class="container">
+		<header>
+			<div class="menu_div">
+				<a href="javascript:;" class="showhidemenus"><img src="../images/menu32@64.png"></a>
+				<ul class="menus"></ul>
+			</div>
+			<script type="text/javascript">document.write(language_en_menus());</script>
+				<div class="logo_div">
+					<a href="#"><img src="../images/logo.png"></a>
+				</div>
+		</header><!------------------header close-------------------------------->
+		<!--------------------------content-div starts------------------------------------------->	
+			<div class="content_div manager_search">
+				
+				<div class="inner_content"><!--------------------------inner_content------------------------------------------->
+					<h4 class="search_headng">Users</h4>
+					      <div class="select_div">
+						  <a href="add-user.html" id="addnewuser" class="btn btn-success add-new">Add New User</a>
+					   </div>
+					   <div class="detail_div">
+					   	<div class="userlisting"></div>
+					   </div>
+							
+				</div><!--------------------------inner_content------------------------------------------->	
+				</div>.
+			</div>
+		
+		<!--------------------------content-div endss------------------------------------------->	
+	</div>
+</div>
+
+</body>
+</html>
+

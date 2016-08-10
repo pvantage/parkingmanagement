@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Add User</title>
+<link href='https://fonts.googleapis.com/css?family=Roboto:400,100italic,300,100,300italic,400italic,500,500italic,700,700italic,900italic,900' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+
+<script type="text/javascript" src="../js/jquery.js"></script>
+<script type="text/javascript" src="../js/config.js"></script>
+<script type="text/javascript" src="../js/validate.js"></script>
+<script type="text/javascript">
+jQuery(document).ready(function(){
+	
+	
+	jQuery( document ).on( "mobileinit", function() {
+		jQuery.mobile.allowCrossDomainPages = true;
+	});
+	var contentType ="application/x-www-form-urlencoded; charset=utf-8";
+    if(window.XDomainRequest){contentType = "text/plain";}
+	jQuery.support.cors = true;
+	
+	var url=siteurl+'/api/users';
+    var uid=gup('uid', window.location.href);
+	checkloggedin(uid);
+	
+	   jQuery('#edituser').validate();
+	 jQuery('#edituser').submit(function(){
+	 	
+		var email=jQuery('#email').val();
+		var phone=jQuery('#phone').val();
+		var name=jQuery('#name').val();
+		var username=jQuery('#username').val();
+		var password=jQuery('#password').val();
+		var notes=jQuery('#notes').val();
+		var error=false;
+		jQuery('#edituser input, #edituser textarea').each(function(){
+			if(jQuery(this).hasClass('error'))
+			{
+				error=true;
+			}
+		});
+		if(!error)
+		{
+			jQuery.ajax({  
+			 type: 'POST',  
+			 url: url,  
+			 dataType: 'json',  
+			 data: {uid:uid, name:name, email:email, phone:phone, username:username, password:password, notes:notes, addnewuser:1, user_type:'user',location_id:uid},  
+			 crossDomain: true,  
+			 beforeSend: function() {
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .preloader').remove();
+				var html='<div class="bodyoverlay"></div><div class="preloader"></div>';
+				jQuery('body').append(html);					
+			 },		
+			 complete: function() {
+				//jQuery('body .bodyoverlay').remove();
+				jQuery('body .preloader').remove();					
+			 },
+			 success: function(res) {  
+				if(res['users']['error'])
+				{
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .popupbox').remove();
+					var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>';
+					jQuery(res['users']['error']).each(function(k){
+						html+=res['users']['error'][k]+'<br />';
+					});
+					
+					html+='</h1><button class="okbox">OK</button></div>';
+					jQuery('body').append(html);
+					
+				}
+				else if(res['users']['addeduser'])
+				{
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .popupbox').remove();
+					var html='<div class="bodyoverlay"></div><div class="popupbox"><div class="popupimg"><img src="../images/pop.png" /></div><h1 class="success">SUCCESS</h1><h1>'+res['users']['addeduser']+'.</h1><button class="okbox">OK</button></div>';
+					jQuery('body').append(html);
+					
+				}
+				jQuery('.okbox').click(function(){
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .popupbox').remove();
+				}); 
+				return false;
+			 },  
+			 error: function(response, d, a){
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .popupbox').remove();
+				var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Server Error.</h1><button class="okbox">OK</button></div>';
+				jQuery('body').append(html);
+				
+				jQuery('.okbox').click(function(){
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .popupbox').remove();
+				});
+				return false; 
+			 } 
+		   });
+	   }
+	   return false;
+	 });
+});		
+</script>
+<body>
+<div class="wrapper">
+	<div class="container">
+		<header>
+			<div class="menu_div">
+				<a href="javascript:;" class="showhidemenus"><img src="../images/menu32@64.png"></a>
+				<ul class="menus"></ul>
+			</div>
+			<script type="text/javascript">document.write(language_en_menus());</script>
+				<div class="logo_div">
+					<a href="#"><img src="../images/logo.png"></a>
+				</div>
+		</header><!------------------header close-------------------------------->
+		<!--------------------------content-div starts------------------------------------------->	
+			<div class="content_div manager_search">
+				
+				<div class="inner_content"><!--------------------------inner_content------------------------------------------->
+					<h4 class="search_headng">ADD USER</h4>
+					   <div class="select_div">
+						  <form name="edituser" id="edituser" action="" method="post">
+							<div class="field"> Name
+							<input type="text" name="name" id="name" placeholder="Name" value="" class="form-control required">
+							</div>
+							<div class="field"> Email
+							  <input type="text" id="email" value="" placeholder="Email" class="form-control required email" name="email">
+							</div>
+							<div class="field"> 
+								Phone
+							  <input type="text" class="form-control required" value="" id="phone" placeholder="Phone" name="phone">
+							</div>
+							<div class="field">
+							Username
+							<input type="text" name="username" id="username" placeholder="Username" value="" class="form-control required">
+							</div>
+							<div class="field">
+							Password
+							 <input type="password" name="password" id="password" placeholder="Password" value="" class="form-control required">
+							</div>
+							<div class="field"> 
+							 Notes
+							  <textarea name="notes" placeholder="Notes" id="notes" class="form-control"></textarea>
+							</div>
+							
+							<div class="clr"></div>
+							<button class="btn btn-success" name="update" type="submit">Add</button>
+						  </form>
+					   </div>
+				</div>.
+			</div>
+		
+	</div>
+</div>
+
+</body>
+</html>

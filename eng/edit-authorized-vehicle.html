@@ -1,0 +1,289 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>EDIT VEHICLE</title>
+<link href='https://fonts.googleapis.com/css?family=Roboto:400,100italic,300,100,300italic,400italic,500,500italic,700,700italic,900italic,900' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+
+<script type="text/javascript" src="../js/jquery.js"></script>
+<script type="text/javascript" src="../js/config.js"></script>
+<script type="text/javascript" src="../js/validate.js"></script>
+<script type="text/javascript">
+jQuery(document).ready(function(){
+	
+	
+	jQuery( document ).on( "mobileinit", function() {
+		jQuery.mobile.allowCrossDomainPages = true;
+	});
+	var contentType ="application/x-www-form-urlencoded; charset=utf-8";
+    if(window.XDomainRequest){contentType = "text/plain";}
+	jQuery.support.cors = true;
+	
+	var url=siteurl+'/api/vehicle_details';
+    var uid=gup('uid', window.location.href);
+	checkloggedin(uid);
+	var v=gup('v', window.location.href);
+	var href=jQuery('.backtopage').attr('href')+'?uid='+uid;
+	jQuery('.backtopage').attr('href',href);
+	jQuery.ajax({  
+         type: 'POST',  
+         url: url,  
+         //contentType: contentType,  
+         dataType: 'json',  
+         data: {uid:uid,id:v},  
+         crossDomain: true,  
+		 beforeSend: function() {
+			jQuery('body .bodyoverlay').remove();
+			jQuery('body .preloader').remove();
+			var html='<div class="bodyoverlay"></div><div class="preloader"></div>';
+			jQuery('body').append(html);					
+		 },		
+		 complete: function() {
+			jQuery('body .bodyoverlay').remove();
+			jQuery('body .preloader').remove();					
+		 },
+         success: function(json) {  
+             var key='vehicle';
+		
+			 var owner_name =  json[key]["owner_name"];
+			 var Email =  json[key]["Email"];
+			 var Phone =  json[key]["Phone"];
+			 var aprtment =  json[key]["aprtment"];
+			 var vinnumber =  json[key]["vinnumber"];
+			 var tagnumber =  json[key]["tagnumber"];
+			 var year =  json[key]["year"];
+			 var make =  json[key]["make"];
+			 var model =  json[key]["model"];
+			 var color =  json[key]["color"];
+			 var typeofpermit =   json[key]["typeofpermit"];
+			 var notes =  json[key]["notes"];
+			 var maddress =  json[key]["Address"];
+			 var company_name =  json[key]["company_name"];
+			 var managername =  json[key]["managername"];
+			 var managerphone =  json[key]["managerphone"];
+			 var manageremail =  json[key]["manageremail"];
+			 var expdate =  json[key]["expdate"];
+			 var site_url =  json[key]["site_url"];
+			 var usertype =  json[key]["usertype"];
+			 var typeofpermitss=json["permittype"];
+			 var reservedspacea=json[key]["reservedspace"];
+			 var signature=json[key]["signature"];
+			 if(jQuery.trim(signature)!='')
+			 {
+			 	jQuery('.signature').html('<img src="'+realsiteurl+'/files/signature/'+signature+'" />');
+			 }
+			 
+			 jQuery('#typeofpermita').html(typeofpermitss);
+			var html='';
+			
+			jQuery('#towingdetails').html(html);
+			jQuery('#myCarousel .item:first').addClass('active');
+			jQuery('.showallphotos').click(function(){
+				jQuery('#showphotos').modal('show');
+			});
+		 
+			
+			$("#owner_namea").val(owner_name);
+			$("#emaila").val(Email);		
+			$("#Phonepa").val(Phone);
+			$("#aprtmenta").val(aprtment);
+			$("#vinnumbera").val(vinnumber);
+			$("#tagnumbera").val(tagnumber);
+			$("#yeara").val(year);
+			$("#makea").val(make);
+			$("#modela").val(model);
+			$("#colora").val(color);
+			$("#notespa").val(notes);
+			$("#expdatea").val(expdate);
+			$("#typeofpermita").val(typeofpermit);
+			$("#reservedspacea").val(reservedspacea);
+				
+         },  
+         error: function(response, d, a){
+            jQuery('body .bodyoverlay').remove();
+			jQuery('body .popupbox').remove();
+			var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Server Error.</h1><button class="okbox">OK</button></div>';
+			jQuery('body').append(html);
+			
+			jQuery('.okbox').click(function(){
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .popupbox').remove();
+			}); 
+         } 
+       });
+	   
+	   jQuery('#edituser').validate();
+	 jQuery('#edituser').submit(function(){
+	 	var owner_name=jQuery('#owner_namea').val();
+		var Email=jQuery('#emaila').val();
+		var Phone=jQuery('#Phonepa').val();
+		var aprtment=jQuery('#aprtmenta').val();
+		var vinnumber=jQuery('#vinnumbera').val();
+		var tagnumber=jQuery('#tagnumbera').val();
+		var year=jQuery('#yeara').val();
+		var make=jQuery('#makea').val();
+		var model=jQuery('#modela').val();
+		var color=jQuery('#colora').val();
+		var notes=jQuery('#notespa').val();
+		var typeofpermit=jQuery('#typeofpermita').val();
+		var reservedspace=jQuery('#reservedspacea').val();
+		
+		var error=false;
+		jQuery('#edituser input, #edituser textarea').each(function(){
+			if(jQuery(this).hasClass('error'))
+			{
+				error=true;
+			}
+		});
+		if(!error)
+		{
+			var url=siteurl+'/api/update-vehicle';
+			jQuery.ajax({  
+			 type: 'POST',  
+			 url: url,  
+			 dataType: 'json',  
+			 data: {uid:uid, id:v, name:name, owner_name:owner_name, Email:Email, Phone:Phone, aprtment:aprtment, vinnumber:vinnumber, tagnumber:tagnumber, year:year, make:make, model:model, color:color, notes:notes, typeofpermit:typeofpermit, reservedspace:reservedspace, updatevehicle:1},  
+			 crossDomain: true,  
+			 beforeSend: function() {
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .preloader').remove();
+				var html='<div class="bodyoverlay"></div><div class="preloader"></div>';
+				jQuery('body').append(html);					
+			 },		
+			 complete: function() {
+				//jQuery('body .bodyoverlay').remove();
+				jQuery('body .preloader').remove();					
+			 },
+			 success: function(res) {  
+				if(res['vehicles']['error'])
+				{
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .popupbox').remove();
+					var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>'+res['vehicles']['error']+'</h1><button class="okbox">OK</button></div>';
+					jQuery('body').append(html);
+					
+				}
+				else if(res['vehicles']['updatevehicle'])
+				{
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .popupbox').remove();
+					var html='<div class="bodyoverlay"></div><div class="popupbox"><div class="popupimg"><img src="../images/pop.png" /></div><h1 class="success">SUCCESS</h1><h1>'+res['vehicles']['updatevehicle']+'.</h1><button class="okbox">OK</button></div>';
+					jQuery('body').append(html);
+					
+				}
+				jQuery('.okbox').click(function(){
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .popupbox').remove();
+				}); 
+				return false;
+			 },  
+			 error: function(response, d, a){
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .popupbox').remove();
+				var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Server Error.</h1><button class="okbox">OK</button></div>';
+				jQuery('body').append(html);
+				
+				jQuery('.okbox').click(function(){
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .popupbox').remove();
+				}); 
+			 } 
+		   });
+	   }
+	   return false;
+	 });
+});		
+</script>
+<body>
+<div class="wrapper">
+	<div class="container">
+		<header>
+			<div class="menu_div">
+				<a href="javascript:;" class="showhidemenus"><img src="../images/menu32@64.png"></a>
+				<ul class="menus"></ul>
+			</div>
+			<script type="text/javascript">document.write(language_en_menus());</script>
+				<div class="logo_div">
+					<a href="#"><img src="../images/logo.png"></a>
+				</div>
+		</header><!------------------header close-------------------------------->
+		<!--------------------------content-div starts------------------------------------------->	
+			<div class="content_div manager_search">
+				
+				<div class="inner_content"><!--------------------------inner_content------------------------------------------->
+					<h4 class="search_headng">EDIT VEHICLE</h4>
+					   <div class="select_div">
+						  <form name="edituser" id="edituser" action="" method="post">
+							<div class="field"> Resident Name
+							<input type="text" class="form-control required" placeholder="Name" id="owner_namea" name="owner_name" value="">
+							</div>
+							<div class="field"> Email
+							  <input type="text" id="emaila" value="" placeholder="Email" class="form-control required email" name="email">
+							</div>
+							<div class="field"> 
+								Phone
+							  <input type="text" class="form-control required" value="" id="Phonepa" placeholder="Phone" name="phone">
+							</div>
+							<div class="field">
+							Unit Number
+							<input type="text" class="form-control" id="aprtmenta" placeholder="Unit Number" name="aprtment" value="">
+							</div>
+							<div class="field">
+							Vin Number
+							  <input type="text" class="form-control required" id="vinnumbera" placeholder="Vin Number" value="" name="vinnumber">
+							</div>
+							<div class="field">
+								License No
+							  <input type="text" class="form-control" id="tagnumbera" placeholder="License No" name="tagnumber">
+							</div>
+							
+							<div class="field"> 
+							 Year
+							  <input type="text" class="form-control" id="yeara" placeholder="Year" value="" name="year">
+							</div>
+							
+							<div class="field"> 
+							 Make
+							  <input type="text" class="form-control" id="makea" placeholder="Make" value="" name="make">
+							</div>
+							<div class="field"> 
+							 Model
+							  <input type="text" class="form-control" id="modela" placeholder="Model" value="" name="model">
+							</div>
+							<div class="field"> 
+							 Color
+							  <input type="text" class="form-control" id="colora" placeholder="Color" value="" name="color">
+							</div>
+							<div class="field"> 
+							 Expiry Date
+							  <input type="text" class="form-control" id="expdatea" placeholder="Expiry Date" value="" disabled="disabled">
+							</div>
+							<div class="field"> 
+							 Type Of Permit
+							  <select name="typeofpermit" id="typeofpermita" class="form-control required">
+							  
+							  </select>
+							</div>
+							<div class="field"> 
+							 Reserved Space
+							  <input type="text" name="reservedspace" placeholder="" id="reservedspacea" class="form-control">
+							</div>
+							<div class="field"> 
+							 Notes
+							  <textarea name="notes" id="notespa" class="form-control"></textarea>
+							</div>
+							<div class="signature"></div>
+							<div class="clr"></div>
+							<button class="btn btn-success" name="update" type="submit">Update</button>
+						  </form>
+					   </div>
+				</div>.
+			</div>
+		
+	</div>
+</div>
+
+</body>
+</html>
