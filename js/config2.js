@@ -1,6 +1,7 @@
 var siteurl = "http://parkingandtowingexperts.com/parkingmanagement/app";
 var realsiteurl = "http://parkingandtowingexperts.com/parkingmanagement";
 function getUrlParameter(sParam) {
+	alert(sParam);
 	var sPageURL = decodeURIComponent(window.location.search.substring(1)),
 		sURLVariables = sPageURL.split('&'),
 		sParameterName,
@@ -41,11 +42,11 @@ function manager_menus(para='')
 }
 
 
-var uid=getUrlParameter('uid');
+
+setTimeout(function(){
+	var uid=getUrlParameter('uid');
 
 var usertype=getUrlParameter('usertype');
-setTimeout(function(){
-	
 	if(usertype=='driver')
 	{
 		jQuery('.driver').show();
