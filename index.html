@@ -36,17 +36,18 @@ jQuery(document).ready(function(){
 			 dataType: 'json',  
 			 data: {uname:user_login,pwd:user_pass,loginuser:1}, 
 			 beforeSend: function() {
-					//jQuery(".loading").show();					
+					alert('start');					
 			 },		
 			 complete: function() {
-					//jQuery(".loading").hide();					
+					alert('end');					
 			 }, 
 			 crossDomain: true,  
-			 success: function(res) {  
+			 success: function(res) { 
+			 	alert('progress'); 
 				if(res['checklogin']['udetail'])
 				{
 					
-					window.location ='eng/dashboard.html?uid='+res['checklogin']['udetail']['uid']+'&usertype='+res['checklogin']['udetail']['user_type'];
+					window.location ='dashboard.html?uid='+res['checklogin']['udetail']['uid']+'&usertype='+res['checklogin']['udetail']['user_type'];
 				
 					//localStorage.setItem('userInfo', res['success']['userid']);
 					//window.location ='category.html';
