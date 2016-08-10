@@ -40,3 +40,35 @@ function manager_menus(para)
 		menu+='<li><a href="../index.html">Log Out</a></li>';
 	return menu;
 }
+var uid=getUrlParameter('uid');
+
+var usertype=getUrlParameter('usertype');
+setTimeout(function(){
+	
+	if(usertype=='driver')
+	{
+		jQuery('.driver').show();
+		var menu=driver_menus('?uid='+uid+'&usertype='+usertype);
+		jQuery('.menu_div ul.menus').html(menu);
+		jQuery('.logo_div a').attr('href','dashboard.html?uid='+uid+'&usertype='+usertype);
+	}
+	if(usertype=='admin')
+	{
+		jQuery('.admin').show();
+		var menu=manager_menus('?uid='+uid+'&usertype='+usertype);
+		jQuery('.menu_div ul.menus').html(menu);
+		jQuery('.logo_div a').attr('href','dashboard.html?uid='+uid+'&usertype='+usertype);
+	}
+	jQuery('a.showhidemenus').click(function(){
+		if(jQuery(this).hasClass('show'))
+		{
+			jQuery( ".menu_div ul.menus").animate({ "left": "-220px" }, "slow" );
+			jQuery(this).removeClass('show');
+		}
+		else
+		{
+			jQuery( ".menu_div ul.menus").animate({ "left": "0px" }, "slow" );
+			jQuery(this).addClass('show');
+		}
+	});
+},500);
