@@ -15,3 +15,9 @@ function getUrlParameter(sParam) {
 		}
 	}
 }
+
+function language_en_menus()
+{
+	var menu='<div class="lang_div"><ul><li class="active"><a href="#">English</a></li><li><a href="#">Espanol</a></li></ul></div>';
+	return menu;
+}
