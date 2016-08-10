@@ -1,13 +1,25 @@
 var siteurl = "http://parkingandtowingexperts.com/parkingmanagement/app";
 var realsiteurl = "http://parkingandtowingexperts.com/parkingmanagement";
 
-function gup( name, url ) {
-  if (!url) url = location.href;
+function gup( sParam, url ) {
+  /*if (!url) url = location.href;
   name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
   var regexS = "[\\?&]"+name+"=([^&#]*)";
   var regex = new RegExp( regexS );
   var results = regex.exec( url );
-  return results == null ? '' : results[1];
+  return results == null ? '' : results[1];*/
+  var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : sParameterName[1];
+        }
+    }
 }
 function language_en_menus()
 {

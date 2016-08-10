@@ -5,156 +5,23 @@
 <title>Dashboard</title>
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,100italic,300,100,300italic,400italic,500,500italic,700,700italic,900italic,900' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" type="text/css" href="../style.css">
-
-<script type="text/javascript" src="js/jquery.js"></script>
-<script type="text/javascript" src="js/validate.js"></script>
-<script type="text/javascript">
-var siteurl = "http://parkingandtowingexperts.com/parkingmanagement/app";
-var realsiteurl = "http://parkingandtowingexperts.com/parkingmanagement";
-
-function gup( name, url ) {
-  alert(name);
-  if (!url) url = location.href;
-  name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
-  var regexS = "[\\?&]"+name+"=([^&#]*)";
-  var regex = new RegExp( regexS );
-  var results = regex.exec( url );
-  return results == null ? '' : results[1];
-}
-function language_en_menus()
-{
-	var menu='<div class="lang_div"><ul><li class="active"><a href="#">English</a></li><li><a href="#">Espanol</a></li></ul></div>';
-	return menu;
-}
-function driver_menus(para='')
-{
-	var menu='<li><a href="violations-towing.html'+para+'">Violation Towing</a></li>';
-		menu+='<li><a href="unauthorized-vehicles.html'+para+'">Unauthorized Vehicles</a></li>';
-		menu+='<li><a href="inactive-vehicles.html'+para+'">Inactive Vehicles</a></li>';
-		menu+='<li><a href="my-account.html'+para+'">My Account</a></li>';
-		menu+='<li><a href="../index.html">Log Out</a></li>';
-	return menu;
-}
-function manager_menus(para='')
-{
-	var menu='<li><a href="vehicles.html'+para+'">Vehicles</a></li>';
-		menu+='<li><a href="violations-towing.html'+para+'">Violation Towing</a></li>';
-		menu+='<li><a href="unauthorized-vehicles.html'+para+'">Unauthorized Vehicles</a></li>';
-		menu+='<li><a href="users.html'+para+'">Users</a></li>';
-		menu+='<li><a href="my-account.html'+para+'">My Account</a></li>';
-		menu+='<li><a href="../index.html">Log Out</a></li>';
-	return menu;
-}
-
-
-
-
-function checkloggedin(siteurl,uid)
-{
-	
-	var url=siteurl+'/api/login';
-	
-	jQuery.ajax({  
-	 type: 'POST',  
-	 url: url,  
-	 //contentType: contentType,  
-	 dataType: 'json',  
-	 data: {checkloggedin:1,uid:uid},  
-	 crossDomain: true,  
-	 beforeSend: function() {
-		jQuery('body .bodyoverlay').remove();
-		jQuery('body .preloader').remove();
-		var html='<div class="bodyoverlay"></div><div class="preloader"></div>';
-		jQuery('body').append(html);					
-	 },		
-	 complete: function() {
-		jQuery('body .bodyoverlay').remove();
-		jQuery('body .preloader').remove();					
-	 },
-	 success: function(res) {  
-	   if(res['loggedin']!='success')
-	   {
-		window.location='../index.html';   
-	   }
-		return false;
-	 },  
-	 error: function(response, d, a){
-		jQuery('body .bodyoverlay').remove();
-		jQuery('body .popupbox').remove();
-		var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Server Error.</h1><button class="okbox">OK</button></div>';
-		jQuery('body').append(html);
-		
-		jQuery('.okbox').click(function(){
-			jQuery('body .bodyoverlay').remove();
-			jQuery('body .popupbox').remove();
-		}); 
-		
-	 } 
-   });
-		
-}
-
-</script>
+<script type="text/javascript" src="../js/jquery.js"></script>
+<script type="text/javascript" src="../js/config.js"></script>
+<script type="text/javascript" src="../js/validate.js"></script>
 <script type="text/javascript">
 jQuery(document).ready(function(){
 	
-	var getUrlParameter = function getUrlParameter(sParam) {
-    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-        sURLVariables = sPageURL.split('&'),
-        sParameterName,
-        i;
-
-    for (i = 0; i < sURLVariables.length; i++) {
-        sParameterName = sURLVariables[i].split('=');
-
-        if (sParameterName[0] === sParam) {
-            return sParameterName[1] === undefined ? true : sParameterName[1];
-        }
-    }
-};
+	
 	jQuery( document ).on( "mobileinit", function() {
 		jQuery.mobile.allowCrossDomainPages = true;
 	});
 	var contentType ="application/x-www-form-urlencoded; charset=utf-8";
     if(window.XDomainRequest){contentType = "text/plain";}
 	jQuery.support.cors = true;
-	var uid = getUrlParameter('uid');
-	alert(uid);
-	
-	
+    
 	var uid=gup('uid', window.location.href);
 	var usertype=gup('usertype', window.location.href);
-	
-	checkloggedin(siteurl,uid);
-	setTimeout(function(){
-	
-		if(usertype=='driver')
-		{
-			jQuery('.driver').show();
-			var menu=driver_menus('?uid='+uid+'&usertype='+usertype);
-			jQuery('.menu_div ul.menus').html(menu);
-			jQuery('.logo_div a').attr('href','dashboard.html?uid='+uid+'&usertype='+usertype);
-		}
-		if(usertype=='admin')
-		{
-			jQuery('.admin').show();
-			var menu=manager_menus('?uid='+uid+'&usertype='+usertype);
-			jQuery('.menu_div ul.menus').html(menu);
-			jQuery('.logo_div a').attr('href','dashboard.html?uid='+uid+'&usertype='+usertype);
-		}
-		jQuery('a.showhidemenus').click(function(){
-			if(jQuery(this).hasClass('show'))
-			{
-				jQuery( ".menu_div ul.menus").animate({ "left": "-220px" }, "slow" );
-				jQuery(this).removeClass('show');
-			}
-			else
-			{
-				jQuery( ".menu_div ul.menus").animate({ "left": "0px" }, "slow" );
-				jQuery(this).addClass('show');
-			}
-		});
-	},500);
+	checkloggedin(uid);
 	if(jQuery.trim(uid)=='' || jQuery.trim(uid)=='0')
 	{
 		window.location='../index.html';
@@ -187,7 +54,6 @@ jQuery(document).ready(function(){
 						<h3 class="admin userf"><a href="vehicles.html">VEHICLES</a></h3>
 						<h3><a href="violations-towing.html">VIOLATION TOWING</a></h3>
 						<h3><a href="unauthorized-vehicles.html">UNAUTHORIZED VEHICLES</a></h3>
-						<h3 class="driver"><a href="violations-towing.html">VIOLATION TOWING</a></h3>
 						<h3 class="admin"><a href="users.html">USERS</a></h3>
 						<h3><a href="my-account.html">MY ACCOUNT</a></h3>
 				</div><!--------------------------inner_content------------------------------------------->	
