@@ -6,10 +6,6 @@
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,100italic,300,100,300italic,400italic,500,500italic,700,700italic,900italic,900' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" type="text/css" href="../style.css">
 </head>
-
-<script type="text/javascript" src="../js/jquery.js"></script>
-<script type="text/javascript" src="../js/validate.js"></script>
-<!--<script type="text/javascript" src="../js/congig2.js"></script>-->
 <script type="text/javascript">
 
 
@@ -123,7 +119,10 @@ function checkloggedin(uid,siteurl)
    });
 		
 }
-
+</script>
+<script type="text/javascript" src="../js/jquery.js"></script>
+<script type="text/javascript" src="../js/validate.js"></script>
+<script type="text/javascript">
 
 
 jQuery(document).ready(function(){
@@ -137,11 +136,12 @@ jQuery(document).ready(function(){
 	
 	var siteurl = "http://parkingandtowingexperts.com/parkingmanagement/app";
 	var realsiteurl = "http://parkingandtowingexperts.com/parkingmanagement";
-	
+	alert(siteurl);
 	var url=siteurl+'/api/myaccount';
     
 	var uid=gup('uid', window.location.href);
 	checkloggedin(uid,siteurl);
+	alert(realsiteurl);
 	var usertype=gup('usertype', window.location.href);
 	
 	jQuery.ajax({  
