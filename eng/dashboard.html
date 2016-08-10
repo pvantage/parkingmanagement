@@ -6,14 +6,11 @@
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,100italic,300,100,300italic,400italic,500,500italic,700,700italic,900italic,900' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" type="text/css" href="../style.css">
 <script type="text/javascript" src="../js/jquery.js"></script>
-<script type="text/javascript" src="../js/config2.js"></script>
+
 <script type="text/javascript" src="../js/validate.js"></script>
 <script type="text/javascript">
-function language_en_menus()
-{
-	var menu='<div class="lang_div"><ul><li class="active"><a href="#">English</a></li><li><a href="#">Espanol</a></li></ul></div>';
-	return menu;
-}
+var siteurl = "http://parkingandtowingexperts.com/parkingmanagement/app";
+var realsiteurl = "http://parkingandtowingexperts.com/parkingmanagement";
 function driver_menus(para='')
 {
 	var menu='<li><a href="violations-towing.html'+para+'">Violation Towing</a></li>';
@@ -33,6 +30,7 @@ function manager_menus(para='')
 		menu+='<li><a href="../index.html">Log Out</a></li>';
 	return menu;
 }
+
 /*function checkloggedin(uid)
 {
 	
@@ -130,7 +128,9 @@ function manager_menus(para='')
 
 
 
-
+var language_en_menus = function language_en_menus() {
+		return '<div class="lang_div"><ul><li class="active"><a href="#">English</a></li><li><a href="#">Espanol</a></li></ul></div>';
+	};
 jQuery(document).ready(function(){
 	
 	var getUrlParameter = function getUrlParameter(sParam) {
@@ -155,7 +155,7 @@ jQuery(document).ready(function(){
 	jQuery.support.cors = true;
     
 	var uid=getUrlParameter('uid');
-	alert(uid);
+	//alert(uid);
 	var usertype=getUrlParameter('usertype');
 	//checkloggedin(uid);
 	if(jQuery.trim(uid)=='' || jQuery.trim(uid)=='0')
@@ -178,7 +178,7 @@ jQuery(document).ready(function(){
 				<a href="javascript:;" class="showhidemenus"><img src="../images/menu32@64.png"></a>
 				<ul class="menus"></ul>
 			</div>
-			<script type="text/javascript">document.write(language_en_menus());</script>
+			<script type="text/javascript">document.write(language_en_menus);</script>
 				<div class="logo_div">
 					<a href="#"><img src="../images/logo.png"></a>
 				</div>
