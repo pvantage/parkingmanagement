@@ -9,27 +9,7 @@
 
 <script type="text/javascript" src="../js/validate.js"></script>
 <script type="text/javascript">
-var siteurl = "http://parkingandtowingexperts.com/parkingmanagement/app";
-var realsiteurl = "http://parkingandtowingexperts.com/parkingmanagement";
-function driver_menus(para='')
-{
-	var menu='<li><a href="violations-towing.html'+para+'">Violation Towing</a></li>';
-		menu+='<li><a href="unauthorized-vehicles.html'+para+'">Unauthorized Vehicles</a></li>';
-		menu+='<li><a href="inactive-vehicles.html'+para+'">Inactive Vehicles</a></li>';
-		menu+='<li><a href="my-account.html'+para+'">My Account</a></li>';
-		menu+='<li><a href="../index.html">Log Out</a></li>';
-	return menu;
-}
-function manager_menus(para='')
-{
-	var menu='<li><a href="vehicles.html'+para+'">Vehicles</a></li>';
-		menu+='<li><a href="violations-towing.html'+para+'">Violation Towing</a></li>';
-		menu+='<li><a href="unauthorized-vehicles.html'+para+'">Unauthorized Vehicles</a></li>';
-		menu+='<li><a href="users.html'+para+'">Users</a></li>';
-		menu+='<li><a href="my-account.html'+para+'">My Account</a></li>';
-		menu+='<li><a href="../index.html">Log Out</a></li>';
-	return menu;
-}
+
 
 /*function checkloggedin(uid)
 {
@@ -130,8 +110,11 @@ function manager_menus(para='')
 
 
 jQuery(document).ready(function(){
-	
+	var siteurl = "http://parkingandtowingexperts.com/parkingmanagement/app";
+var realsiteurl = "http://parkingandtowingexperts.com/parkingmanagement";
+
 	var getUrlParameter = function getUrlParameter(sParam) {
+		alert(sParam);
 		var sPageURL = decodeURIComponent(window.location.search.substring(1)),
 			sURLVariables = sPageURL.split('&'),
 			sParameterName,
@@ -148,7 +131,6 @@ jQuery(document).ready(function(){
 	
     
 	var uid=getUrlParameter('uid');
-	alert(uid);
 	var usertype=getUrlParameter('usertype');
 	jQuery( document ).on( "mobileinit", function() {
 		jQuery.mobile.allowCrossDomainPages = true;
