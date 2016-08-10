@@ -43,41 +43,29 @@ function manager_menus(para='')
 }
 
 
-var uid=gup('uid', window.location.href);
 
-var usertype=gup('usertype', window.location.href);
-setTimeout(function(){
+
+</script>
+<script type="text/javascript" src="../js/jquery.js"></script>
+<script type="text/javascript" src="../js/validate.js"></script>
+<script type="text/javascript">
+
+
+jQuery(document).ready(function(){
 	
-	if(usertype=='driver')
-	{
-		jQuery('.driver').show();
-		var menu=driver_menus('?uid='+uid+'&usertype='+usertype);
-		jQuery('.menu_div ul.menus').html(menu);
-		jQuery('.logo_div a').attr('href','dashboard.html?uid='+uid+'&usertype='+usertype);
-	}
-	if(usertype=='admin')
-	{
-		jQuery('.admin').show();
-		var menu=manager_menus('?uid='+uid+'&usertype='+usertype);
-		jQuery('.menu_div ul.menus').html(menu);
-		jQuery('.logo_div a').attr('href','dashboard.html?uid='+uid+'&usertype='+usertype);
-	}
-	jQuery('a.showhidemenus').click(function(){
-		if(jQuery(this).hasClass('show'))
-		{
-			jQuery( ".menu_div ul.menus").animate({ "left": "-220px" }, "slow" );
-			jQuery(this).removeClass('show');
-		}
-		else
-		{
-			jQuery( ".menu_div ul.menus").animate({ "left": "0px" }, "slow" );
-			jQuery(this).addClass('show');
-		}
+	jQuery( document ).on( "mobileinit", function() {
+		jQuery.mobile.allowCrossDomainPages = true;
 	});
-},500);
-function checkloggedin(uid,siteurl)
-{
+	var contentType ="application/x-www-form-urlencoded; charset=utf-8";
+    if(window.XDomainRequest){contentType = "text/plain";}
+	jQuery.support.cors = true;
 	
+	var siteurl = "http://parkingandtowingexperts.com/parkingmanagement/app";
+	var realsiteurl = "http://parkingandtowingexperts.com/parkingmanagement";
+	alert(siteurl);
+	var url=siteurl+'/api/myaccount';
+    
+	var uid=gup('uid', window.location.href);
 	var url=siteurl+'/api/login';
 	
 	jQuery.ajax({  
@@ -117,32 +105,36 @@ function checkloggedin(uid,siteurl)
 		
 	 } 
    });
-		
-}
-</script>
-<script type="text/javascript" src="../js/jquery.js"></script>
-<script type="text/javascript" src="../js/validate.js"></script>
-<script type="text/javascript">
-
-
-jQuery(document).ready(function(){
-	
-	jQuery( document ).on( "mobileinit", function() {
-		jQuery.mobile.allowCrossDomainPages = true;
-	});
-	var contentType ="application/x-www-form-urlencoded; charset=utf-8";
-    if(window.XDomainRequest){contentType = "text/plain";}
-	jQuery.support.cors = true;
-	
-	var siteurl = "http://parkingandtowingexperts.com/parkingmanagement/app";
-	var realsiteurl = "http://parkingandtowingexperts.com/parkingmanagement";
-	alert(siteurl);
-	var url=siteurl+'/api/myaccount';
-    
-	var uid=gup('uid', window.location.href);
-	checkloggedin(uid,siteurl);
-	alert(realsiteurl);
 	var usertype=gup('usertype', window.location.href);
+	setTimeout(function(){
+		
+		if(usertype=='driver')
+		{
+			jQuery('.driver').show();
+			var menu=driver_menus('?uid='+uid+'&usertype='+usertype);
+			jQuery('.menu_div ul.menus').html(menu);
+			jQuery('.logo_div a').attr('href','dashboard.html?uid='+uid+'&usertype='+usertype);
+		}
+		if(usertype=='admin')
+		{
+			jQuery('.admin').show();
+			var menu=manager_menus('?uid='+uid+'&usertype='+usertype);
+			jQuery('.menu_div ul.menus').html(menu);
+			jQuery('.logo_div a').attr('href','dashboard.html?uid='+uid+'&usertype='+usertype);
+		}
+		jQuery('a.showhidemenus').click(function(){
+			if(jQuery(this).hasClass('show'))
+			{
+				jQuery( ".menu_div ul.menus").animate({ "left": "-220px" }, "slow" );
+				jQuery(this).removeClass('show');
+			}
+			else
+			{
+				jQuery( ".menu_div ul.menus").animate({ "left": "0px" }, "slow" );
+				jQuery(this).addClass('show');
+			}
+		});
+	},500);
 	
 	jQuery.ajax({  
          type: 'POST',  
