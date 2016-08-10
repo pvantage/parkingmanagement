@@ -55,14 +55,14 @@ jQuery(document).ready(function(){
 	jQuery.support.cors = true;
 	
 	var siteurl = "http://parkingandtowingexperts.com/parkingmanagement/app";
-    
+    alert(window.location.href);
 	var uid=gup('uid', window.location.href);
 	if(typeof uid != 'undefined'){
-		alert(uid);
+		//alert(uid);
 	}
 	else
 	{
-		alert('error');	
+		//alert('error');	
 	}
 	var usertype=gup('usertype', window.location.href);
 	var url=siteurl+'/api/login';
