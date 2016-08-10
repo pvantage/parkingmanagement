@@ -20,7 +20,6 @@ jQuery(document).ready(function(){
     if(window.XDomainRequest){contentType = "text/plain";}
 	jQuery.support.cors = true;
 	var siteurl = "http://parkingandtowingexperts.com/parkingmanagement/app";
-	alert(siteurl);
 	jQuery('#loginuser').validate();
 	jQuery('#loginuser').submit( function(){	
 			
@@ -33,7 +32,6 @@ jQuery(document).ready(function(){
 		}
 		else
 		{
-			alert('submit2');
 			 jQuery.ajax({  
 			 type: 'POST',  
 			 url: url,           
@@ -48,7 +46,7 @@ jQuery(document).ready(function(){
 				if(res['checklogin']['udetail'])
 				{
 					
-					window.location ='dashboard.html?uid='+res['checklogin']['udetail']['uid']+'&usertype='+res['checklogin']['udetail']['user_type'];
+					window.location ='eng/dashboard.html?uid='+res['checklogin']['udetail']['uid']+'&usertype='+res['checklogin']['udetail']['user_type'];
 				
 					//localStorage.setItem('userInfo', res['success']['userid']);
 					//window.location ='category.html';
