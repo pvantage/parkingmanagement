@@ -24,7 +24,7 @@ jQuery(document).ready(function(){
 	checkloggedin(uid);
 	if(jQuery.trim(uid)=='' || jQuery.trim(uid)=='0')
 	{
-		window.location='../index.html';
+		window.location='index.html';
 	}
 	jQuery('.dashboardlink h3 a').each(function(){
 		var href=jQuery(this).attr('href')+'?uid='+uid+'&usertype='+usertype;
@@ -39,12 +39,12 @@ jQuery(document).ready(function(){
 	<div class="container">
 		<header>
 			<div class="menu_div">
-				<a href="javascript:;" class="showhidemenus"><img src="../images/menu32@64.png"></a>
+				<a href="javascript:;" class="showhidemenus"><img src="images/menu32@64.png"></a>
 				<ul class="menus"></ul>
 			</div>
 			<script type="text/javascript">document.write(language_en_menus());</script>
 				<div class="logo_div">
-					<a href="#"><img src="../images/logo.png"></a>
+					<a href="#"><img src="images/logo.png"></a>
 				</div>
 		</header><!------------------header close-------------------------------->
 		<!--------------------------content-div starts------------------------------------------->	
