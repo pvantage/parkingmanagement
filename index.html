@@ -20,7 +20,7 @@ jQuery(document).ready(function(){
 	jQuery.support.cors = true;
 	
 	jQuery('#loginuser').validate();
-	jQuery('#loginuser').submit( function(){		
+	jQuery('#loginsubmit').click( function(){		
 		var user_login=jQuery('#username').val();
 		var user_pass=jQuery('#pwd').val();
 		var url=siteurl+'/api/login';	
@@ -158,7 +158,7 @@ jQuery(document).ready(function(){
 						<ul>
 						<li><label>User name</label><input type="text" class="required" name="username" id="username"></li>
 						<li><label>Password</label><input type="password" class="required" name="pwd" id="pwd"><a href="#" class="forgotpwd">forgot password</a></li>
-						<li><input class="submit" type="submit" value="Submit"></li>
+						<li><input class="submit" type="submit" id="loginsubmit" value="Submit"></li>
 						</ul>
 						</form> 	
 				</div>
