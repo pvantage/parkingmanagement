@@ -21,10 +21,12 @@ jQuery(document).ready(function(){
 	
 	jQuery('#loginuser').validate();
 	jQuery('#loginuser').submit( function(){	
-		alert('submit');	
+			
 		var user_login=jQuery('#username').val();
 		var user_pass=jQuery('#pwd').val();
-		var url=siteurl+'/api/login';	
+		var url=siteurl+'/api/login';
+		alert('submit');	
+		alert(url);
 		if(user_login=='' || user_pass=='')
 		{
 			alert('empty');
