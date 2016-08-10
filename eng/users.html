@@ -9,8 +9,8 @@
 </head>
 
 <script type="text/javascript" src="../js/jquery.js"></script>
-<script type="text/javascript" src="../js/config.js"></script>
 <script type="text/javascript" src="../js/validate.js"></script>
+<script type="text/javascript" src="../js/config.js"></script>
 <script type="text/javascript">
 jQuery(document).ready(function(){
 	
@@ -24,8 +24,8 @@ jQuery(document).ready(function(){
 	checkloggedin(uid);
 	var url=siteurl+'/api/users';
     
-	var uid=gup('uid', window.location.href);
-	var usertype=gup('usertype', window.location.href);
+	var uid=gup('uid');
+	var usertype=gup('usertype');
 	var addnewuser=jQuery('#addnewuser').attr('href');
 	jQuery('#addnewuser').attr('href',addnewuser+'?uid='+uid+'&usertype='+usertype);
 	
