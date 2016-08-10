@@ -5,8 +5,9 @@
 <title>Login</title>
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,100italic,300,100,300italic,400italic,500,500italic,700,700italic,900italic,900' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" type="text/css" href="style.css">
-<script type="text/javascript" src="js/config.js"></script>
+
 <script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/config.js"></script>
 <script type="text/javascript" src="js/validate.js"></script>
 <script type="text/javascript">
 
@@ -19,6 +20,7 @@ jQuery(document).ready(function(){
     if(window.XDomainRequest){contentType = "text/plain";}
 	jQuery.support.cors = true;
 	
+	alert(siteurl);
 	jQuery('#loginuser').validate();
 	jQuery('#loginuser').submit( function(){	
 			
