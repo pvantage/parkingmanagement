@@ -7,44 +7,11 @@
 <link rel="stylesheet" type="text/css" href="../style.css">
 </head>
 
-<script type="text/javascript" src="js/jquery.js"></script>
-<script type="text/javascript" src="js/validate.js"></script>
+<script type="text/javascript" src="../js/jquery.js"></script>
+<script type="text/javascript" src="../js/validate.js"></script>
+<script type="text/javascript" src="../js/config2.js"></script>
 <script type="text/javascript">
-var language_en_menus=function ()
-	{
-		var menu='<div class="lang_div"><ul><li class="active"><a href="#">English</a></li><li><a href="#">Espanol</a></li></ul></div>';
-		return menu;
-	}
-var gup=function( name, url ) {
-		alert(name);
-		alert(url);
-	  if (!url) url = location.href;
-	  name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
-	  var regexS = "[\\?&]"+name+"=([^&#]*)";
-	  var regex = new RegExp( regexS );
-	  var results = regex.exec( url );
-	  return results == null ? '' : results[1];
-	}
-	
-	var driver_menus=function (para='')
-	{
-		var menu='<li><a href="violations-towing.html'+para+'">Violation Towing</a></li>';
-			menu+='<li><a href="unauthorized-vehicles.html'+para+'">Unauthorized Vehicles</a></li>';
-			menu+='<li><a href="inactive-vehicles.html'+para+'">Inactive Vehicles</a></li>';
-			menu+='<li><a href="my-account.html'+para+'">My Account</a></li>';
-			menu+='<li><a href="../index.html">Log Out</a></li>';
-		return menu;
-	}
-	var manager_menus=function (para='')
-	{
-		var menu='<li><a href="vehicles.html'+para+'">Vehicles</a></li>';
-			menu+='<li><a href="violations-towing.html'+para+'">Violation Towing</a></li>';
-			menu+='<li><a href="unauthorized-vehicles.html'+para+'">Unauthorized Vehicles</a></li>';
-			menu+='<li><a href="users.html'+para+'">Users</a></li>';
-			menu+='<li><a href="my-account.html'+para+'">My Account</a></li>';
-			menu+='<li><a href="../index.html">Log Out</a></li>';
-		return menu;
-	}
+
 jQuery(document).ready(function(){
 	
 	jQuery( document ).on( "mobileinit", function() {
@@ -54,86 +21,10 @@ jQuery(document).ready(function(){
     if(window.XDomainRequest){contentType = "text/plain";}
 	jQuery.support.cors = true;
 	
-	var siteurl = "http://parkingandtowingexperts.com/parkingmanagement/app";
     alert(window.location.href);
-	var uid=gup('uid', window.location.href);
-	if(typeof uid != 'undefined'){
-		//alert(uid);
-	}
-	else
-	{
-		//alert('error');	
-	}
-	var usertype=gup('usertype', window.location.href);
-	var url=siteurl+'/api/login';
-	
-	jQuery.ajax({  
-	 type: 'POST',  
-	 url: url,  
-	 //contentType: contentType,  
-	 dataType: 'json',  
-	 data: {checkloggedin:1,uid:uid},  
-	 crossDomain: true,  
-	 beforeSend: function() {
-		jQuery('body .bodyoverlay').remove();
-		jQuery('body .preloader').remove();
-		var html='<div class="bodyoverlay"></div><div class="preloader"></div>';
-		jQuery('body').append(html);					
-	 },		
-	 complete: function() {
-		jQuery('body .bodyoverlay').remove();
-		jQuery('body .preloader').remove();					
-	 },
-	 success: function(res) {  
-	   if(res['loggedin']!='success')
-	   {
-		window.location='../index.html';   
-	   }
-		return false;
-	 },  
-	 error: function(response, d, a){
-		jQuery('body .bodyoverlay').remove();
-		jQuery('body .popupbox').remove();
-		var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Server Error.</h1><button class="okbox">OK</button></div>';
-		jQuery('body').append(html);
-		
-		jQuery('.okbox').click(function(){
-			jQuery('body .bodyoverlay').remove();
-			jQuery('body .popupbox').remove();
-		}); 
-		
-	 } 
-   });
-	
-	setTimeout(function(){
-		
-		if(usertype=='driver')
-		{
-			jQuery('.driver').show();
-			var menu=driver_menus('?uid='+uid+'&usertype='+usertype);
-			jQuery('.menu_div ul.menus').html(menu);
-			jQuery('.logo_div a').attr('href','dashboard.html?uid='+uid+'&usertype='+usertype);
-		}
-		if(usertype=='admin')
-		{
-			jQuery('.admin').show();
-			var menu=manager_menus('?uid='+uid+'&usertype='+usertype);
-			jQuery('.menu_div ul.menus').html(menu);
-			jQuery('.logo_div a').attr('href','dashboard.html?uid='+uid+'&usertype='+usertype);
-		}
-		jQuery('a.showhidemenus').click(function(){
-			if(jQuery(this).hasClass('show'))
-			{
-				jQuery( ".menu_div ul.menus").animate({ "left": "-220px" }, "slow" );
-				jQuery(this).removeClass('show');
-			}
-			else
-			{
-				jQuery( ".menu_div ul.menus").animate({ "left": "0px" }, "slow" );
-				jQuery(this).addClass('show');
-			}
-		});
-	},500);
+	var uid=getUrlParameter('uid');
+	var usertype=getUrlParameter('usertype');
+	checkloggedin(uid);
 	
 	var url=siteurl+'/api/myaccount';
 	jQuery.ajax({  
