@@ -33,7 +33,7 @@ function manager_menus(para='')
 		menu+='<li><a href="../index.html">Log Out</a></li>';
 	return menu;
 }
-function checkloggedin(uid)
+/*function checkloggedin(uid)
 {
 	
 	var url=siteurl+'/api/login';
@@ -76,9 +76,9 @@ function checkloggedin(uid)
 	 } 
    });
 		
-}
+}*/
 
-jQuery(document).ready(function(){
+/*jQuery(document).ready(function(){
 	var getUrlParameter = function getUrlParameter(sParam) {
 		var sPageURL = decodeURIComponent(window.location.search.substring(1)),
 			sURLVariables = sPageURL.split('&'),
@@ -126,7 +126,7 @@ jQuery(document).ready(function(){
 		});
 	},500);
 });
-
+*/
 
 
 
@@ -157,7 +157,7 @@ jQuery(document).ready(function(){
 	var uid=getUrlParameter('uid');
 	alert(uid);
 	var usertype=getUrlParameter('usertype');
-	checkloggedin(uid);
+	//checkloggedin(uid);
 	if(jQuery.trim(uid)=='' || jQuery.trim(uid)=='0')
 	{
 		window.location='../index.html';
