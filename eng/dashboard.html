@@ -105,15 +105,9 @@
 	},500);
 });
 */
-
-
-
-
-jQuery(document).ready(function(){
-	var siteurl = "http://parkingandtowingexperts.com/parkingmanagement/app";
+var siteurl = "http://parkingandtowingexperts.com/parkingmanagement/app";
 var realsiteurl = "http://parkingandtowingexperts.com/parkingmanagement";
-
-	function getUrlParameter(sParam) {
+function getUrlParameter(sParam) {
 		alert(sParam);
 		var sPageURL = decodeURIComponent(window.location.search.substring(1)),
 			sURLVariables = sPageURL.split('&'),
@@ -128,6 +122,12 @@ var realsiteurl = "http://parkingandtowingexperts.com/parkingmanagement";
 			}
 		}
 	}
+
+
+jQuery(document).ready(function(){
+	
+
+	
 	
     
 	var uid=getUrlParameter('uid');
