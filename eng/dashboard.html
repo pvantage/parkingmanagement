@@ -113,7 +113,7 @@ jQuery(document).ready(function(){
 	var siteurl = "http://parkingandtowingexperts.com/parkingmanagement/app";
 var realsiteurl = "http://parkingandtowingexperts.com/parkingmanagement";
 
-	var getUrlParameter = function getUrlParameter(sParam) {
+	function getUrlParameter(sParam) {
 		alert(sParam);
 		var sPageURL = decodeURIComponent(window.location.search.substring(1)),
 			sURLVariables = sPageURL.split('&'),
@@ -127,7 +127,7 @@ var realsiteurl = "http://parkingandtowingexperts.com/parkingmanagement";
 				return sParameterName[1] === undefined ? true : sParameterName[1];
 			}
 		}
-	};
+	}
 	
     
 	var uid=getUrlParameter('uid');
