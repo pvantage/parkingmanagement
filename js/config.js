@@ -1,5 +1,6 @@
 var siteurl = "http://parkingandtowingexperts.com/parkingmanagement/app";
 var realsiteurl = "http://parkingandtowingexperts.com/parkingmanagement";
+alert(siteurl);
 function gup( name, url ) {
   if (!url) url = location.href;
   name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
