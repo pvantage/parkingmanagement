@@ -20,7 +20,8 @@ jQuery(document).ready(function(){
 	jQuery.support.cors = true;
 	
 	jQuery('#loginuser').validate();
-	jQuery('#loginsubmit').click( function(){		
+	jQuery('#loginuser').submit( function(){	
+		alert('submit');	
 		var user_login=jQuery('#username').val();
 		var user_pass=jQuery('#pwd').val();
 		var url=siteurl+'/api/login';	
@@ -30,6 +31,7 @@ jQuery(document).ready(function(){
 		}
 		else
 		{
+			alert('submit2');
 			 jQuery.ajax({  
 			 type: 'POST',  
 			 url: url,           
