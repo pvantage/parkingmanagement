@@ -2,12 +2,6 @@ var siteurl = "http://parkingandtowingexperts.com/parkingmanagement/app";
 var realsiteurl = "http://parkingandtowingexperts.com/parkingmanagement";
 
 function gup( sParam, url ) {
-  /*if (!url) url = location.href;
-  name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
-  var regexS = "[\\?&]"+name+"=([^&#]*)";
-  var regex = new RegExp( regexS );
-  var results = regex.exec( url );
-  return results == null ? '' : results[1];*/
   var sPageURL = decodeURIComponent(window.location.search.substring(1)),
         sURLVariables = sPageURL.split('&'),
         sParameterName,
@@ -26,7 +20,7 @@ function language_en_menus()
 	var menu='<div class="lang_div"><ul><li class="active"><a href="#">English</a></li><li><a href="#">Espanol</a></li></ul></div>';
 	return menu;
 }
-function driver_menus(para='')
+function driver_menus(para)
 {
 	var menu='<li><a href="violations-towing.html'+para+'">Violation Towing</a></li>';
 		menu+='<li><a href="unauthorized-vehicles.html'+para+'">Unauthorized Vehicles</a></li>';
@@ -35,7 +29,7 @@ function driver_menus(para='')
 		menu+='<li><a href="../index.html">Log Out</a></li>';
 	return menu;
 }
-function manager_menus(para='')
+function manager_menus(para)
 {
 	var menu='<li><a href="vehicles.html'+para+'">Vehicles</a></li>';
 		menu+='<li><a href="violations-towing.html'+para+'">Violation Towing</a></li>';
