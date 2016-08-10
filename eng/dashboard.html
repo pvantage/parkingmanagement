@@ -104,8 +104,16 @@ jQuery(document).ready(function(){
 	var contentType ="application/x-www-form-urlencoded; charset=utf-8";
     if(window.XDomainRequest){contentType = "text/plain";}
 	jQuery.support.cors = true;
-	alert(window.location.href);
-	var uid=gup('uid', window.location.href);
+	var surl=window.location.href;
+	var sname='uid';
+	if (!surl) surl = location.href;
+	  sname = sname.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+	  var regexS = "[\\?&]"+sname+"=([^&#]*)";
+	  var regex = new RegExp( regexS );
+	  var results = regex.exec( surl );
+	  uid == null ? '' : results[1];
+	alert(uid);
+	var uid=gup(, window.location.href);
 	var usertype=gup('usertype', window.location.href);
 	
 	checkloggedin(siteurl,uid);
