@@ -1,7 +1,7 @@
 var siteurl = "http://parkingandtowingexperts.com/parkingmanagement/app";
 var realsiteurl = "http://parkingandtowingexperts.com/parkingmanagement";
 
-function gup( sParam, url ) {
+function gup(sParam) {
   var sPageURL = decodeURIComponent(window.location.search.substring(1)),
         sURLVariables = sPageURL.split('&'),
         sParameterName,
@@ -41,9 +41,9 @@ function manager_menus(para)
 }
 
 
-var uid=gup('uid', window.location.href);
+var uid=gup('uid');
 
-var usertype=gup('usertype', window.location.href);
+var usertype=gup('usertype');
 setTimeout(function(){
 	
 	if(usertype=='driver')
