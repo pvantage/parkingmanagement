@@ -134,9 +134,15 @@ jQuery(document).ready(function(){
 	var contentType ="application/x-www-form-urlencoded; charset=utf-8";
     if(window.XDomainRequest){contentType = "text/plain";}
 	jQuery.support.cors = true;
-    alert(window.location.href);
-	var uid=gup('uid', window.location.href);
-	var usertype=gup('usertype', window.location.href);
+	alert(window.location.href);
+	if(typeof gup('uid', window.location.href) != 'undefined'){
+		var uid=gup('uid', window.location.href);
+		var usertype=gup('usertype', window.location.href);
+	}
+	else
+	{
+		alert('error');
+	}
 	checkloggedin(uid);
 	if(jQuery.trim(uid)=='' || jQuery.trim(uid)=='0')
 	{
