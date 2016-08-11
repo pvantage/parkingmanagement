@@ -1,5 +1,5 @@
-var siteurl = "http://vantageappspro.com/parking/parkingmanagement/app";
-var realsiteurl = "http://vantageappspro.com/parking/parkingmanagement";
+var siteurl = "http://localhost/parkingmanagement/app";
+var realsiteurl = "http://localhost/parkingmanagement";
 
 function gup(sParam) {
   var sPageURL = decodeURIComponent(window.location.search.substring(1)),

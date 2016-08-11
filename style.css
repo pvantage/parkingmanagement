@@ -46,10 +46,9 @@ background: #fcfcfc none repeat scroll 0 0;
   width: 100%;
 }
 .content_div {
-  float: left;
-  margin-top: 35px;
   text-align: center;
   width: 100%;
+  margin:0px auto;
 }
 .content_div h3 {
   background: #0c5dc6 none repeat scroll 0 0;

@@ -35,6 +35,10 @@ jQuery(document).ready(function(){
 	var searcht=gup('searcht');
 	jQuery('input[name="searcht"]').val(searcht);
 	
+	if(usertype=='driver')
+	{
+		jQuery('.select_div').prepend('<a href="add-unauthorized-towing.html?uid='+uid+'&usertype='+usertype+'" id="addnewuser" class="btn btn-success add-new">Add Unauthorized Tow Vehicle</a>');
+	}
 	jQuery('#usid').val(uid);
 	jQuery('#usertype').val(usertype);
 	jQuery.ajax({  
@@ -76,7 +80,7 @@ jQuery(document).ready(function(){
 						html+='<a href="unauthorized-vehicle-detail.html?uid='+uid+'&v='+res['vehicles']['vehiclelist'][index]['id']+'&usertype='+usertype+'"><i class="fa fa-eye"></i></a>';
 					}
 					if(res['vehicles']['usertype']=='driver' && res['vehicles']['vehiclelist'][index]['status']=='25'){
-						html+='<a href="add-unauthorized-towing.html?uid='+uid+'&v='+res['vehicles']['vehiclelist'][index]['id']+'&usertype='+usertype+'"><img src="../images/truck.png"></a>';
+						html+='<a href="add-unauthorized-towing.html?uid='+uid+'&v='+res['vehicles']['vehiclelist'][index]['id']+'&usertype='+usertype+'"><i class="fa fa-truck"></i></a>';
 					}
 					html+='</div></div>';
 			   });
@@ -100,6 +104,8 @@ jQuery(document).ready(function(){
 			}); 
          } 
        });
+	   
+	   
 });		
 </script>
 <body>

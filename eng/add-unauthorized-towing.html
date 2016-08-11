@@ -29,7 +29,7 @@ function savetotow()
 	var formData = jQuery('#edituser').serialize();
 	
 	
-	formData = formData + '&uid=' + uid + '&authsubmit=1';
+	formData = formData + '&uid=' + uid + '&unauthsubmit=1';
 	jQuery.ajax({  
 		 type: 'POST',  
 		 url: url,  
@@ -136,7 +136,7 @@ function uploadPics() {
     jQuery(images).each(function(i) {
         var filetrasfer=images[i];
 
-        var uri = encodeURI(siteurl+"/api/save-vehicle-images?v="+vechileid+'&i='+i+'&authvehicle=1');
+        var uri = encodeURI(siteurl+"/api/save-vehicle-images?uid="+uid+'&i='+i+'&unauthvehicle=1');
 
         var options = new FileUploadOptions();
         options.fileKey="file";
@@ -201,7 +201,7 @@ jQuery(document).ready(function(){
 			 type: 'POST',  
 			 url: url,  
 			 dataType: 'json',  
-			 data: {uid:uid, authorisedvehicles:1},  
+			 data: {uid:uid, unauthorisedvehicles:1},  
 			 crossDomain: true,  
 			 beforeSend: function() {
 				jQuery('body .bodyoverlay').remove();
@@ -217,9 +217,10 @@ jQuery(document).ready(function(){
 				
 				jQuery('body .bodyoverlay').remove();
 				jQuery(res['vehiclelist']).each(function(k){
-					jQuery('#vechileid').append('<option value="'+res['vehiclelist'][k]['id']+'">'+res['vehiclelist'][k]['name']+'</option>');
+					jQuery('#vechileid2').append('<option value="'+res['vehiclelist'][k]['id']+'">'+res['vehiclelist'][k]['name']+'</option>');
 				});
-				jQuery('#vechileid').val(v);
+				jQuery('#vechileid2').val(v);
+				
 				
 				jQuery(res['trucklist']).each(function(k){
 					jQuery('#truckid').append('<option value="'+res['trucklist'][k]['id']+'">'+res['trucklist'][k]['name']+'</option>');
@@ -232,6 +233,11 @@ jQuery(document).ready(function(){
 					treson+='<label><input type="checkbox" name="towingreasons[]" value="'+res['towingreasons'][k]+'" />'+res['towingreasons'][k]+'</label><div class="clr"></div>';
 				});
 				jQuery('.towingreasons').html(treson);
+				
+				jQuery(res['locationlist']).each(function(k){
+					jQuery('#location_id').append('<option value="'+res['locationlist'][k]['id']+'">'+res['locationlist'][k]['name']+'</option>');
+				});
+				
 				jQuery('body .popupbox').remove();
 			 },  
 			 error: function(response, d, a){
@@ -266,6 +272,22 @@ jQuery(document).ready(function(){
 	   }
 	   return false;
 	 });
+	 jQuery('#vechileid2').change(function(){
+		var vechileid2=jQuery(this).val();
+		if(jQuery.trim(vechileid2)==''){
+			jQuery('.unauthorized input,.unauthorized select').attr('disabled',false);
+			jQuery('.unauthorized input,.unauthorized select').addClass('required');
+		}
+		else
+		{
+			jQuery('.unauthorized input,.unauthorized select').attr('disabled',true);
+			jQuery('.unauthorized input,.unauthorized select').removeClass('required');
+			
+		}
+		jQuery(this).attr('disabled',false);
+		jQuery(this).removeClass('required');
+	});
+	setTimeout(function(){jQuery('#vechileid2').trigger('change');},500);
 });		
 </script>
 
@@ -289,11 +311,34 @@ jQuery(document).ready(function(){
 					<h4 class="search_headng">ADD VEHICLE</h4>
 					   <div class="select_div">
 						  <form name="edituser" id="edituser" action="" method="post">
-							<div class="field unauthorized">
-								<select class="selectpicker form-control required" name="vechileid" id="vechileid">
-								  <option data-tokens="" value="">Select Vehicle or search eg model color tagnumber</option>
+							<div class="unauthorized">
+							  <div class="field">
+							  <select class="selectpicker form-control required" name="vechileid2" id="vechileid2">
+								  <option data-tokens="" value="">Select Vehicle</option>
 								</select>
-							</div>
+				
+							  </div>
+							  <div class="field">
+								<input type="text" name="vinnumber" placeholder="Vin Number" class="form-control">
+							  </div>
+							  <div class="field">
+								<input type="text" name="tagnumber" placeholder="License No" class="form-control required">
+							  </div>
+							  <div class="field">
+								<input type="text" name="make" placeholder="Make" class="form-control required">
+							  </div>
+							  <div class="field">
+								<input type="text" name="model" placeholder="Model" class="form-control required">
+							  </div>
+							  <div class="field">
+								<input type="text" name="color" placeholder="Color" class="form-control required">
+							  </div>
+							  <div class="field">
+								<select class="selectpicker form-control required" name="location_id" id="location_id" data-live-search="true">
+								  <option data-tokens="" value="">Select Location</option>
+							    </select>
+							  </div>
+							  </div>
 							  <div class="field">
 								<select class="selectpicker form-control required" name="truckid" id="truckid" data-live-search="true">
 								  <option data-tokens="" value="">Select Truck</option>

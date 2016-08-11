@@ -5,6 +5,7 @@
 <title>VIOLATIONS TOWING</title>
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,100italic,300,100,300italic,400italic,500,500italic,700,700italic,900italic,900' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" type="text/css" href="../css/font-awesome.css">
 </head>
 
 <script type="text/javascript" src="../js/jquery.js"></script>
@@ -36,6 +37,10 @@ jQuery(document).ready(function(){
 	jQuery('input[name="searcht"]').val(searcht);
 	
 	jQuery('#usid').val(uid);
+	if(usertype=='driver')
+	{
+		jQuery('.select_div').prepend('<a href="add-violation-towing.html?uid='+uid+'&usertype='+usertype+'" id="addnewuser" class="btn btn-success add-new">Add Tow Vehicle</a>');
+	}
 	jQuery('#usertype').val(usertype);
 	jQuery.ajax({  
          type: 'GET',  
@@ -59,9 +64,9 @@ jQuery(document).ready(function(){
 		   {
             	var html='';
 				jQuery(res['vehicles']['vehiclelist']).each(function(index){
-					html+='<div class="mnger_frst"><div class="list"><ul><li><strong>Vin Number:</strong> <p>'+res['vehicles']['vehiclelist'][index]['vinnumber']+'</p></li><li><strong>License No:</strong> <p>'+res['vehicles']['vehiclelist'][index]['tagnumber']+'</p></li><li><strong>Model:</strong> <p>'+res['vehicles']['vehiclelist'][index]['model']+'</p></li><li><strong>Color:</strong> <p>'+res['vehicles']['vehiclelist'][index]['color']+'</p></li></ul></div><div class="overlay_div"><a href="violation-towing-detail.html?uid='+uid+'&v='+res['vehicles']['vehiclelist'][index]['id']+'&usertype='+usertype+'"><img src="../images/view.png"></a>';
+					html+='<div class="mnger_frst"><div class="list"><ul><li><strong>Vin Number:</strong> <p>'+res['vehicles']['vehiclelist'][index]['vinnumber']+'</p></li><li><strong>License No:</strong> <p>'+res['vehicles']['vehiclelist'][index]['tagnumber']+'</p></li><li><strong>Model:</strong> <p>'+res['vehicles']['vehiclelist'][index]['model']+'</p></li><li><strong>Color:</strong> <p>'+res['vehicles']['vehiclelist'][index]['color']+'</p></li></ul></div><div class="overlay_div"><a href="violation-towing-detail.html?uid='+uid+'&v='+res['vehicles']['vehiclelist'][index]['id']+'&usertype='+usertype+'"><i class="fa fa-eye"></i></a>';
 					if(res['vehicles']['usertype']=='driver' && res['vehicles']['vehiclelist'][index]['status']=='25'){
-						html+='<a href="add-violation-towing.html?uid='+uid+'&v='+res['vehicles']['vehiclelist'][index]['id']+'&usertype='+usertype+'"><img src="../images/truck.png"></a>';
+						html+='<a href="add-violation-towing.html?uid='+uid+'&v='+res['vehicles']['vehiclelist'][index]['id']+'&usertype='+usertype+'"><i class="fa fa-truck"></i></a>';
 					}
 					html+='</div></div>';
 			   });
