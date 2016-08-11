@@ -121,7 +121,7 @@ function uploadPics() {
 	var vechileid=jQuery('#vechileid').val();
 	
     jQuery(images).each(function(i) {
-        var filetrasfer=images[i]+'.jpeg';
+        var filetrasfer=images[i];
 
         var uri = encodeURI(siteurl+"/api/save-vehicle-images?v="+vechileid+'&i='+i+'&authvehicle=1');
 
