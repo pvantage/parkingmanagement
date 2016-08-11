@@ -210,7 +210,7 @@ function selPic() {
 }
 function uploadPics() {
     alert("Ok, going to upload "+images.length+" images.");
-    images.each(function(i) {
+    jQuery(images).each(function(i) {
         alert('processing '+i);
         //var def = $.Deferred();
 
