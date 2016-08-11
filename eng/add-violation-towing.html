@@ -158,8 +158,9 @@ jQuery(document).ready(function(){
 document.addEventListener("deviceready", init, false);
 function init() {
 	document.querySelector("#startScan").addEventListener("touchend", startScan, false);
-	document.querySelector("#startScan2").addEventListener("touchend", pickpictures, false);
-	//resultDiv = document.querySelector("#results");
+	$("#addPicture").on("touchend", selPic);
+    $imagesDiv = $("#images");  
+    $("#uploadPictures").on("touchend", uploadPics);
 }
 
 function startScan() {
@@ -186,40 +187,68 @@ function startScan() {
 	);
 
 }
-function win(r) {
-	alert("Code = " + r.responseCode+', '+"Response = " + r.response+', '+"Sent = " + r.bytesSent);
-    console.log("Code = " + r.responseCode);
-    console.log("Response = " + r.response);
-    console.log("Sent = " + r.bytesSent);
-}
 
-function fail(error) {
-    alert("An error has occurred: Code = " + error.code+", upload error source " + error.source+", upload error target " + error.target);
-    console.log("upload error source " + error.source);
-    console.log("upload error target " + error.target);
+function selPic() {
+    navigator.camera.getPicture(function(f) {
+        var newHtml = "<img src='"+f+"'>";
+        $imagesDiv.append(newHtml);
+        images.push(f);
+        if(images.length === 1) {
+            $("#uploadPictures").removeAttr("disabled");
+        }
+    }, function(e) {
+        alert("Error, check console.");
+        console.dir(e);
+    }, { 
+        quality: 50,
+        sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+        destinationType: Camera.DestinationType.FILE_URI
+    });
+    
 }
-function pickpictures()
-{
-	var uri = encodeURI("http://vantageappspro.com/parking/parkingmanagement/app/api/save-vehicle-images.php");
+function uploadPics() {
+    alert("Ok, going to upload "+images.length+" images.");
+    var defs = [];
 
-	var options = new FileUploadOptions();
-	options.fileKey="file";
-	options.fileName=fileURL.substr(fileURL.lastIndexOf('/')+1);
-	//options.mimeType="text/plain";
-	
-	var headers={'headerParam':'headerValue'};
-	
-	options.headers = headers;
-	
-	var ft = new FileTransfer();
-	ft.onprogress = function(progressEvent) {
-		if (progressEvent.lengthComputable) {
-			loadingStatus.setPercentage(progressEvent.loaded / progressEvent.total);
-		} else {
-			loadingStatus.increment();
-		}
-	};
-	ft.upload(fileURL, uri, win, fail, options);
+    images.forEach(function(i) {
+        console.log('processing '+i);
+        var def = $.Deferred();
+
+        function win(r) {
+            alert("thing done");
+            if($.trim(r.response) === "0") {
+                alert("this one failed");
+                def.resolve(0);
+            } else {
+                alert("this one passed");
+                def.resolve(1);
+            }
+        }
+
+        function fail(error) {
+            alert("upload error source " + error.source);
+            alert("upload error target " + error.target);
+            def.resolve(0);
+        }
+
+        var uri = encodeURI("http://vantageappspro.com/parking/parkingmanagement/app/api/save-vehicle-images.php");
+
+        var options = new FileUploadOptions();
+        options.fileKey="file";
+        options.fileName=i.substr(i.lastIndexOf('/')+1);
+        options.mimeType="image/jpeg";
+
+        var ft = new FileTransfer();
+        ft.upload(i, uri, win, fail, options);
+        defs.push(def.promise());
+        
+    });
+
+    $.when.apply($, defs).then(function() {
+        alert("all things done");
+        console.dir(arguments);
+    });
+
 }
 
 
@@ -271,7 +300,15 @@ function pickpictures()
 							  </div>
 							  <div class="clr"></div>
 							  <div class="field">
-								<div class="cmra"><a href="javascript:;" id="startScan2"><img src="../images/camera.png"></a></div>
+								<div class="cmra"><a href="javascript:;" id="addPicture">addPicture</a></div>
+							  </div>
+							  <div class="clr"></div>
+							  <div class="field">
+								<div class="cmra" id="images"></div>
+							  </div>
+							  <div class="clr"></div>
+							  <div class="field">
+								<div class="cmra"><a href="javascript:;" id="uploadPictures">uploadPictures</a></div>
 							  </div>
 							  <div class="clr"></div>
 							<button class="btn btn-success" name="update" type="submit">Add</button>
