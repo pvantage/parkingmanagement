@@ -103,6 +103,7 @@ function selPic() {
 			if (index > -1) {
 				images.splice(index, 1);
 			}
+			jQuery(this).parent('.img').remove();
 		});
     }, function(e) {
         alert("Error, check console.");
