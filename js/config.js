@@ -1,5 +1,5 @@
-var siteurl = "http://parkingandtowingexperts.com/parkingmanagement/app";
-var realsiteurl = "http://parkingandtowingexperts.com/parkingmanagement";
+var siteurl = "http://vantageappspro.com/parking/parkingmanagement/app";
+var realsiteurl = "http://vantageappspro.com/parking/parkingmanagement";
 
 function gup(sParam) {
   var sPageURL = decodeURIComponent(window.location.search.substring(1)),
@@ -86,10 +86,10 @@ function checkloggedin(uid)
 	 data: {checkloggedin:1,uid:uid},  
 	 crossDomain: true,  
 	 beforeSend: function() {
-		jQuery('body .bodyoverlay').remove();
+		/*jQuery('body .bodyoverlay').remove();
 		jQuery('body .preloader').remove();
 		var html='<div class="bodyoverlay"></div><div class="preloader"></div>';
-		jQuery('body').append(html);					
+		jQuery('body').append(html);*/					
 	 },		
 	 complete: function() {
 		jQuery('body .bodyoverlay').remove();
