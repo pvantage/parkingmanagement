@@ -107,8 +107,8 @@ function selPic() {
 }
 var j=0;
 function win(r) {
-	alert("thing done. "+r.response);
-	jQuery('#edituser').append('<input type="hidden" name="photos" value="'+r.response+'">');
+	alert(images.length);
+	jQuery('#edituser').append('<input type="hidden" name="photos" class="vphotos" value="'+r.response+'" />');
 	j=parseInt(j)+1;
 }
 
@@ -140,7 +140,7 @@ function uploadPics() {
 		};
         var t=ft.upload(filetrasfer, uri, win, fail, options);
     });
-	alert(images.length);
+	
 	
    if(parseInt(images.length)>0)
    {
