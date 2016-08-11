@@ -402,3 +402,5 @@ ul.menus{left:-220px;}
 .add-new{margin:0px auto; float:none !important; color:#FFFFFF !important;}
 #images{width:100%;}
 #images img{width:100%;}
+#images .img{width:100%; position:relative;}
+#images .closeimg{position:absolute; right:14px; width:20px; border-radius:50%; height:20px; top:10px; display:block; background:#FFFFFF; color:#FF0000; font-weight:bold; font-size:20px;}

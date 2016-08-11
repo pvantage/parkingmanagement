@@ -94,10 +94,16 @@ function savetotow()
 function selPic() {
     navigator.camera.getPicture(function(f) {
 		//alert(f);
-        var newHtml = "<img src='"+f+"'>";
+        var newHtml = '<div class="img"><img src="'+f+'"><a href="javascript:;" class="closeimg" data="'+f+'">X</a></div>';
         $imagesDiv.append(newHtml);
         images.push(f);
-        
+        jQuery('a.closeimg').click(function(){
+			var pat=jQuery(this).attr('data');
+			var index = images.indexOf(pat);
+			if (index > -1) {
+				images.splice(index, 1);
+			}
+		});
     }, function(e) {
         alert("Error, check console.");
         console.dir(e);
