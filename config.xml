@@ -21,7 +21,7 @@
 	 <!-- Core plugins -->
 	 <gap:plugin name="com.ams.plugins.barcodescanner" />
 	 <gap:plugin name="org.apache.cordova.camera" />
-	 <gap:plugin name="cordova-plugin-media-capture" />
+	 <gap:plugin name="org.apache.cordova.file-transfer" />
    <!-- <gap:plugin name="org.apache.cordova.battery-status" />
     <gap:plugin name="org.apache.cordova.camera" />
     <gap:plugin name="org.apache.cordova.media-capture" />

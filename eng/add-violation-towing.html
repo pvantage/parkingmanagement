@@ -158,7 +158,7 @@ jQuery(document).ready(function(){
 document.addEventListener("deviceready", init, false);
 function init() {
 	document.querySelector("#startScan").addEventListener("touchend", startScan, false);
-	document.querySelector("#startScan2").addEventListener("touchend", piclpictures, false);
+	document.querySelector("#startScan2").addEventListener("touchend", pickpictures, false);
 	//resultDiv = document.querySelector("#results");
 }
 
@@ -186,27 +186,44 @@ function startScan() {
 	);
 
 }
-function piclpictures()
+function win(r) {
+	alert("Code = " + r.responseCode+', '+"Response = " + r.response+', '+"Sent = " + r.bytesSent);
+    console.log("Code = " + r.responseCode);
+    console.log("Response = " + r.response);
+    console.log("Sent = " + r.bytesSent);
+}
+
+function fail(error) {
+    alert("An error has occurred: Code = " + error.code+", upload error source " + error.source+", upload error target " + error.target);
+    console.log("upload error source " + error.source);
+    console.log("upload error target " + error.target);
+}
+function pickpictures()
 {
-	// capture callback
-	var captureSuccess = function(mediaFiles) {
-		var i, path, len;
-		for (i = 0, len = mediaFiles.length; i < len; i += 1) {
-			path = mediaFiles[i].fullPath;
-			// do something interesting with the file
-			alert(path);
+	var uri = encodeURI("http://vantageappspro.com/parking/parkingmanagement/app/api/save-vehicle-images.php");
+
+	var options = new FileUploadOptions();
+	options.fileKey="file";
+	options.fileName=fileURL.substr(fileURL.lastIndexOf('/')+1);
+	//options.mimeType="text/plain";
+	
+	var headers={'headerParam':'headerValue'};
+	
+	options.headers = headers;
+	
+	var ft = new FileTransfer();
+	ft.onprogress = function(progressEvent) {
+		if (progressEvent.lengthComputable) {
+			loadingStatus.setPercentage(progressEvent.loaded / progressEvent.total);
+		} else {
+			loadingStatus.increment();
 		}
 	};
-	
-	// capture error callback
-	var captureError = function(error) {
-		alert('Error code: ' + error.code, null, 'Capture Error');
-		navigator.notification.alert('Error code: ' + error.code, null, 'Capture Error');
-	};
-	
-	// start image capture
-	navigator.device.capture.captureImage(captureSuccess, captureError, {limit:2});
+	ft.upload(fileURL, uri, win, fail, options);
 }
+
+
+
 </script>
 <body>
 <div class="wrapper">
