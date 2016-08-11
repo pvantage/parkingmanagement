@@ -100,10 +100,14 @@ jQuery(document).ready(function(){
 			 dataType: 'json',  
 			 data: {forgotemail:forgotemail,forgotpwd:1}, 
 			 beforeSend: function() {
-					//jQuery(".loading").show();					
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .preloader').remove();
+				var html='<div class="bodyoverlay"></div><div class="preloader"></div>';
+				jQuery('body').append(html);					
 			 },		
 			 complete: function() {
-					//jQuery(".loading").hide();					
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .preloader').remove();				
 			 }, 
 			 crossDomain: true,  
 			 success: function(res) {  

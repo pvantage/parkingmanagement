@@ -139,12 +139,13 @@ function uploadPics() {
 			}
 		};
         var t=ft.upload(filetrasfer, uri, win, fail, options);
-        
+        alert(j);
     });
+	alert(images.length);
 	
    if(j==images.length && parseInt(images.length)>0)
    {
-   		savetotow();
+   		//savetotow();
    }
    else
    {
@@ -188,7 +189,6 @@ jQuery(document).ready(function(){
 			 data: {uid:uid, authorisedvehicles:1},  
 			 crossDomain: true,  
 			 beforeSend: function() {
-			 	uploadPics();
 				jQuery('body .bodyoverlay').remove();
 				jQuery('body .preloader').remove();
 				var html='<div class="bodyoverlay"></div><div class="preloader"></div>';
