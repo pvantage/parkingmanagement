@@ -28,6 +28,7 @@ function savetotow()
 	var url=siteurl+'/api/towvehicle';
 	var formData = jQuery('#edituser').serialize();
 	
+	
 	formData = formData + '&uid=' + uid + '&authsubmit=1';
 	jQuery.ajax({  
 		 type: 'POST',  
@@ -108,7 +109,7 @@ function selPic() {
 }
 var j=0;
 function win(r) {
-	jQuery('#edituser').append('<input type="hidden" name="photos" class="vphotos" value="'+r.response+'" />');
+	jQuery('#edituser').append('<input type="hidden" name="photos[]" class="vphotos" value="'+r.response+'" />');
 	j=parseInt(j)+1;
 	
 	if(j==images.length)
@@ -219,10 +220,11 @@ jQuery(document).ready(function(){
 				jQuery(res['storagelist']).each(function(k){
 					jQuery('#storage_id').append('<option value="'+res['storagelist'][k]['id']+'">'+res['storagelist'][k]['name']+'</option>');
 				});
+				var treson=''
 				jQuery(res['towingreasons']).each(function(k){
-					jQuery('.towingreasons').append('<label><input type="checkbox" name="towingreasons[]" value="'+res['towingreasons'][k]+'" />'+res['towingreasons'][k]+'</label><div class="clr"></div>');
+					treson+='<label><input type="checkbox" name="towingreasons[]" value="'+res['towingreasons'][k]+'" />'+res['towingreasons'][k]+'</label><div class="clr"></div>';
 				});
-				
+				jQuery('.towingreasons').html(treson);
 				jQuery('body .popupbox').remove();
 			 },  
 			 error: function(response, d, a){
