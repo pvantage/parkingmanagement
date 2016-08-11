@@ -192,6 +192,7 @@ function startScan() {
 
 function selPic() {
     navigator.camera.getPicture(function(f) {
+		alert(f);
         var newHtml = "<img src='"+f+"'>";
         $imagesDiv.append(newHtml);
         images.push(f);
@@ -208,28 +209,20 @@ function selPic() {
     });
     
 }
+function win(r) {
+	alert("thing done. "+r.response);
+}
+
+function fail(error) {
+	alert("upload error source " + error.source);
+	alert("upload error target " + error.target);
+	//def.resolve(0);
+}
 function uploadPics() {
     alert("Ok, going to upload "+images.length+" images.");
     jQuery(images).each(function(i) {
         alert('processing '+images[i]);
         //var def = $.Deferred();
-
-        function win(r) {
-            alert("thing done");
-            if(jQuery.trim(r.response) === "0") {
-                alert("this one failed");
-                //def.resolve(0);
-            } else {
-                alert("this one passed");
-                //def.resolve(1);
-            }
-        }
-
-        function fail(error) {
-            alert("upload error source " + error.source);
-            alert("upload error target " + error.target);
-            //def.resolve(0);
-        }
 
         var uri = encodeURI(siteurl+"/api/save-vehicle-images?uid="+uid+'&i='+i);
 
