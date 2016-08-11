@@ -155,6 +155,8 @@ jQuery(document).ready(function(){
 </script>
 <script type="text/javascript" src="../cordova.js"></script>
 <script type="text/javascript">
+var images = [];
+var $imagesDiv;
 document.addEventListener("deviceready", init, false);
 function init() {
 	document.querySelector("#startScan").addEventListener("touchend", startScan, false);
