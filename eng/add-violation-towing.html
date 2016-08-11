@@ -11,7 +11,162 @@
 <script type="text/javascript" src="../js/validate.js"></script>
 <script src="../js/jquery-ui.js"></script>
 <script type="text/javascript" src="../js/config.js"></script>
+<script type="text/javascript" src="../cordova.js"></script>
 <script type="text/javascript">
+var uid=gup('uid');
+document.addEventListener("deviceready", init, false);
+function init() {
+	//document.querySelector("#startScan").addEventListener("touchend", startScan, false);
+	jQuery("#addPicture").on("touchend", selPic);
+    $imagesDiv = jQuery("#images");  
+    //jQuery("#uploadPictures").on("touchend", uploadPics);
+}
+var images = [];
+var $imagesDiv;
+function savetotow()
+{
+	var url=siteurl+'/api/towvehicle';
+	var formData = jQuery('#edituser').serialize();
+	
+	formData = formData + '&uid=' + uid + '&authsubmit=1';
+	jQuery.ajax({  
+		 type: 'POST',  
+		 url: url,  
+		 dataType: 'json',  
+		 data: formData,  
+		 crossDomain: true,  
+		 beforeSend: function() {
+			jQuery('body .bodyoverlay').remove();
+			jQuery('body .preloader').remove();
+			var html='<div class="bodyoverlay"></div><div class="preloader"></div>';
+			jQuery('body').append(html);					
+		 },		
+		 complete: function() {
+			//jQuery('body .bodyoverlay').remove();
+			jQuery('body .preloader').remove();					
+		 },
+		 success: function(res) {  
+			if(res['vehicles']['error'])
+			{
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .popupbox').remove();
+				var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>';
+				jQuery(res['vehicles']['error']).each(function(k){
+					html+=res['vehicles']['error'][k]+'<br />';
+				});
+				
+				html+='</h1><button class="okbox">OK</button></div>';
+				jQuery('body').append(html);
+				
+			}
+			else if(res['vehicles']['updatevehicle'])
+			{
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .popupbox').remove();
+				var html='<div class="bodyoverlay"></div><div class="popupbox"><div class="popupimg"><img src="../images/pop.png" /></div><h1 class="success">SUCCESS</h1><h1>'+res['vehicles']['updatevehicle']+'.</h1><button class="okbox">OK</button></div>';
+				jQuery('body').append(html);
+				jQuery('#edituser')[0].reset();
+				
+			}
+			jQuery('.okbox').click(function(){
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .popupbox').remove();
+			}); 
+			return false;
+		 },  
+		 error: function(response, d, a){
+			jQuery('body .bodyoverlay').remove();
+			jQuery('body .popupbox').remove();
+			var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Server Error.</h1><button class="okbox">OK</button></div>';
+			jQuery('body').append(html);
+			
+			jQuery('.okbox').click(function(){
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .popupbox').remove();
+			});
+			return false; 
+		 } 
+	   });
+}
+function selPic() {
+    navigator.camera.getPicture(function(f) {
+		//alert(f);
+        var newHtml = "<img src='"+f+"'>";
+        $imagesDiv.append(newHtml);
+        images.push(f);
+        
+    }, function(e) {
+        alert("Error, check console.");
+        console.dir(e);
+    }, { 
+        quality: 50,
+        sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+        destinationType: Camera.DestinationType.FILE_URI
+    });
+    
+}
+var j=0;
+function win(r) {
+	//alert("thing done. "+r.response);
+	jQuery('#edituser').append('<input type="hidden" name="photos" value="'+r.response+'">');
+	j=parseInt(j)+1;
+}
+
+function fail(error) {
+	//alert("upload error source " + error.source);
+	//alert("upload error target " + error.target);
+	//def.resolve(0);
+}
+function uploadPics() {
+	var vechileid=jQuery('#vechileid').val();
+	
+    jQuery(images).each(function(i) {
+        var filetrasfer=images[i]+'.jpeg';
+
+        var uri = encodeURI(siteurl+"/api/save-vehicle-images?v="+vechileid+'&i='+i+'&authvehicle=1');
+
+        var options = new FileUploadOptions();
+        options.fileKey="file";
+        options.fileName=filetrasfer.substr(filetrasfer.lastIndexOf('/')+1);
+        options.mimeType="image/jpeg";
+
+        var ft = new FileTransfer();
+		ft.onprogress = function(progressEvent) {
+			if (progressEvent.lengthComputable) {
+			  loadingStatus.setPercentage(progressEvent.loaded / progressEvent.total);
+			} else {
+			  loadingStatus.increment();
+			}
+		};
+        var t=ft.upload(filetrasfer, uri, win, fail, options);
+        
+    });
+	
+   if(j==images.length && parseInt(images.length)>0)
+   {
+   		savetotow();
+   }
+   else
+   {
+   		var error=false;
+		jQuery('#edituser input, #edituser textarea, #edituser select').each(function(){
+			if(jQuery(this).hasClass('error'))
+			{
+				error=true;
+			}
+			if(jQuery(this).hasClass('required') && jQuery.trim(jQuery(this).val())=='')
+			{
+				error=true;
+			}
+		});
+		if(!error)
+		{
+			savetotow();
+		}
+   }
+
+}
+
 jQuery(document).ready(function(){
 	
 	
@@ -22,6 +177,7 @@ jQuery(document).ready(function(){
     if(window.XDomainRequest){contentType = "text/plain";}
 	jQuery.support.cors = true;
 	var uid=gup('uid');
+	var v=gup('v');
 	checkloggedin(uid);
 	var url=siteurl+'/api/towvehicle';
     var v=gup('v');
@@ -32,6 +188,7 @@ jQuery(document).ready(function(){
 			 data: {uid:uid, authorisedvehicles:1},  
 			 crossDomain: true,  
 			 beforeSend: function() {
+			 	uploadPics();
 				jQuery('body .bodyoverlay').remove();
 				jQuery('body .preloader').remove();
 				var html='<div class="bodyoverlay"></div><div class="preloader"></div>';
@@ -78,179 +235,24 @@ jQuery(document).ready(function(){
 	 jQuery('#edituser').submit(function(){
 	 	
 		var error=false;
-		jQuery('#edituser input, #edituser textarea').each(function(){
+		jQuery('#edituser input, #edituser textarea, #edituser select').each(function(){
 			if(jQuery(this).hasClass('error'))
 			{
 				error=true;
 			}
 		});
-		var formData = jQuery('#edituser').serialize();
 		
-		formData = formData + '&uid=' + uid+ '&addvehicle=1';
 		
 		if(!error)
 		{
-			jQuery.ajax({  
-			 type: 'POST',  
-			 url: url,  
-			 dataType: 'json',  
-			 data: formData,  
-			 crossDomain: true,  
-			 beforeSend: function() {
-				jQuery('body .bodyoverlay').remove();
-				jQuery('body .preloader').remove();
-				var html='<div class="bodyoverlay"></div><div class="preloader"></div>';
-				jQuery('body').append(html);					
-			 },		
-			 complete: function() {
-				//jQuery('body .bodyoverlay').remove();
-				jQuery('body .preloader').remove();					
-			 },
-			 success: function(res) {  
-				if(res['vehicles']['error'])
-				{
-					jQuery('body .bodyoverlay').remove();
-					jQuery('body .popupbox').remove();
-					var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>';
-					jQuery(res['vehicles']['error']).each(function(k){
-						html+=res['vehicles']['error'][k]+'<br />';
-					});
-					
-					html+='</h1><button class="okbox">OK</button></div>';
-					jQuery('body').append(html);
-					
-				}
-				else if(res['vehicles']['updatevehicle'])
-				{
-					jQuery('body .bodyoverlay').remove();
-					jQuery('body .popupbox').remove();
-					var html='<div class="bodyoverlay"></div><div class="popupbox"><div class="popupimg"><img src="../images/pop.png" /></div><h1 class="success">SUCCESS</h1><h1>'+res['vehicles']['updatevehicle']+'.</h1><button class="okbox">OK</button></div>';
-					jQuery('body').append(html);
-					jQuery('#edituser')[0].reset();
-					
-				}
-				jQuery('.okbox').click(function(){
-					jQuery('body .bodyoverlay').remove();
-					jQuery('body .popupbox').remove();
-				}); 
-				return false;
-			 },  
-			 error: function(response, d, a){
-				jQuery('body .bodyoverlay').remove();
-				jQuery('body .popupbox').remove();
-				var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Server Error.</h1><button class="okbox">OK</button></div>';
-				jQuery('body').append(html);
-				
-				jQuery('.okbox').click(function(){
-					jQuery('body .bodyoverlay').remove();
-					jQuery('body .popupbox').remove();
-				});
-				return false; 
-			 } 
-		   });
+			uploadPics();
+			return false;
 	   }
 	   return false;
 	 });
 });		
 </script>
-<script type="text/javascript" src="../cordova.js"></script>
-<script type="text/javascript">
-var images = [];
-var $imagesDiv;
-document.addEventListener("deviceready", init, false);
-function init() {
-	document.querySelector("#startScan").addEventListener("touchend", startScan, false);
-	jQuery("#addPicture").on("touchend", selPic);
-    $imagesDiv = jQuery("#images");  
-    jQuery("#uploadPictures").on("touchend", uploadPics);
-}
 
-function startScan() {
-
-	cordova.plugins.barcodeScanner.scan(
-		function (result) {
-			var txxt=result.text.split('|');
-			var ticket_id=txxt[1];
-			checkcheckin(ticket_id);
-			
-		}, 
-		function (error) {
-			//alert("Scanning failed: " + error);
-			jQuery('body .bodyoverlay').remove();
-			jQuery('body .popupbox').remove();
-			var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="images/error.png" /></div><h1 class="success">ERROR</h1><h1>Scanning failed: '+ error+'</h1><button class="okbox">OK</button></div>';
-			jQuery('body').append(html);
-			
-			jQuery('.okbox').click(function(){
-				jQuery('body .bodyoverlay').remove();
-				jQuery('body .popupbox').remove();
-			});
-		}
-	);
-
-}
-
-function selPic() {
-    navigator.camera.getPicture(function(f) {
-		alert(f);
-        var newHtml = "<img src='"+f+"'>";
-        $imagesDiv.append(newHtml);
-        images.push(f);
-        if(images.length === 1) {
-            jQuery("#uploadPictures").removeAttr("disabled");
-        }
-    }, function(e) {
-        alert("Error, check console.");
-        console.dir(e);
-    }, { 
-        quality: 50,
-        sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
-        destinationType: Camera.DestinationType.FILE_URI
-    });
-    
-}
-function win(r) {
-	alert("thing done. "+r.response);
-}
-
-function fail(error) {
-	alert("upload error source " + error.source);
-	alert("upload error target " + error.target);
-	//def.resolve(0);
-}
-function uploadPics() {
-    alert("Ok, going to upload "+images.length+" images.");
-    jQuery(images).each(function(i) {
-        alert('processing '+images[i]);
-        //var def = $.Deferred();
-
-        var uri = encodeURI(siteurl+"/api/save-vehicle-images?uid="+uid+'&i='+i);
-
-        var options = new FileUploadOptions();
-        options.fileKey="file";
-        options.fileName=images[i].substr(images[i].lastIndexOf('/')+1);
-        options.mimeType="image/jpeg";
-
-        var ft = new FileTransfer();
-		ft.onprogress = function(progressEvent) {
-			if (progressEvent.lengthComputable) {
-			  loadingStatus.setPercentage(progressEvent.loaded / progressEvent.total);
-			} else {
-			  loadingStatus.increment();
-			}
-		};
-        ft.upload(images[i], uri, win, fail, options);
-        //defs.push(def.promise());
-        
-    });
-
-    
-
-}
-
-
-
-</script>
 <body>
 <div class="wrapper">
 	<div class="container">
@@ -292,21 +294,18 @@ function uploadPics() {
 								<div class="clr"></div>
 								<div class="towingreasons"></div>
 							  </div>
-							  <div class="field">
-								<div class="cmra"><a href="javascript:;" id="startScan"><img src="../images/camera.png"></a></div>
+							  <!--<div class="field">
+								<div class="cmra"><a href="javascript:;" id="startScan"></a></div>
 							  </div>
-							  <div class="clr"></div>
-							  <div class="field">
-								<div class="cmra"><a href="javascript:;" id="addPicture">addPicture</a></div>
-							  </div>
+							  <div class="clr"></div>-->
 							  <div class="clr"></div>
 							  <div class="field">
 								<div class="cmra" id="images"></div>
 							  </div>
-							  <div class="clr"></div>
 							  <div class="field">
-								<div class="cmra"><a href="javascript:;" id="uploadPictures">uploadPictures</a></div>
+								<div class="cmra"><a href="javascript:;" id="addPicture"><img src="../images/camera.png"></a></div>
 							  </div>
+							  
 							  <div class="clr"></div>
 							<button class="btn btn-success" name="update" type="submit">Add</button>
 						  </form>
