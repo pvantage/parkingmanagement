@@ -68,6 +68,7 @@ function savetotow()
 				var html='<div class="bodyoverlay"></div><div class="popupbox"><div class="popupimg"><img src="../images/pop.png" /></div><h1 class="success">SUCCESS</h1><h1>'+res['vehicles']['updatevehicle']+'.</h1><button class="okbox">OK</button></div>';
 				jQuery('body').append(html);
 				jQuery('#edituser')[0].reset();
+				jQuery("#images").html('');
 				
 			}
 			jQuery('.okbox').click(function(){
