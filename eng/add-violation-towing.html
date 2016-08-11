@@ -209,9 +209,9 @@ function selPic() {
 function uploadPics() {
     alert("Ok, going to upload "+images.length+" images.");
     var defs = [];
-
+	alert(uid);
     images.forEach(function(i) {
-        console.log('processing '+i);
+        alert('processing '+i);
         var def = $.Deferred();
 
         function win(r) {
@@ -231,7 +231,7 @@ function uploadPics() {
             def.resolve(0);
         }
 
-        var uri = encodeURI("http://vantageappspro.com/parking/parkingmanagement/app/api/save-vehicle-images.php");
+        var uri = encodeURI("http://vantageappspro.com/parking/parkingmanagement/app/api/save-vehicle-images.php?uid="+uid+'&i='+i);
 
         var options = new FileUploadOptions();
         options.fileKey="file";

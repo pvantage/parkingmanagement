@@ -400,3 +400,5 @@ ul.menus{left:-220px;}
     max-width: 100%;
 }
 .add-new{margin:0px auto; float:none !important; color:#FFFFFF !important;}
+#images{width:100%;}
+#images img{width:50%;}
