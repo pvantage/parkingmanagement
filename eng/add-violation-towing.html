@@ -61,6 +61,7 @@ function savetotow()
 			}
 			else if(res['vehicles']['updatevehicle'])
 			{
+				jQuery('#edituser .vphotos').remove();
 				jQuery('body .bodyoverlay').remove();
 				jQuery('body .popupbox').remove();
 				var html='<div class="bodyoverlay"></div><div class="popupbox"><div class="popupimg"><img src="../images/pop.png" /></div><h1 class="success">SUCCESS</h1><h1>'+res['vehicles']['updatevehicle']+'.</h1><button class="okbox">OK</button></div>';
@@ -107,9 +108,13 @@ function selPic() {
 }
 var j=0;
 function win(r) {
-	alert(images.length);
 	jQuery('#edituser').append('<input type="hidden" name="photos" class="vphotos" value="'+r.response+'" />');
 	j=parseInt(j)+1;
+	
+	if(j==images.length)
+	{
+		savetotow();
+	}
 }
 
 function fail(error) {
@@ -142,11 +147,7 @@ function uploadPics() {
     });
 	
 	
-   if(parseInt(images.length)>0)
-   {
-   		//savetotow();
-   }
-   else
+   if(parseInt(images.length)<=0)
    {
    		var error=false;
 		jQuery('#edituser input, #edituser textarea, #edituser select').each(function(){
@@ -161,8 +162,15 @@ function uploadPics() {
 		});
 		if(!error)
 		{
-			//savetotow();
+			savetotow();
 		}
+   }
+   else
+   {
+   		jQuery('body .bodyoverlay').remove();
+		jQuery('body .preloader').remove();
+		var html='<div class="bodyoverlay"></div><div class="preloader"></div>';
+		jQuery('body').append(html);
    }
 
 }
