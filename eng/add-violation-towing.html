@@ -158,9 +158,9 @@ jQuery(document).ready(function(){
 document.addEventListener("deviceready", init, false);
 function init() {
 	document.querySelector("#startScan").addEventListener("touchend", startScan, false);
-	$("#addPicture").on("touchend", selPic);
-    $imagesDiv = $("#images");  
-    $("#uploadPictures").on("touchend", uploadPics);
+	jQuery("#addPicture").on("touchend", selPic);
+    $imagesDiv = jQuery("#images");  
+    jQuery("#uploadPictures").on("touchend", uploadPics);
 }
 
 function startScan() {
@@ -194,7 +194,7 @@ function selPic() {
         $imagesDiv.append(newHtml);
         images.push(f);
         if(images.length === 1) {
-            $("#uploadPictures").removeAttr("disabled");
+            jQuery("#uploadPictures").removeAttr("disabled");
         }
     }, function(e) {
         alert("Error, check console.");
@@ -208,30 +208,28 @@ function selPic() {
 }
 function uploadPics() {
     alert("Ok, going to upload "+images.length+" images.");
-    var defs = [];
-	alert(uid);
     images.each(function(i) {
         alert('processing '+i);
-        var def = $.Deferred();
+        //var def = $.Deferred();
 
         function win(r) {
             alert("thing done");
-            if($.trim(r.response) === "0") {
+            if(jQuery.trim(r.response) === "0") {
                 alert("this one failed");
-                def.resolve(0);
+                //def.resolve(0);
             } else {
                 alert("this one passed");
-                def.resolve(1);
+                //def.resolve(1);
             }
         }
 
         function fail(error) {
             alert("upload error source " + error.source);
             alert("upload error target " + error.target);
-            def.resolve(0);
+            //def.resolve(0);
         }
 
-        var uri = encodeURI("http://vantageappspro.com/parking/parkingmanagement/app/api/save-vehicle-images.php?uid="+uid+'&i='+i);
+        var uri = encodeURI(siteurl+"/api/save-vehicle-images?uid="+uid+'&i='+i);
 
         var options = new FileUploadOptions();
         options.fileKey="file";
@@ -240,14 +238,11 @@ function uploadPics() {
 
         var ft = new FileTransfer();
         ft.upload(i, uri, win, fail, options);
-        defs.push(def.promise());
+        //defs.push(def.promise());
         
     });
 
-    $.when.apply($, defs).then(function() {
-        alert("all things done");
-        console.dir(arguments);
-    });
+    
 
 }
 
