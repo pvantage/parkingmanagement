@@ -74,7 +74,7 @@ function savetotow()
 				jQuery('body').append(html);
 				jQuery('#edituser')[0].reset();
 				jQuery("#images").html('');
-				navigator.notification.beep(times);
+				navigator.notification.beep(1);
 				jQuery('.okbox').click(function(){
 					window.location='report-unathorized-vehicle.html?uid='+uid+'&usertype='+usertype;
 				});
