@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>Add Vehicle</title>
+<title>Add Unauthorized Tow Vehicle</title>
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,100italic,300,100,300italic,400italic,500,500italic,700,700italic,900italic,900' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" type="text/css" href="../style.css">
 </head>
@@ -59,6 +59,11 @@ function savetotow()
 				html+='</h1><button class="okbox">OK</button></div>';
 				jQuery('body').append(html);
 				
+				jQuery('.okbox').click(function(){
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .popupbox').remove();
+				});
+				
 			}
 			else if(res['vehicles']['updatevehicle'])
 			{
@@ -70,10 +75,12 @@ function savetotow()
 				jQuery('#edituser')[0].reset();
 				jQuery("#images").html('');
 				
+				jQuery('.okbox').click(function(){
+					window.location='add-violation-towing.html?uid='+uid+'&usertype='+usertype;
+				});
+				
 			}
-			jQuery('.okbox').click(function(){
-				window.location='add-violation-towing.html?uid='+uid+'&usertype='+usertype;
-			}); 
+			 
 			return false;
 		 },  
 		 error: function(response, d, a){
@@ -308,7 +315,7 @@ jQuery(document).ready(function(){
 			<div class="content_div manager_search">
 				
 				<div class="inner_content"><!--------------------------inner_content------------------------------------------->
-					<h4 class="search_headng">ADD VEHICLE</h4>
+					<h4 class="search_headng">Add Unauthorized Tow Vehicle</h4>
 					   <div class="select_div">
 						  <form name="edituser" id="edituser" action="" method="post">
 							<div class="unauthorized">
@@ -371,7 +378,7 @@ jQuery(document).ready(function(){
 							<button class="btn btn-success" name="update" type="submit">Add</button>
 						  </form>
 					   </div>
-				</div>.
+				</div>
 			</div>
 		
 	</div>

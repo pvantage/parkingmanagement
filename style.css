@@ -302,7 +302,7 @@ font-size: 20px;
   background: url(images/loading.gif) no-repeat #FFFFFF;
   margin: 0 auto;
   width: 200px;
-  position:absolute;
+  position:fixed;
   left:50%;
   margin-left:-100px;
   top:50px;
@@ -359,13 +359,13 @@ font-size: 20px;
   padding: 10px 0;
   position: absolute;
   top: 32px;
-  width: 200px;
+  width: 240px;
 }
 .menu_div > ul {
   position: absolute;
   top: 33px;
 }
-ul.menus{left:-220px;}
+ul.menus{left:-260px;}
 .superadmin, .admin, .driver, .userf{display:none;}
 .buttons, button, .btn {
     margin-bottom: 5px;

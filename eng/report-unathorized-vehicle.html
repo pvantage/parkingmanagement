@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>Add Violation Towing</title>
+<title>Report Unauthorized Vehicle</title>
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,100italic,300,100,300italic,400italic,500,500italic,700,700italic,900italic,900' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" type="text/css" href="../style.css">
 </head>
@@ -25,11 +25,11 @@ var images = [];
 var $imagesDiv;
 function savetotow()
 {
-	var url=siteurl+'/api/towvehicle';
+	var url=siteurl+'/api/parking-violation';
 	var formData = jQuery('#edituser').serialize();
 	
 	
-	formData = formData + '&uid=' + uid + '&authsubmit=1';
+	formData = formData + '&uid=' + uid + '&unauthsubmit=1';
 	jQuery.ajax({  
 		 type: 'POST',  
 		 url: url,  
@@ -63,23 +63,24 @@ function savetotow()
 					jQuery('body .bodyoverlay').remove();
 					jQuery('body .popupbox').remove();
 				});
+				
 			}
 			else if(res['vehicles']['updatevehicle'])
 			{
 				jQuery('#edituser .vphotos').remove();
 				jQuery('body .bodyoverlay').remove();
 				jQuery('body .popupbox').remove();
-				var html='<div class="bodyoverlay"></div><div class="popupbox"><div class="popupimg"><img src="../images/pop.png" /></div><h1 class="success">SUCCESS</h1><h1>'+res['vehicles']['updatevehicle']+'.</h1><button class="okbox">OK</button></div>';
+				var html='<div class="bodyoverlay"></div><div class="popupbox"><div class="popupimg"><img src="../images/pop.png" /></div><h1 class="success">SUCCESS</h1><h1>'+res['vehicles']['updatevehicle']+'</h1><button class="okbox">OK</button></div>';
 				jQuery('body').append(html);
 				jQuery('#edituser')[0].reset();
 				jQuery("#images").html('');
 				
 				jQuery('.okbox').click(function(){
-					window.location='add-violation-towing.html?uid='+uid+'&usertype='+usertype;
-				}); 
+					window.location='report-unathorized-vehicle.html?uid='+uid+'&usertype='+usertype;
+				});
 				
 			}
-			
+			 
 			return false;
 		 },  
 		 error: function(response, d, a){
@@ -142,7 +143,7 @@ function uploadPics() {
     jQuery(images).each(function(i) {
         var filetrasfer=images[i];
 
-        var uri = encodeURI(siteurl+"/api/save-vehicle-images?v="+vechileid+'&i='+i+'&authvehicle=1');
+        var uri = encodeURI(siteurl+"/api/save-vehicle-images?uid="+uid+'&i='+i+'&unauthvehicle=1');
 
         var options = new FileUploadOptions();
         options.fileKey="file";
@@ -201,13 +202,13 @@ jQuery(document).ready(function(){
 	var uid=gup('uid');
 	var v=gup('v');
 	checkloggedin(uid);
-	var url=siteurl+'/api/towvehicle';
+	var url=siteurl+'/api/parking-violation';
     var v=gup('v');
 		jQuery.ajax({  
 			 type: 'POST',  
 			 url: url,  
 			 dataType: 'json',  
-			 data: {uid:uid, authorisedvehicles:1},  
+			 data: {uid:uid, unauthorisedvehicles:1},  
 			 crossDomain: true,  
 			 beforeSend: function() {
 				jQuery('body .bodyoverlay').remove();
@@ -222,22 +223,13 @@ jQuery(document).ready(function(){
 			 success: function(res) {  
 				
 				jQuery('body .bodyoverlay').remove();
-				jQuery(res['vehiclelist']).each(function(k){
-					jQuery('#vechileid').append('<option value="'+res['vehiclelist'][k]['id']+'">'+res['vehiclelist'][k]['name']+'</option>');
-				});
-				jQuery('#vechileid').val(v);
 				
-				jQuery(res['trucklist']).each(function(k){
-					jQuery('#truckid').append('<option value="'+res['trucklist'][k]['id']+'">'+res['trucklist'][k]['name']+'</option>');
-				});
-				jQuery(res['storagelist']).each(function(k){
-					jQuery('#storage_id').append('<option value="'+res['storagelist'][k]['id']+'">'+res['storagelist'][k]['name']+'</option>');
-				});
 				var treson=''
 				jQuery(res['towingreasons']).each(function(k){
 					treson+='<label><input type="checkbox" name="towingreasons[]" value="'+res['towingreasons'][k]+'" />'+res['towingreasons'][k]+'</label><div class="clr"></div>';
 				});
 				jQuery('.towingreasons').html(treson);
+				
 				jQuery('body .popupbox').remove();
 			 },  
 			 error: function(response, d, a){
@@ -272,6 +264,22 @@ jQuery(document).ready(function(){
 	   }
 	   return false;
 	 });
+	 jQuery('#vechileid2').change(function(){
+		var vechileid2=jQuery(this).val();
+		if(jQuery.trim(vechileid2)==''){
+			jQuery('.unauthorized input,.unauthorized select').attr('disabled',false);
+			jQuery('.unauthorized input,.unauthorized select').addClass('required');
+		}
+		else
+		{
+			jQuery('.unauthorized input,.unauthorized select').attr('disabled',true);
+			jQuery('.unauthorized input,.unauthorized select').removeClass('required');
+			
+		}
+		jQuery(this).attr('disabled',false);
+		jQuery(this).removeClass('required');
+	});
+	setTimeout(function(){jQuery('#vechileid2').trigger('change');},500);
 });		
 </script>
 
@@ -292,24 +300,29 @@ jQuery(document).ready(function(){
 			<div class="content_div manager_search">
 				
 				<div class="inner_content"><!--------------------------inner_content------------------------------------------->
-					<h4 class="search_headng">Add Violation Towing</h4>
+					<h4 class="search_headng">Report Unauthorized Vehicle</h4>
 					   <div class="select_div">
 						  <form name="edituser" id="edituser" action="" method="post">
-							<div class="field unauthorized">
-								<select class="selectpicker form-control required" name="vechileid" id="vechileid">
-								  <option data-tokens="" value="">Select Vehicle</option>
-								</select>
-							</div>
 							  <div class="field">
-								<select class="selectpicker form-control required" name="truckid" id="truckid" data-live-search="true">
-								  <option data-tokens="" value="">Select Truck</option>
-							    </select>
+								<input type="text" name="vinnumber" placeholder="Vin Number" class="form-control">
+							  </div>
+							  <div class="field">
+								<input type="text" name="tagnumber" placeholder="License No" class="form-control required">
+							  </div>
+							  <div class="field">
+								<input type="text" name="make" placeholder="Make" class="form-control required">
+							  </div>
+							  <div class="field">
+								<input type="text" name="model" placeholder="Model" class="form-control required">
+							  </div>
+							  <div class="field">
+								<input type="text" name="color" placeholder="Color" class="form-control required">
 							  </div>
 							  
+							  
+							  
 							  <div class="field">
-								<select class="selectpicker form-control required" name="storage_id" id="storage_id" data-live-search="true">
-								  <option data-tokens="" value="">Select Storage</option>
-								</select>
+								<textarea rows="2" cols="100" class="form-control" name="notes" id="notes" placeholder="Note"></textarea>
 								</div>
 							  <div class="field">
 							  	<label for="treasons">Towing Reasons</label>

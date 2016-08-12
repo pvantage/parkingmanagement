@@ -21,10 +21,11 @@ jQuery(document).ready(function(){
 	var contentType ="application/x-www-form-urlencoded; charset=utf-8";
     if(window.XDomainRequest){contentType = "text/plain";}
 	jQuery.support.cors = true;
+	var uid=gup('uid');
 	checkloggedin(uid);
 	var url=siteurl+'/api/users';
     
-	var uid=gup('uid');
+	
 	var usertype=gup('usertype');
 	var addnewuser=jQuery('#addnewuser').attr('href');
 	jQuery('#addnewuser').attr('href',addnewuser+'?uid='+uid+'&usertype='+usertype);
