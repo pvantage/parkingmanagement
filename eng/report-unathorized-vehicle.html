@@ -143,7 +143,7 @@ function uploadPics() {
     jQuery(images).each(function(i) {
         var filetrasfer=images[i];
 
-        var uri = encodeURI(siteurl+"/api/save-vehicle-images?uid="+uid+'&i='+i+'&unauthvehicle=1');
+        var uri = encodeURI(siteurl+"/api/save-vehicle-images?uid="+uid+'&i='+i+'&unauthvoilationvehicle=1');
 
         var options = new FileUploadOptions();
         options.fileKey="file";
