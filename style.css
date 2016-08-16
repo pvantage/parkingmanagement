@@ -311,6 +311,7 @@ font-size: 20px;
   line-height:300px;
   text-align:center;
   color:#0C5DC6;
+  border-radius:50%;
 }
 
 #towingdetails img{max-width:100px;}
