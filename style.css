@@ -299,7 +299,7 @@ font-size: 20px;
 .popupbox.errorbox h1{color:#FF0000;}
 .bodyoverlay{position:fixed; height:100%; width:100%; background:#000000; opacity:0.8; z-index:99999; top:0px; left:0px; display:block;}
 .preloader {
-  background: url(images/loading.gif) no-repeat #FFFFFF scroll 46px center;
+  background: url(images/loading.gif) no-repeat #FFFFFF scroll 50px center;
   margin: 0 auto;
   width: 200px;
   position:fixed;
