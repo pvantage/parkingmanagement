@@ -26,7 +26,7 @@ function driver_menus(para)
 		menu+='<li><a href="unauthorized-vehicles.html'+para+'">Unauthorized Vehicles</a></li>';
 		menu+='<li><a href="inactive-vehicles.html'+para+'">Inactive Vehicles</a></li>';
 		menu+='<li><a href="my-account.html'+para+'">My Account</a></li>';
-		menu+='<li><a href="../index.html">Log Out</a></li>';
+		menu+='<li><a href="logout.html'+para+'">Log Out</a></li>';
 	return menu;
 }
 function manager_menus(para)
@@ -38,7 +38,7 @@ function manager_menus(para)
 		menu+='<li><a href="my-account.html'+para+'">My Account</a></li>';
 		menu+='<li><a href="report-parking-violation.html'+para+'">Report Parking Violation</a></li>';
 		menu+='<li><a href="report-unathorized-vehicle.html'+para+'">Report Unauthorized Vehicle</a></li>';
-		menu+='<li><a href="../index.html">Log Out</a></li>';
+		menu+='<li><a href="logout.html'+para+'">Log Out</a></li>';
 	return menu;
 }
 
@@ -142,7 +142,7 @@ function activdeactivvehicle()
 				jQuery('body').append(html);					
 			 },		
 			 complete: function() {
-				jQuery('body .bodyoverlay').remove();
+				//jQuery('body .bodyoverlay').remove();
 				jQuery('body .preloader').remove();					
 			 },
 			 success: function(res) {  

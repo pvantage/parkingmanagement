@@ -73,6 +73,11 @@ jQuery(document).ready(function(){
 					}
 					html+='</div></div>';
 			   });
+			   if(parseInt(res['users']['total'])>(parseInt(res['users']['pageid'])*parseInt(res['users']['userlist'].length)))
+			   {
+			   		var pageid=parseInt(res['users']['pageid'])+1;
+			   		html+='<a href="javascript:;" class="loadmore" pageid="'+pageid+'">Load More</a>';
+			   }
 			   jQuery('.userlisting').html(html);
 				
 				activdeactivuser();
@@ -91,6 +96,76 @@ jQuery(document).ready(function(){
 			}); 
          } 
        });
+	  
+	  jQuery('a.loadmore').live('click',function(){
+		var pageid=jQuery(this).attr('pageid');
+		var $this=jQuery(this);
+		jQuery.ajax({ 
+			 type: 'POST',  
+			 url: url,  
+			 //contentType: contentType,  
+			 dataType: 'json',  
+			 data: {uid:uid,show:pageid},  
+			 crossDomain: true,  
+			 beforeSend: function() {
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .preloader').remove();
+				var html='<div class="bodyoverlay"></div><div class="preloader"></div>';
+				jQuery('body').append(html);					
+			 },		
+			 complete: function() {
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .preloader').remove();					
+			 },
+			 success: function(res) {  
+			   if(res['users']['userlist'])
+			   {
+					var html='';
+					jQuery(res['users']['userlist']).each(function(index){
+						html+='<div class="mnger_frst"><div class="list"><ul><li><strong>ID:</strong> <p>'+res['users']['userlist'][index]['id']+'</p></li><li><strong>Name:</strong> <p>'+res['users']['userlist'][index]['name']+'</p></li><li><strong>Username:</strong> <p>'+res['users']['userlist'][index]['username']+'</p></li><li><strong>Email:</strong> <p>'+res['users']['userlist'][index]['email']+'</p></li><li><strong>Phone Number:</strong> <p>'+res['users']['userlist'][index]['phone']+'</p></li></ul></div><div class="overlay_div">';
+						if(res['users']['userlist'][index]['status']!='24' && res['users']['userlist'][index]['status']!='25'){
+							if(res['users']['userlist'][index]['status']=='0'){
+								html+='<a href="javascript:;" class="activdeactivuser" coords="0" vid="'+res['users']['userlist'][index]['id']+'"><i class="fa fa-times"></i></a>';
+							}
+							else if(res['users']['userlist'][index]['status']=='1'){
+								html+='<a href="javascript:;" class="activdeactivuser" coords="1" vid="'+res['users']['userlist'][index]['id']+'"><i class="fa fa-check"></i></a>';
+							}
+						}
+						if(usertype=='admin' || usertype=='user')
+						{
+							html+='<a href="edit-user.html?uid='+uid+'&v='+res['users']['userlist'][index]['id']+'&usertype='+usertype+'"><i class="fa fa-pencil"></i></a>';
+						}
+						else
+						{
+							html+='<a href="user-detail.html?uid='+uid+'&v='+res['users']['userlist'][index]['id']+'&usertype='+usertype+'"><i class="fa fa-eye"></i></a>';
+						}
+						html+='</div></div>';
+				   });
+				   if(parseInt(res['users']['total'])>(parseInt(res['users']['pageid'])*parseInt(res['users']['userlist'].length)))
+				   {
+						var pageid=parseInt(res['users']['pageid'])+1;
+						html+='<a href="javascript:;" class="loadmore" pageid="'+pageid+'">Load More</a>';
+				   }
+				   jQuery('.userlisting').append(html);
+					
+					activdeactivuser();
+					
+				}
+				jQuery($this).remove();
+			 },  
+			 error: function(response, d, a){
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .popupbox').remove();
+				var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Server Error.</h1><button class="okbox">OK</button></div>';
+				jQuery('body').append(html);
+				
+				jQuery('.okbox').click(function(){
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .popupbox').remove();
+				}); 
+			 } 
+		   });
+	});
 });		
 </script>
 <body>

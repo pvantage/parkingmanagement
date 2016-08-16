@@ -43,7 +43,7 @@ jQuery(document).ready(function(){
 	}
 	jQuery('#usertype').val(usertype);
 	jQuery.ajax({  
-         type: 'GET',  
+         type: 'POST',  
          url: url,  
          //contentType: contentType,  
          dataType: 'json',  
@@ -70,6 +70,11 @@ jQuery(document).ready(function(){
 					}
 					html+='</div></div>';
 			   });
+			   if(parseInt(res['vehicles']['total'])>(parseInt(res['vehicles']['pageid'])*parseInt(res['vehicles']['vehiclelist'].length)))
+			   {
+			   		var pageid=parseInt(res['vehicles']['pageid'])+1;
+			   		html+='<a href="javascript:;" class="loadmore" pageid="'+pageid+'">Load More</a>';
+			   }
 			   jQuery('.vehiclelisting').html(html);
 				   
 			}
@@ -90,6 +95,77 @@ jQuery(document).ready(function(){
 			}); 
          } 
        });
+	  
+	  jQuery('a.loadmore').live('click',function(){
+		var pageid=jQuery(this).attr('pageid');
+		var $this=jQuery(this);
+		jQuery.ajax({ 
+			 type: 'POST',  
+			 url: url,  
+			 //contentType: contentType,  
+			 dataType: 'json',  
+			 data: {uid:uid,selectoption:selectoption,vtype:vtype,searcht:searcht,show:pageid},  
+			 crossDomain: true,  
+			 beforeSend: function() {
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .preloader').remove();
+				var html='<div class="bodyoverlay"></div><div class="preloader"></div>';
+				jQuery('body').append(html);					
+			 },		
+			 complete: function() {
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .preloader').remove();					
+			 },
+			 success: function(res) {  
+			   if(res['vehicles']['vehiclelist'])
+			   {
+					var html='';
+					
+					jQuery(res['vehicles']['vehiclelist']).each(function(index){
+						html+='<div class="mnger_frst"><div class="list"><ul><li><strong>Vin Number:</strong> <p>'+res['vehicles']['vehiclelist'][index]['vinnumber']+'</p></li><li><strong>License No:</strong> <p>'+res['vehicles']['vehiclelist'][index]['tagnumber']+'</p></li><li><strong>Model:</strong> <p>'+res['vehicles']['vehiclelist'][index]['model']+'</p></li><li><strong>Color:</strong> <p>'+res['vehicles']['vehiclelist'][index]['color']+'</p></li></ul></div><div class="overlay_div">';
+						if(res['vehicles']['vehiclelist'][index]['status']!='24' && res['vehicles']['vehiclelist'][index]['status']!='25'){
+							if(res['vehicles']['vehiclelist'][index]['status']=='0'){
+								html+='<a href="javascript:;" class="activdeactivvehicle" coords="0" vid="'+res['vehicles']['vehiclelist'][index]['id']+'"><i class="fa fa-times"></i></a>';
+							}
+							else if(res['vehicles']['vehiclelist'][index]['status']=='1'){
+								html+='<a href="javascript:;" class="activdeactivvehicle" coords="1" vid="'+res['vehicles']['vehiclelist'][index]['id']+'"><i class="fa fa-check"></i></a>';
+							}
+						}
+						if(usertype=='admin' || usertype=='user')
+						{
+							html+='<a href="edit-authorized-vehicle.html?uid='+uid+'&v='+res['vehicles']['vehiclelist'][index]['id']+'&usertype='+usertype+'"><i class="fa fa-pencil"></i></a>';
+							//html+='<a href="print-vehicle.html?uid='+uid+'&v='+res['vehicles']['vehiclelist'][index]['id']+'&usertype='+usertype+'"><i class="fa fa-print"></i></a>';
+						}
+						else
+						{
+							html+='<a href="authorized-vehicle-detail.html?uid='+uid+'&v='+res['vehicles']['vehiclelist'][index]['id']+'&usertype='+usertype+'"><i class="fa fa-eye"></i></a>';
+						}
+						html+='</div></div>';
+				   });
+				   if(parseInt(res['vehicles']['total'])>(parseInt(res['vehicles']['pageid'])*parseInt(res['vehicles']['vehiclelist'].length)))
+				   {
+						var pageid=parseInt(res['vehicles']['pageid'])+1;
+						html+='<a href="javascript:;" class="loadmore" pageid="'+pageid+'">Load More</a>';
+				   }
+				   jQuery('.vehiclelisting').append(html);
+				   
+				}
+				jQuery($this).remove();
+				
+			 },  
+			 error: function(response, d, a){
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .popupbox').remove();
+				var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Server Error.</h1><button class="okbox">OK</button></div>';
+				jQuery('body').append(html);
+				
+				jQuery('.okbox').click(function(){
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .popupbox').remove();
+				}); 
+			 } 
+		   });
+	});
 });		
 </script>
 <body>

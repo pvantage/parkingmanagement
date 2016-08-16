@@ -36,8 +36,14 @@ jQuery(document).ready(function(){
 			 dataType: 'json',  
 			 data: {uname:user_login,pwd:user_pass,loginuser:1}, 
 			 beforeSend: function() {
+			 	jQuery('body .bodyoverlay').remove();
+				jQuery('body .preloader').remove();
+				var html='<div class="bodyoverlay"></div><div class="preloader"></div>';
+				jQuery('body').append(html);
 			 },		
 			 complete: function() {
+			 	//jQuery('body .bodyoverlay').remove();
+				jQuery('body .preloader').remove();
 			 }, 
 			 crossDomain: true,  
 			 success: function(res) { 
