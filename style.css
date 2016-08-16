@@ -456,11 +456,7 @@ margin-top:0px;
 .select_div {
 margin-top: 0;
 }
-.inner_content .btn.btn-success.btn-sm {
-  float: none;
-  margin: 0 auto;
-  width: 50%;
-}
+
 
 .wrapper {
   float: left;
@@ -533,3 +529,6 @@ font-size: 20px;
 }
 }
 
+.m-signature-pad--body > img {
+    width: 100%;
+}
