@@ -299,7 +299,7 @@ font-size: 20px;
 .popupbox.errorbox h1{color:#FF0000;}
 .bodyoverlay{position:fixed; height:100%; width:100%; background:#000000; opacity:0.8; z-index:99999; top:0px; left:0px; display:block;}
 .preloader {
-  background: url(images/loading.gif) no-repeat #FFFFFF;
+  background: url(images/loading.gif) no-repeat #FFFFFF scroll 46px center;
   margin: 0 auto;
   width: 200px;
   position:fixed;
@@ -308,6 +308,9 @@ font-size: 20px;
   top:50px;
   height:200px;
   z-index:999999;
+  line-height:300px;
+  text-align:center;
+  color:#0C5DC6;
 }
 
 #towingdetails img{max-width:100px;}
@@ -403,5 +406,3 @@ ul.menus{left:-260px;}
 #images img{width:100%;}
 #images .img{width:100%; position:relative;}
 #images .closeimg{position:absolute; right:14px; width:20px; border-radius:50%; height:20px; top:10px; display:block; background:#FFFFFF; color:#FF0000; font-weight:bold; font-size:20px;}
-.progresbar{width:100%; position:fixed; top:100px; left:0px; z-index:999999999; background:#FFFFFF;}
-.formbar{width:0px; height:20px; position:relative; background:#000000; color:#FFFFFF; text-align:center; margin:5px 2px;}

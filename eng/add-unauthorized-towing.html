@@ -31,21 +31,7 @@ function savetotow()
 	
 	formData = formData + '&uid=' + uid + '&unauthsubmit=1';
 	jQuery.ajax({
-		 xhr: function() {
-			var xhr = new window.XMLHttpRequest();
-		
-			xhr.upload.addEventListener("progress", function(evt) {
-			  if (evt.lengthComputable) {
-				var percentComplete = evt.loaded / evt.total;
-				percentComplete = parseInt(percentComplete * 100);
-				jQuery('.formbar').css({'width':percentComplete+'%'});
-				jQuery('.formbar').html(percentComplete);
-		
-			  }
-			}, false);
-		
-			return xhr;
-		  },  
+	  
 		 type: 'POST',  
 		 url: url,  
 		 dataType: 'json',  
@@ -54,18 +40,18 @@ function savetotow()
 		 beforeSend: function() {
 			jQuery('body .bodyoverlay').remove();
 			jQuery('body .preloader').remove();
-			var html='<div class="bodyoverlay"></div><div class="progresbar"><div class="formbar"></div></div>';
+			var html='<div class="bodyoverlay"></div><div class="preloader"></div>';
 			jQuery('body').append(html);					
 		 },
 		 	
 		 complete: function() {
 			//jQuery('body .bodyoverlay').remove();
-			//jQuery('body .preloader').remove();					
+			jQuery('body .preloader').remove();					
 		 },
 		 success: function(res) {  
 			if(res['vehicles']['error'])
 			{
-				/*jQuery('body .bodyoverlay').remove();
+				jQuery('body .bodyoverlay').remove();
 				jQuery('body .popupbox').remove();
 				var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>';
 				jQuery(res['vehicles']['error']).each(function(k){
@@ -78,12 +64,12 @@ function savetotow()
 				jQuery('.okbox').click(function(){
 					jQuery('body .bodyoverlay').remove();
 					jQuery('body .popupbox').remove();
-				});*/
+				});
 				
 			}
 			else if(res['vehicles']['updatevehicle'])
 			{
-				/*jQuery('#edituser .vphotos').remove();
+				jQuery('#edituser .vphotos').remove();
 				jQuery('body .bodyoverlay').remove();
 				jQuery('body .popupbox').remove();
 				var html='<div class="bodyoverlay"></div><div class="popupbox"><div class="popupimg"><img src="../images/pop.png" /></div><h1 class="success">SUCCESS</h1><h1>'+res['vehicles']['updatevehicle']+'.</h1><button class="okbox">OK</button></div>';
@@ -93,7 +79,7 @@ function savetotow()
 				
 				jQuery('.okbox').click(function(){
 					window.location='add-violation-towing.html?uid='+uid+'&usertype='+usertype;
-				});*/
+				});
 				
 			}
 			 
@@ -200,7 +186,7 @@ function uploadPics() {
    {
    		jQuery('body .bodyoverlay').remove();
 		jQuery('body .preloader').remove();
-		var html='<div class="bodyoverlay"></div><div class="preloader"></div>';
+		var html='<div class="bodyoverlay"></div><div class="preloader">Please wait while <br />uploading form</div>';
 		jQuery('body').append(html);
    }
 
