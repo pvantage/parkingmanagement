@@ -73,7 +73,7 @@ function savetotow()
 				jQuery('body').append(html);
 				jQuery('#edituser')[0].reset();
 				jQuery("#images").html('');
-				
+				navigator.notification.beep(1);
 				jQuery('.okbox').click(function(){
 					window.location='add-violation-towing.html?uid='+uid+'&usertype='+usertype;
 				}); 
@@ -183,7 +183,7 @@ function uploadPics() {
    {
    		jQuery('body .bodyoverlay').remove();
 		jQuery('body .preloader').remove();
-		var html='<div class="bodyoverlay"></div><div class="preloader"></div>';
+		var html='<div class="bodyoverlay"></div><div class="preloader"><br /><br /><br /><br /><br /><br /><br />Please wait while <br />uploading form</div>';
 		jQuery('body').append(html);
    }
 
