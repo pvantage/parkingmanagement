@@ -80,6 +80,9 @@ background: #fcfcfc none repeat scroll 0 0;
   margin-bottom: 13px;
   width: 100%;
 }
+.inner_content .mnger_frst li {
+  margin-bottom: 0px;
+}
 .inner_content label {
   font-size: 15px;
   font-weight: 600;
@@ -204,8 +207,12 @@ background: #fcfcfc none repeat scroll 0 0;
 .mnger_frst:hover {
   background: rgba(225, 225, 225, 0.3) none repeat scroll 0 0;
   box-sizing: border-box;
-  padding: 0 10px;
-  z-index: 999999999;
+  padding: 5px 10px;
+}
+.mnger_frst {
+  background:#ffffff;
+  box-sizing: border-box;
+  padding: 5px 10px;
 }
 .select_div select {
   margin: 0 auto 20px;
