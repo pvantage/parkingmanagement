@@ -15,6 +15,7 @@ background: #fcfcfc none repeat scroll 0 0;
   float: left;
   padding: 0 20px;
   width: 100%;
+  
 }
 .wrapper {
   float: left;
@@ -104,8 +105,15 @@ background: #fcfcfc none repeat scroll 0 0;
   text-transform: uppercase;
   width: 100%;
 }
-.inner_content input[type="text"],.inner_content input[type="password"] {
+.inner_content input[type="text"], .inner_content input[type="password"] {
   background: #f1d4d6 none repeat scroll 0 0;
+  border: 1px solid #f1d4d6;
+  border-radius: 0;
+  color: #000;
+  height: auto;
+  line-height: 26px;
+  margin-bottom: 8px;
+  padding: 7px 13px;
 }
 .inner_content input {
   border: medium none;
@@ -195,6 +203,8 @@ background: #fcfcfc none repeat scroll 0 0;
 }
 .mnger_frst:hover {
   background: rgba(225, 225, 225, 0.3) none repeat scroll 0 0;
+  box-sizing: border-box;
+  padding: 0 10px;
   z-index: 999999999;
 }
 .select_div select {
@@ -207,54 +217,38 @@ background: #fcfcfc none repeat scroll 0 0;
   margin-top: 23px;
   width: 100%;
 }
-
-/********************************************responsive startss***************************************************************/
-@media only screen and (max-width:1024px) {
-.wrapper {
-  float: left;
+/*********************************16-08-2016****************************************/
+.logo_div {
+margin-top: 30px;
+}
+.lang_div {
+  float: right;
   margin-top: 20px;
-  width: 100%;
+  width: 65%;
 }
+.fa {
+  font-size: 24px !important;
 }
-@media only screen and (max-width: 480px) {
-.wrapper {
-  float: left;
-  width: 100%;
+#vehicle_search.form-control {
+  border: medium none;
+  border-radius: 0;
+  color: #000;
+  height: auto;
+  padding: 4px 13px;
 }
-.content_div h3 {
-width: auto;
-}
-.inner_content input {
-width: 57%;
-}
-.detail_div {
-  float: left;
-  margin: 0 auto;
-  width: 100%;
-}
-}
-@media only screen and (max-width: 360px) {
-.driver_login .inner_content input {
-  float: left;
-  width: 57%;
-}
-.driver_login .inner_content label {
-  float: left;
-  text-align: left;
-  width: auto;
-}
-.inner_content strong {
-  font-size: 18px;
-}
-.content_div h3 {
-font-size: 20px;
-}
-.inner_content .list strong {
-  float: left;
-  width: 100%;
-}
+.patent_submit .btn {
+  background: #fe0000 none repeat scroll 0 0;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 9px 4px;
+  text-align: center;
+  text-transform: capitalize;
 }
 
+/******************************************sir css********************************************************************/
 .popupimg{ text-align:center; width:100%;}
 .okbox {
   background: #55cccc none repeat scroll 0 0;
@@ -299,7 +293,7 @@ font-size: 20px;
 .popupbox.errorbox h1{color:#FF0000;}
 .bodyoverlay{position:fixed; height:100%; width:100%; background:#000000; opacity:0.8; z-index:99999; top:0px; left:0px; display:block;}
 .preloader {
-  background: url(images/loading.gif) no-repeat #FFFFFF scroll 50px center;
+   background: url(images/loading.gif) no-repeat #FFFFFF scroll 50px center;
   margin: 0 auto;
   width: 200px;
   position:fixed;
@@ -315,22 +309,35 @@ font-size: 20px;
 
 #towingdetails img{max-width:100px;}
 .clr{clear:both;}
-.field{margin:5px auto; width:50%;}
+.field {
+  line-height: 31px;
+  margin: 5px auto 16px;
+  text-align: left;
+  width: 50%;
+}
 .field .form-control {
-    background-color: #fff;
-    background-image: none;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    color: #555;
-    display: block;
-    font-size: 14px;
-    height: 25px;
-    padding: 2px 1px;
-    width: 100%;
-	line-height: 30px;
+  background-color: #f1d4d6;
+  background-image: none;
+  border: 0 none;
+  border-radius: 0;
+  box-sizing: border-box;
+  color: #000;
+  display: block;
+  font-size: 14px;
+  height: 25px;
+  line-height: 30px;
+  padding: 2px 5px;
+  width: 100%;
+}
+.m-signature-pad--body canvas {
+  background: #f1d4d6 none repeat scroll 0 0;
 }
 .field select.form-control {
-	height: 30px;
+  background: #f1d4d6 none repeat scroll 0 0;
+  border: 1px solid #f1d4d6;
+  border-radius: 0;
+  height: auto;
+  padding: 10px 18px;
 }
 .field textarea.form-control {
 	height: 100px;
@@ -378,9 +385,12 @@ ul.menus{left:-260px;}
     border-radius: 0;
 }
 .btn-success {
-    background-color: #5cb85c;
-    border-color: #4cae4c;
-    color: #fff;
+  background-color: #5cb85c;
+  border-color: #4cae4c;
+  color: #fff;
+  font-size: 17px;
+  margin-top: 13px;
+
 }
 .btn {
     -moz-user-select: none;
@@ -401,8 +411,125 @@ ul.menus{left:-260px;}
 .item > img {
     max-width: 100%;
 }
-.add-new{margin:0px auto; float:none !important; color:#FFFFFF !important;}
+.inner_content .add-new {
+  color: #fff;
+  float: none;
+  font-family: "Roboto",sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  margin: 0 auto;
+}
 #images{width:100%;}
 #images img{width:100%;}
 #images .img{width:100%; position:relative;}
 #images .closeimg{position:absolute; right:14px; width:20px; border-radius:50%; height:20px; top:10px; display:block; background:#FFFFFF; color:#FF0000; font-weight:bold; font-size:20px;}
+
+/********************************************responsive startss***************************************************************/
+@media only screen and (max-width:1024px) {
+.wrapper {
+  float: left;
+  margin-top: 20px;
+  width: 100%;
+}
+.inner_content {
+margin-top:0px;
+}
+}
+@media only screen and (max-width: 480px) {
+.inner_content strong {
+  font-size: 18px;
+  margin-top: 15px;
+}
+.inner_content .towingreasons input {
+  width: 14%;
+  float: none;
+}
+.inner_content .towingreasons label {
+  float: left;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 30px;
+  margin-right: 14px;
+  text-transform: uppercase;
+  width: 100%;
+}
+.select_div {
+margin-top: 0;
+}
+.inner_content .btn.btn-success.btn-sm {
+  float: none;
+  margin: 0 auto;
+  width: 50%;
+}
+
+.wrapper {
+  float: left;
+  width: 100%;
+}
+.content_div h3 {
+  float: left;
+  width: 100%;
+}
+.inner_content input {
+width: 57%;
+}
+.detail_div {
+  float: left;
+  margin: 0 auto;
+  width: 100%;
+}
+.inner_content input {
+  box-sizing: border-box;
+  float: left;
+  width: 100%;
+}
+.inner_content .submit {
+  float: none;
+  margin: 0 auto;
+}
+.inner_content li {
+  float: left;
+  line-height: 33px;
+  list-style: outside none none;
+  margin-bottom: 19px;
+  width: 100%;
+}
+.inner_content h3 a {
+font-size: 20px;}
+.field {
+  float: left;
+  
+  width: 100%;
+}
+.menu_div a {
+  color: #fff;
+  font-size: 15px;
+  line-height: 35px;
+}
+
+}
+@media only screen and (max-width: 360px) {
+.driver_login .inner_content input {
+  float: left;
+  width: 57%;
+}
+.driver_login .inner_content label {
+  float: left;
+  text-align: left;
+  width: auto;
+}
+.inner_content strong {
+  font-size: 18px;
+}
+.content_div h3 {
+font-size: 20px;
+}
+.inner_content .list strong {
+  float: left;
+  width: 100%;
+}
+.btn-success {
+ width: 50%;
+}
+}
+
