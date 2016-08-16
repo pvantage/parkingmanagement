@@ -429,7 +429,11 @@ ul.menus{left:-260px;}
 #images{width:100%;}
 #images img{width:100%;}
 #images .img{width:100%; position:relative;}
-#images .closeimg{position:absolute; right:14px; width:20px; border-radius:50%; height:20px; top:10px; display:block; background:#FFFFFF; color:#FF0000; font-weight:bold; font-size:20px;}
+#images .closeimg{position:absolute; right:14px; width:25px; border-radius:50%; height:25px; top:10px; display:block; background:#e4e4e4; color:#FF0000; font-weight:bold; font-size:20px; line-height:25px}
+.cmra {
+    margin: 0 auto;
+    width: 50px;
+}
 
 /********************************************responsive startss***************************************************************/
 @media only screen and (max-width:1024px) {
