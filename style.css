@@ -492,7 +492,7 @@ width: 57%;
 }
 .inner_content li {
   float: left;
-  line-height: 33px;
+  line-height: 30px;
   list-style: outside none none;
   margin-bottom: 19px;
   width: 100%;
@@ -537,5 +537,18 @@ font-size: 20px;
 }
 
 .m-signature-pad--body > img {
+    width: 100%;
+}
+.overlay_div > a {
+    margin-right: 10px;
+}
+a.loadmore {
+    background: #0c5dc6 none repeat scroll 0 0;
+    border-radius: 20px;
+    color: #fff !important;
+    font-size: 20px !important;
+    font-weight: bold !important;
+    margin-bottom: 5px;
+    text-align: center;
     width: 100%;
 }
