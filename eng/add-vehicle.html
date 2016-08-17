@@ -113,11 +113,11 @@ jQuery(document).ready(function(){
 					jQuery('body').append(html);
 					
 				}
-				else if(res['vehicles']['updatevehicle'])
+				else if(res['vehicles']['addedvehicle'])
 				{
 					jQuery('body .bodyoverlay').remove();
 					jQuery('body .popupbox').remove();
-					var html='<div class="bodyoverlay"></div><div class="popupbox"><div class="popupimg"><img src="../images/pop.png" /></div><h1 class="success">SUCCESS</h1><h1>'+res['vehicles']['updatevehicle']+'.</h1><button class="okbox">OK</button></div>';
+					var html='<div class="bodyoverlay"></div><div class="popupbox"><div class="popupimg"><img src="../images/pop.png" /></div><h1 class="success">SUCCESS</h1><h1>'+res['vehicles']['addedvehicle']+'.</h1><button class="okbox">OK</button></div>';
 					jQuery('body').append(html);
 					jQuery('#edituser')[0].reset();
 					
@@ -126,6 +126,8 @@ jQuery(document).ready(function(){
 					jQuery('body .bodyoverlay').remove();
 					jQuery('body .popupbox').remove();
 				}); 
+				
+				
 				return false;
 			 },  
 			 error: function(response, d, a){

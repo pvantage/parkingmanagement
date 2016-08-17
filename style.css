@@ -556,3 +556,6 @@ a.loadmore {
     text-align: center;
     width: 100%;
 }
+.btn.btn-default.savesignature:disabled {
+    background: #ccc none repeat scroll 0 0;
+}

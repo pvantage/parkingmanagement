@@ -10,6 +10,8 @@
 <script type="text/javascript" src="../js/jquery.js"></script>
 <script type="text/javascript" src="../js/validate.js"></script>
 <script src="../js/jquery-ui.js"></script>
+<script src="../js/zelect.js"></script>
+<link href="../css/zelect.css" rel="stylesheet">
 <script type="text/javascript" src="../js/config.js"></script>
 <script type="text/javascript" src="../cordova.js"></script>
 <script type="text/javascript">
@@ -27,7 +29,6 @@ function savetotow()
 {
 	var url=siteurl+'/api/towvehicle';
 	var formData = jQuery('#edituser').serialize();
-	
 	
 	formData = formData + '&uid=' + uid + '&authsubmit=1';
 	jQuery.ajax({  
@@ -223,9 +224,16 @@ jQuery(document).ready(function(){
 				
 				jQuery('body .bodyoverlay').remove();
 				jQuery(res['vehiclelist']).each(function(k){
-					jQuery('#vechileid').append('<option value="'+res['vehiclelist'][k]['id']+'">'+res['vehiclelist'][k]['name']+'</option>');
+					if(res['vehiclelist'][k]['id']==v){
+						jQuery('#vechileid').append('<option value="'+res['vehiclelist'][k]['id']+'" selected="selected">'+res['vehiclelist'][k]['name']+'</option>');
+					}
+					else
+					{
+						jQuery('#vechileid').append('<option value="'+res['vehiclelist'][k]['id']+'">'+res['vehiclelist'][k]['name']+'</option>');
+					}
 				});
-				jQuery('#vechileid').val(v);
+				
+				jQuery('#vechileid').zelect();
 				
 				jQuery(res['trucklist']).each(function(k){
 					jQuery('#truckid').append('<option value="'+res['trucklist'][k]['id']+'">'+res['trucklist'][k]['name']+'</option>');
@@ -295,19 +303,19 @@ jQuery(document).ready(function(){
 					<h4 class="search_headng">Add Violation Towing</h4>
 					   <div class="select_div">
 						  <form name="edituser" id="edituser" action="" method="post">
-							<div class="field unauthorized">
-								<select class="selectpicker form-control required" name="vechileid" id="vechileid">
-								  <option data-tokens="" value="">Select Vehicle</option>
+							<div class="field unauthorized" id="intro">
+								<select class="form-control required" name="vechileid" id="vechileid">
+								  <option value="">Type and select vehicle</option>
 								</select>
 							</div>
 							  <div class="field">
-								<select class="selectpicker form-control required" name="truckid" id="truckid" data-live-search="true">
+								<select class="form-control required" name="truckid" id="truckid">
 								  <option data-tokens="" value="">Select Truck</option>
 							    </select>
 							  </div>
 							  
 							  <div class="field">
-								<select class="selectpicker form-control required" name="storage_id" id="storage_id" data-live-search="true">
+								<select class="form-control required" name="storage_id" id="storage_id" data-live-search="true">
 								  <option data-tokens="" value="">Select Storage</option>
 								</select>
 								</div>

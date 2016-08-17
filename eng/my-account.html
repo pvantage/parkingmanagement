@@ -43,7 +43,7 @@ jQuery(document).ready(function(){
 			jQuery('body .bodyoverlay').remove();
 			jQuery('body .preloader').remove();					
 		 },
-         success: function(res) {  
+         success: function(res) {   
 		 	jQuery('#company_name').val(res['user']['detail']['company_name']);
 			jQuery('#name').val(res['user']['detail']['name']);
 			jQuery('#email').val(res['user']['detail']['email']);

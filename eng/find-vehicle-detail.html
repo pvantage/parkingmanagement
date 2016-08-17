@@ -23,8 +23,6 @@ jQuery(document).ready(function(){
 	
 	var url=siteurl+'/api/find_vehicle_details';
 	var v=gup('v');
-	var href=jQuery('.backtopage').attr('href')+'?uid='+uid;
-	jQuery('.backtopage').attr('href',href);
 	jQuery.ajax({  
          type: 'POST',  
          url: url,  

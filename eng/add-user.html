@@ -23,6 +23,7 @@ jQuery(document).ready(function(){
 	
 	var url=siteurl+'/api/users';
     var uid=gup('uid');
+	var usertype=gup('usertype');
 	checkloggedin(uid);
 	
 	   jQuery('#edituser').validate();
@@ -71,6 +72,10 @@ jQuery(document).ready(function(){
 					
 					html+='</h1><button class="okbox">OK</button></div>';
 					jQuery('body').append(html);
+					jQuery('.okbox').click(function(){
+						jQuery('body .bodyoverlay').remove();
+						jQuery('body .popupbox').remove();
+					});
 					
 				}
 				else if(res['users']['addeduser'])
@@ -80,11 +85,12 @@ jQuery(document).ready(function(){
 					var html='<div class="bodyoverlay"></div><div class="popupbox"><div class="popupimg"><img src="../images/pop.png" /></div><h1 class="success">SUCCESS</h1><h1>'+res['users']['addeduser']+'.</h1><button class="okbox">OK</button></div>';
 					jQuery('body').append(html);
 					
+					jQuery('.okbox').click(function(){
+						window.location='users.html?uid='+uid+'&usertype='+usertype;
+					});
+					
 				}
-				jQuery('.okbox').click(function(){
-					jQuery('body .bodyoverlay').remove();
-					jQuery('body .popupbox').remove();
-				}); 
+				 
 				return false;
 			 },  
 			 error: function(response, d, a){
