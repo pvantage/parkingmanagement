@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Find Vehicles</title>
+<link href='https://fonts.googleapis.com/css?family=Roboto:400,100italic,300,100,300italic,400italic,500,500italic,700,700italic,900italic,900' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" type="text/css" href="../css/font-awesome.css">
+</head>
+
+<script type="text/javascript" src="../js/jquery.js"></script>
+
+<script type="text/javascript" src="../js/validate.js"></script>
+<script type="text/javascript" src="../js/config.js"></script>
+<script type="text/javascript">
+jQuery(document).ready(function(){
+	
+	jQuery( document ).on( "mobileinit", function() {
+		jQuery.mobile.allowCrossDomainPages = true;
+	});
+	var contentType ="application/x-www-form-urlencoded; charset=utf-8";
+    if(window.XDomainRequest){contentType = "text/plain";}
+	jQuery.support.cors = true;
+	
+	var url=siteurl+'/api/find-your-vehicle';
+    
+	var selectoption=gup('selectoption');
+	if(jQuery.trim(selectoption)==''){selectoption='tag';}
+	jQuery('select[name="selectoption"]').val(selectoption);
+	var searcht=gup('searcht');
+	jQuery('input[name="searcht"]').val(searcht);
+	
+	if(jQuery.trim(selectoption)!='' && jQuery.trim(searcht)!='')
+	{
+	
+		jQuery.ajax({ 
+			 type: 'POST',  
+			 url: url,  
+			 //contentType: contentType,  
+			 dataType: 'json',  
+			 data: {selectoption:selectoption,searcht:searcht},  
+			 crossDomain: true,  
+			 beforeSend: function() {
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .preloader').remove();
+				var html='<div class="bodyoverlay"></div><div class="preloader"></div>';
+				jQuery('body').append(html);					
+			 },		
+			 complete: function() {
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .preloader').remove();					
+			 },
+			 success: function(res) {  
+			   if(res['vehicles']['vehiclelist'])
+			   {
+					var html='';
+					
+					jQuery(res['vehicles']['vehiclelist']).each(function(index){
+						html+='<div class="mnger_frst"><div class="list"><ul><li><strong>Vin Number:</strong> <p>'+res['vehicles']['vehiclelist'][index]['vinnumber']+'</p></li><li><strong>License No:</strong> <p>'+res['vehicles']['vehiclelist'][index]['tagnumber']+'</p></li><li><strong>Model:</strong> <p>'+res['vehicles']['vehiclelist'][index]['model']+'</p></li><li><strong>Color:</strong> <p>'+res['vehicles']['vehiclelist'][index]['color']+'</p></li></ul></div><div class="overlay_div">';
+						
+						html+='<a href="find-vehicle-detail.html?v='+res['vehicles']['vehiclelist'][index]['id']+'"><i class="fa fa-eye"></i></a>';
+						html+='</div></div>';
+				   });
+				   if(parseInt(res['vehicles']['total'])>(parseInt(res['vehicles']['pageid'])*parseInt(res['vehicles']['vehiclelist'].length)))
+				   {
+						var pageid=parseInt(res['vehicles']['pageid'])+1;
+						html+='<a href="javascript:;" class="loadmore" pageid="'+pageid+'">Load More</a>';
+				   }
+				   jQuery('.vehiclelisting').html(html);
+					
+					activdeactivvehicle();
+				}
+				else
+				{
+					//window.location='index.html';
+				}
+			 },  
+			 error: function(response, d, a){
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .popupbox').remove();
+				var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Server Error.</h1><button class="okbox">OK</button></div>';
+				jQuery('body').append(html);
+				
+				jQuery('.okbox').click(function(){
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .popupbox').remove();
+				}); 
+			 } 
+		   });
+		  jQuery('a.loadmore').live('click',function(){
+			var pageid=jQuery(this).attr('pageid');
+			var $this=jQuery(this);
+			jQuery.ajax({ 
+				 type: 'POST',  
+				 url: url,  
+				 //contentType: contentType,  
+				 dataType: 'json',  
+				 data: {selectoption:selectoption,searcht:searcht,show:pageid},  
+				 crossDomain: true,  
+				 beforeSend: function() {
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .preloader').remove();
+					var html='<div class="bodyoverlay"></div><div class="preloader"></div>';
+					jQuery('body').append(html);					
+				 },		
+				 complete: function() {
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .preloader').remove();					
+				 },
+				 success: function(res) {  
+				   if(res['vehicles']['vehiclelist'])
+				   {
+						var html='';
+						
+						jQuery(res['vehicles']['vehiclelist']).each(function(index){
+							html+='<div class="mnger_frst"><div class="list"><ul><li><strong>Vin Number:</strong> <p>'+res['vehicles']['vehiclelist'][index]['vinnumber']+'</p></li><li><strong>License No:</strong> <p>'+res['vehicles']['vehiclelist'][index]['tagnumber']+'</p></li><li><strong>Model:</strong> <p>'+res['vehicles']['vehiclelist'][index]['model']+'</p></li><li><strong>Color:</strong> <p>'+res['vehicles']['vehiclelist'][index]['color']+'</p></li></ul></div><div class="overlay_div">';
+							
+							html+='<a href="find-vehicle-detail.html?v='+res['vehicles']['vehiclelist'][index]['id']+'"><i class="fa fa-eye"></i></a>';
+							html+='</div></div>';
+					   });
+					   if(parseInt(res['vehicles']['total'])>(parseInt(res['vehicles']['pageid'])*parseInt(res['vehicles']['vehiclelist'].length)))
+					   {
+							var pageid=parseInt(res['vehicles']['pageid'])+1;
+							html+='<a href="javascript:;" class="loadmore" pageid="'+pageid+'">Load More</a>';
+					   }
+					   jQuery('.vehiclelisting').append(html);
+					   activdeactivvehicle();
+					   
+					}
+					jQuery($this).remove();
+					
+				 },  
+				 error: function(response, d, a){
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .popupbox').remove();
+					var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Server Error.</h1><button class="okbox">OK</button></div>';
+					jQuery('body').append(html);
+					
+					jQuery('.okbox').click(function(){
+						jQuery('body .bodyoverlay').remove();
+						jQuery('body .popupbox').remove();
+					}); 
+				 } 
+			   });
+		});
+	}
+});		
+</script>
+<body>
+<div class="wrapper">
+	<div class="container">
+		<header>
+			
+			<script type="text/javascript">document.write(language_en_menus());</script>
+				<div class="logo_div">
+					<a href="#"><img src="../images/logo.png"></a>
+				</div>
+		</header><!------------------header close-------------------------------->
+		<!--------------------------content-div starts------------------------------------------->	
+			<div class="content_div manager_search">
+				
+				<div class="inner_content"><!--------------------------inner_content------------------------------------------->
+					<h4 class="search_headng">VEHICLES</h4>
+						 
+					      <div class="select_div">
+						  <form class="searchbox" action="find-vehicles.html" method="get">
+						  <div class="field">
+							 <select name="selectoption" class="form-control">
+							   <option value="tag"> License Plate </option>
+							  <option value="vin">Vin Number </option>
+							  <option value="model">Model </option>
+					  			<option value="color">Color </option>
+							  <option value="location">Location</option>
+							  <option value="company">Company</option>
+							</select>
+						</div>
+							<div class="field">
+								<input type="text" class="form-control" id="vehicle_search" placeholder="Search" value="" name="searcht">
+							</div>
+							<div class="field">
+								<input class="btn btn-success btn-sm" type="submit" value="Search">
+							</div>
+					     </form>
+					   </div>
+					   <div class="detail_div">
+					   	<div class="vehiclelisting"></div>
+					   </div>
+							
+				</div><!--------------------------inner_content------------------------------------------->	
+				</div>
+			</div>
+		
+		<!--------------------------content-div endss------------------------------------------->	
+	</div>
+</div>
+
+</body>
+</html>
+
