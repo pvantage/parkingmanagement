@@ -562,4 +562,6 @@ a.loadmore {
 .vlist{text-align:left;}
 .vehiclilist{border:1px solid #000000; text-align:left;}
 .towdetail{color:#990000;}
-.vlist strong{ width:auto !important; padding-right:8px;}
+.vlist strong{ width:auto !important; padding-right:8px; margin-top:0px;}
+#loginuser li{ margin-bottom:0px;}
+#loginuser{margin-bottom:10px;}
