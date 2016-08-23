@@ -79,7 +79,7 @@ jQuery(document).ready(function(){
 		var shoph='';
 		var gaddress='';
 		if(typeof json['towingdetail'] != 'undefined'){
-		html+='<div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback vtitle" style="margin-top:3%;">Towing Detail  <i class="fa fa-level-down"></i></div><table class="table table-bordered towingtable">';
+		html+='<h2>Towing Detail  </h2><table class="table table-bordered towingtable">';
 		jQuery.each(json['towingdetail'], function (key) {
 			var photo='';
 			if(jQuery.trim(json['towingdetail'][key]['photo'])!=''){
@@ -100,12 +100,13 @@ jQuery(document).ready(function(){
 			}
 			}
 			
-			html+='<tr><th>Photo</th><td>'+photo+'</td></tr><tr><th>Reason</th><td>'+json['towingdetail'][key]['reason']+'</td></tr><tr><th>From</th><td>'+json['towingdetail'][key]['locationfrom']+'</td></tr><tr><th>To</th><td>'+json['towingdetail'][key]['locationto']+'</td></tr><tr><th>Truck</th><td>'+json['towingdetail'][key]['truck']+'</td></tr><tr><th>Driver</th><td>'+json['towingdetail'][key]['by_name']+'</td></tr><tr><th>Date</th><td>'+json['towingdetail'][key]['cdate']+'</td></tr>';
+			html+='<tr><td colspan="2">'+photo+'</td></tr><tr><th valign="top">Reason</th><td valign="top">'+json['towingdetail'][key]['reason']+'</td></tr><tr><th valign="top">From</th><td valign="top">'+json['towingdetail'][key]['locationfrom']+'</td></tr><tr><th valign="top">To</th><td valign="top">'+json['towingdetail'][key]['locationto']+'</td></tr><tr><th valign="top">Truck</th><td valign="top">'+json['towingdetail'][key]['truck']+'</td></tr><tr><th valign="top">Driver</th><td valign="top">'+json['towingdetail'][key]['by_name']+'</td></tr><tr><th valign="top">Date</th><td valign="top">'+json['towingdetail'][key]['cdate']+'</td></tr>';
 			html+='<tr><td colspan="2"><div id="area_map" style="height:200px; margin-top:5px; display:none; color:#000000;"></div></td></tr>';
 			gaddress=json['towingdetail'][key]['locationto'];
 		});
 		
 		html+='</table>';
+		jQuery('.showtowong').show();
 		}
 		jQuery('#towingdetails').html(html);
 		jQuery('#myCarousel .item:first').addClass('active');
@@ -237,8 +238,8 @@ function addInfoWindow(marker, message, map){
 					   
 					   <div class="detail_div">
 					   <div class="vehiclelisting">
-					   	<div class="mnger_frst"><!--------------------------mnger_frstt------------------------------------------->	
-							<div class="list">
+					   	<div class="mnger_frst vehiclilist"><!--------------------------mnger_frstt------------------------------------------->	
+							<div class="list vlist">
 								<ul>
 								<li class="superadmin"><strong>Address:</strong> <p id="maddress"></p></li>
 								<li class="superadmin"><strong>Company Name: </strong><p id="mcompany_name"></p></li>
@@ -248,22 +249,22 @@ function addInfoWindow(marker, message, map){
 								<li class="superadmin"><h2>Vechile Details</h2></li>
 								<li><strong>Name:</strong><p id="owner_namea"></p></li>
 								<li><strong>Email:</strong><p id="Emaila"></p></li>
-								<li><strong>Phone:</strong><p id="Phonepa"></p></li>
-								<li><strong>Unit Number:</strong><p id="aprtmenta"></p></li>
-								<li><strong>Vin Number:</strong><p id="vinnumbera"></p></li>
-								<li><strong>License No:</strong><p id="tagnumbera"></p></li>
-								<li><strong>Year:</strong><p id="yeara"></p></li>
-								<li><strong>Make:</strong><p id="makea"></p></li>
-								<li><strong>Model:</strong><p id="modela"></p></li>
-								<li><strong>Color:</strong><p id="colora"></p></li>
-								<li><strong>Expiry Date:</strong><p id="expdatea"></p></li>
-								<li class="admin"><strong>Type Of Permit:</strong><p id="aprtmenta"></p></li>
+								<li><strong>Phone:</strong><p id="Phonepa"></p>
+								<strong>&nbsp;&nbsp;Unit Number:</strong><p id="aprtmenta"></p></li>
+								<li><strong>Vin Number:</strong><p id="vinnumbera"></p>
+								<strong>&nbsp;&nbsp;License No:</strong><p id="tagnumbera"></p></li>
+								<li><strong>Year:</strong><p id="yeara"></p>
+								<strong>&nbsp;&nbsp;Make:</strong><p id="makea"></p></li>
+								<li><strong>Model:</strong><p id="modela"></p>
+								<strong>&nbsp;&nbsp;Color:</strong><p id="colora"></p></li>
+								<li><strong>Expiry Date:</strong><p id="expdatea"></p>
+								<strong class="admin">&nbsp;&nbsp;Type Of Permit:</strong><p class="admin" id="aprtmenta"></p></li>
 								<li><strong>Notes:</strong><p id="notespa"></p></li>
 								</ul>
 							</div>
+						</div>
+						<div class="mnger_frst vehiclilist showtowong" style="display:none;"><!--------------------------mnger_frstt------------------------------------------->	
 							<div id="towingdetails"></div>
-			
-          
 						</div>
 					   </div>
 							

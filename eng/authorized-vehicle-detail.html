@@ -78,8 +78,9 @@ jQuery(document).ready(function(){
 		 }
 		var html='';
 		var shoph='';
+		var gaddress='';
 		if(typeof json['towingdetail'] != 'undefined'){
-		html+='<div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback vtitle" style="margin-top:3%;">Towing Detail  <i class="fa fa-level-down"></i></div><table class="table table-bordered towingtable">';
+		html+='<h2" style="margin-top:3%;">Towing Detail</h2><table class="table table-bordered towingtable">';
 		jQuery.each(json['towingdetail'], function (key) {
 			var photo='';
 			if(jQuery.trim(json['towingdetail'][key]['photo'])!=''){
@@ -100,18 +101,78 @@ jQuery(document).ready(function(){
 			}
 			}
 			
-			html+='<tr><th>Photo</th><td>'+photo+'</td></tr><tr><th>Reason</th><td>'+json['towingdetail'][key]['reason']+'</td></tr><tr><th>From</th><td>'+json['towingdetail'][key]['locationfrom']+'</td></tr><tr><th>To</th><td>'+json['towingdetail'][key]['locationto']+'</td></tr><tr><th>Truck</th><td>'+json['towingdetail'][key]['truck']+'</td></tr><tr><th>Driver</th><td>'+json['towingdetail'][key]['by_name']+'</td></tr><tr><th>Date</th><td>'+json['towingdetail'][key]['cdate']+'</td></tr>';
+			html+='<tr><td colspan="2">'+photo+'</td></tr><tr><th valign="top">Reason</th><td valign="top">'+json['towingdetail'][key]['reason']+'</td></tr><tr><th valign="top">From</th><td valign="top">'+json['towingdetail'][key]['locationfrom']+'</td></tr><tr><th valign="top">To</th><td valign="top">'+json['towingdetail'][key]['locationto']+'</td></tr><tr><th valign="top">Truck</th><td valign="top">'+json['towingdetail'][key]['truck']+'</td></tr><tr><th valign="top">Driver</th><td valign="top">'+json['towingdetail'][key]['by_name']+'</td></tr><tr><th valign="top">Date</th><td valign="top">'+json['towingdetail'][key]['cdate']+'</td></tr>';
+			html+='<tr><td colspan="2"><div id="area_map2" style="height:200px; margin-top:5px; display:none; color:#000000;"></div></td></tr>';
+			gaddress=json['towingdetail'][key]['locationto'];
 			
 		});
 		
 		html+='</table>';
+		jQuery('.showtowong').show();
 		}
 		jQuery('#towingdetails').html(html);
 		jQuery('#myCarousel .item:first').addClass('active');
 		jQuery('.showallphotos').click(function(){
 			jQuery('#showphotos').modal('show');
 		});
-	 
+	 	if(jQuery.trim(gaddress)!=''){
+			var url2=siteurl+'/api/gmap';
+			jQuery('#area_map2').show(400);
+			jQuery.ajax({
+			url: url2+'?gnmap=sales&address='+gaddress,
+			type: 'post',
+			dataType: 'json',
+			beforeSend: function() {},	
+			complete: function() {},			
+			success: function(json){
+				if(json['error']){			
+					var map = new google.maps.Map(document.getElementById('area_map2'), {
+					  zoom: 11,
+					  center: new google.maps.LatLng(40.1329091, -87.5681211),
+					  mapTypeId: google.maps.MapTypeId.ROADMAP
+					//mapTypeId: 'terrain'
+					});
+				}else{
+					
+					var lati_center = json['success']['lat'];
+					var longi_center = json['success']['longi'];
+					var map = new google.maps.Map(document.getElementById('area_map2'), {
+					  zoom: 11,
+					  center: new google.maps.LatLng(lati_center, longi_center),
+					  mapTypeId: google.maps.MapTypeId.ROADMAP
+					//mapTypeId: 'terrain'
+						});
+				}
+					if(json['success']){				
+						// GOOGLE MAP START HERE //////////////////						
+						var locations = new Array();	
+						locations = json['success']['map'];			
+						var marker = new Array();
+						var i;							
+						var addinfo = new Array();
+						var latitude = new Array();
+						var longitude = new Array();
+						for (i = 0; i < locations.length; i++){ 						
+							var map_info = locations[i].split('@@');
+							if(map_info.length == 3){							
+								addinfo[i] = decodeURIComponent(map_info[0]).replace(/\+/g, ' ');								
+								latitude[i] = map_info[1];
+								longitude[i] = map_info[2];
+								marker[i] = new google.maps.Marker({
+									position: new google.maps.LatLng(latitude[i], longitude[i]),
+									radius: 500,
+									types: ['store'],
+									map: map
+							  	});
+								addInfoWindow(marker[i], addinfo[i], map);
+						  	} // MAP LENGTH
+						}											
+						// SALES GOOGLE MAP END  //
+					}	
+				}	
+			});
+			//return false;
+		}
 		if(jQuery.trim(maddress)!=''){
 			var url2=siteurl+'/api/gmap';
 			jQuery('#area_map').show(400);
@@ -123,7 +184,7 @@ jQuery(document).ready(function(){
 			complete: function() {},			
 			success: function(json){
 				if(json['error']){			
-					var map = new google.maps.Map(document.getElementById('left_area_map'), {
+					var map = new google.maps.Map(document.getElementById('area_map'), {
 					  zoom: 11,
 					  center: new google.maps.LatLng(40.1329091, -87.5681211),
 					  mapTypeId: google.maps.MapTypeId.ROADMAP
@@ -236,35 +297,55 @@ function addInfoWindow(marker, message, map){
 					   
 					   <div class="detail_div">
 					   <div class="vehiclelisting">
-					   	<div class="mnger_frst"><!--------------------------mnger_frstt------------------------------------------->	
-							<div class="list">
-								<ul>
-								<li class="superadmin"><strong>Address:</strong> <p id="maddress"></p></li>
-								<li class="superadmin"><strong>Company Name: </strong><p id="mcompany_name"></p></li>
-								<li class="superadmin"><strong>Manager Name:</strong> <p id="managername"></p></li>
-								<li class="superadmin"><strong>Email:</strong><p id="manageremail"></p></li>
-								<li class="superadmin"><strong>Manager Phone:</strong><p id="managerphone"></p></li>
-								<li class="superadmin"><h2>Vechile Details</h2></li>
-								<li><strong>Name:</strong><p id="owner_namea"></p></li>
-								<li><strong>Email:</strong><p id="Emaila"></p></li>
-								<li><strong>Phone:</strong><p id="Phonepa"></p></li>
-								<li><strong>Unit Number:</strong><p id="aprtmenta"></p></li>
-								<li><strong>Vin Number:</strong><p id="vinnumbera"></p></li>
-								<li><strong>License No:</strong><p id="tagnumbera"></p></li>
-								<li><strong>Year:</strong><p id="yeara"></p></li>
-								<li><strong>Make:</strong><p id="makea"></p></li>
-								<li><strong>Model:</strong><p id="modela"></p></li>
-								<li><strong>Color:</strong><p id="colora"></p></li>
-								<li><strong>Expiry Date:</strong><p id="expdatea"></p></li>
-								<li class="admin"><strong>Type Of Permit:</strong><p id="typeofpermita"></p></li>
-								<li><strong>Notes:</strong><p id="notespa"></p></li>
-								</ul>
-							</div>
+					   	<div class="mnger_frst vehiclilist"><!--------------------------mnger_frstt------------------------------------------->	
+							<div class="list vlist">
+							<p id="maddress"></p>
 							<div class="clr"></div>
-							<div id="area_map" style="height:200px; max-width:400px; margin-top:5px; display:none; color:#000000;"></div>
-							<div id="towingdetails"></div>
-			
+							<strong>Company Name: </strong><p id="mcompany_name"></p>
+							<div class="clr"></div>
+							<strong>Manager Name:</strong> <p id="managername"></p>
+							<div class="clr"></div>
+							<strong>Email:</strong><p id="manageremail"></p>
+							<div class="clr"></div>
+							<strong>Manager Phone:</strong><p id="managerphone"></p>
+							<div class="clr"></div>
+							<div id="area_map" style="height:200px; margin-top:5px; display:none; color:#000000;"></div>
+							
+							</div>
           
+						</div>
+						<div class="mnger_frst vehiclilist"><!--------------------------mnger_frstt------------------------------------------->	
+							<div class="list vlist">
+								
+								<h2>Vechile Details</h2>
+								<div class="clr"></div>
+								<strong>Owner Name:</strong><p id="owner_namea"></p>
+								<div class="clr"></div>
+								<strong>Email:</strong><p id="Emaila"></p>
+								<div class="clr"></div>
+								<strong>Phone:</strong><p id="Phonepa"></p>
+								<strong>&nbsp;&nbsp;Unit Number:</strong><p id="aprtmenta"></p>
+								<div class="clr"></div>
+								<strong>Vin Number:</strong><p id="vinnumbera"></p>
+								<strong>&nbsp;&nbsp;License No:</strong><p id="tagnumbera"></p>
+								<div class="clr"></div>
+								<strong>Year:</strong><p id="yeara"></p>
+								<strong>&nbsp;&nbsp;Make:</strong><p id="makea"></p>
+								<div class="clr"></div>
+								<strong>Model:</strong><p id="modela"></p>
+								<strong>&nbsp;&nbsp;Color:</strong><p id="colora"></p>
+								<div class="clr"></div>
+								<strong>Expiry Date:</strong><p id="expdatea"></p>
+								<strong>&nbsp;&nbsp;Type Of Permit:</strong><p id="typeofpermita"></p>
+								<div class="clr"></div>
+								<strong>Notes:</strong><p id="notespa"></p>
+								
+								
+							</div>
+          
+						</div>
+						<div class="mnger_frst vehiclilist showtowong" style="display:none;"><!--------------------------mnger_frstt------------------------------------------->	
+							<div id="towingdetails"></div>
 						</div>
 					   </div>
 							

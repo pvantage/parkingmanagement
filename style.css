@@ -560,5 +560,6 @@ a.loadmore {
     background: #ccc none repeat scroll 0 0;
 }
 .vlist{text-align:left;}
-.vehiclilist{border:1px solid #000000;}
+.vehiclilist{border:1px solid #000000; text-align:left;}
 .towdetail{color:#990000;}
+.vlist strong{ width:auto !important; padding-right:8px;}
