@@ -72,63 +72,7 @@ jQuery(document).ready(function(){
 			$("#managerphone").html(managerphone);
 			$("#maddress").html(maddress);
 		 }
-		 if(jQuery.trim(maddress)!=''){
-			var url2=siteurl+'/api/gmap';
-			jQuery('#area_map').show(400);
-			jQuery.ajax({
-			url: url2+'?gnmap=sales&address='+maddress,
-			type: 'post',
-			dataType: 'json',
-			beforeSend: function() {},	
-			complete: function() {},			
-			success: function(json){
-				if(json['error']){			
-					var map = new google.maps.Map(document.getElementById('left_area_map'), {
-					  zoom: 11,
-					  center: new google.maps.LatLng(40.1329091, -87.5681211),
-					  mapTypeId: google.maps.MapTypeId.ROADMAP
-					//mapTypeId: 'terrain'
-					});
-				}else{
-					var lati_center = json['success']['lat'];
-					var longi_center = json['success']['longi'];
-					var map = new google.maps.Map(document.getElementById('area_map'), {
-					  zoom: 11,
-					  center: new google.maps.LatLng(lati_center, longi_center),
-					  mapTypeId: google.maps.MapTypeId.ROADMAP
-					//mapTypeId: 'terrain'
-						});
-				}
-					if(json['success']){					
-						// GOOGLE MAP START HERE //////////////////						
-						var locations = new Array();	
-						locations = json['success']['map'];						
-						var marker = new Array();
-						var i;							
-						var addinfo = new Array();
-						var latitude = new Array();
-						var longitude = new Array();
-						for (i = 0; i < locations.length; i++){ 						
-							var map_info = locations[i].split('@@');
-							if(map_info.length == 3){							
-								addinfo[i] = decodeURIComponent(map_info[0]).replace(/\+/g, ' ');								
-								latitude[i] = map_info[1];
-								longitude[i] = map_info[2];
-								marker[i] = new google.maps.Marker({
-									position: new google.maps.LatLng(latitude[i], longitude[i]),
-									radius: 500,
-									types: ['store'],
-									map: map
-							  	});
-								addInfoWindow(marker[i], addinfo[i], map);
-						  	} // MAP LENGTH
-						}											
-						// SALES GOOGLE MAP END  //
-					}	
-				}	
-			});
-			//return false;
-		}
+		 
 		var html='';
 		var shoph='';
 		var gaddress='';
@@ -178,7 +122,65 @@ jQuery(document).ready(function(){
 			complete: function() {},			
 			success: function(json){
 				if(json['error']){			
-					var map = new google.maps.Map(document.getElementById('left_area_map'), {
+					var map = new google.maps.Map(document.getElementById('area_map2'), {
+					  zoom: 11,
+					  center: new google.maps.LatLng(40.1329091, -87.5681211),
+					  mapTypeId: google.maps.MapTypeId.ROADMAP
+					//mapTypeId: 'terrain'
+					});
+				}else{
+					
+					var lati_center = json['success']['lat'];
+					var longi_center = json['success']['longi'];
+					var map = new google.maps.Map(document.getElementById('area_map2'), {
+					  zoom: 11,
+					  center: new google.maps.LatLng(lati_center, longi_center),
+					  mapTypeId: google.maps.MapTypeId.ROADMAP
+					//mapTypeId: 'terrain'
+						});
+				}
+					if(json['success']){				
+						// GOOGLE MAP START HERE //////////////////						
+						var locations = new Array();	
+						locations = json['success']['map'];			
+						var marker = new Array();
+						var i;							
+						var addinfo = new Array();
+						var latitude = new Array();
+						var longitude = new Array();
+						for (i = 0; i < locations.length; i++){ 						
+							var map_info = locations[i].split('@@');
+							if(map_info.length == 3){							
+								addinfo[i] = decodeURIComponent(map_info[0]).replace(/\+/g, ' ');								
+								latitude[i] = map_info[1];
+								longitude[i] = map_info[2];
+								marker[i] = new google.maps.Marker({
+									position: new google.maps.LatLng(latitude[i], longitude[i]),
+									radius: 500,
+									types: ['store'],
+									map: map
+							  	});
+								addInfoWindow(marker[i], addinfo[i], map);
+						  	} // MAP LENGTH
+						}											
+						// SALES GOOGLE MAP END  //
+					}	
+				}	
+			});
+			//return false;
+		}
+		if(jQuery.trim(maddress)!=''){
+			var url2=siteurl+'/api/gmap';
+			jQuery('#area_map').show(400);
+			jQuery.ajax({
+			url: url2+'?gnmap=sales&address='+maddress,
+			type: 'post',
+			dataType: 'json',
+			beforeSend: function() {},	
+			complete: function() {},			
+			success: function(json){
+				if(json['error']){			
+					var map = new google.maps.Map(document.getElementById('area_map'), {
 					  zoom: 11,
 					  center: new google.maps.LatLng(40.1329091, -87.5681211),
 					  mapTypeId: google.maps.MapTypeId.ROADMAP
@@ -224,7 +226,6 @@ jQuery(document).ready(function(){
 			});
 			//return false;
 		}
-		
 		$("#owner_namea").html(owner_name);
 		$("#Emaila").html(Email);		
 		$("#Phonepa").html(Phone);

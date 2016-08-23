@@ -559,3 +559,6 @@ a.loadmore {
 .btn.btn-default.savesignature:disabled {
     background: #ccc none repeat scroll 0 0;
 }
+.vlist{text-align:left;}
+.vehiclilist{border:1px solid #000000;}
+.towdetail{color:#990000;}

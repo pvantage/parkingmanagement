@@ -61,15 +61,24 @@ jQuery(document).ready(function(){
 		   {
             	var html='';
 				jQuery(res['vehicles']['vehiclelist']).each(function(index){
-					html+='<div class="mnger_frst"><div class="list"><ul><li><strong>Vin Number:</strong> <p>'+res['vehicles']['vehiclelist'][index]['vinnumber']+'</p></li><li><strong>License No:</strong> <p>'+res['vehicles']['vehiclelist'][index]['tagnumber']+'</p></li><li><strong>Model:</strong> <p>'+res['vehicles']['vehiclelist'][index]['model']+'</p></li><li><strong>Color:</strong> <p>'+res['vehicles']['vehiclelist'][index]['color']+'</p></li></ul></div><div class="overlay_div">';
-					
-					
-					html+='<a href="authorized-vehicle-detail.html?uid='+uid+'&v='+res['vehicles']['vehiclelist'][index]['id']+'&usertype='+usertype+'"><i class="fa fa-eye"></i></a>';
+					html+='<div class="mnger_frst vehiclilist"><div class="list vlist"><div class="vdetail">'+res['vehicles']['vehiclelist'][index]['year']+' '+res['vehicles']['vehiclelist'][index]['make']+' '+res['vehicles']['vehiclelist'][index]['model']+' ('+res['vehicles']['vehiclelist'][index]['color']+')<br />License No: '+res['vehicles']['vehiclelist'][index]['tagnumber']+' Vin Number: '+res['vehicles']['vehiclelist'][index]['vinnumber']+'</div>';
+					if(typeof res['vehicles']['vehiclelist'][index]['address']['Address'] != 'undefined'){
+						html+='<div class="addetail">'+res['vehicles']['vehiclelist'][index]['address']['Address']+'</div>';
+					}
+					if(typeof res['vehicles']['vehiclelist'][index]['towing']['locationto'] != 'undefined'){
+						html+='<div class="towdetail">Towed To: '+res['vehicles']['vehiclelist'][index]['towing']['locationto']+'</div>';
+					}
+					html+='<div class="overlay_div"><a href="violation-towing-detail.html?uid='+uid+'&v='+res['vehicles']['vehiclelist'][index]['id']+'&usertype='+usertype+'"><i class="fa fa-eye"></i></a>';
 					if(usertype=='driver' && res['vehicles']['vehiclelist'][index]['status']=='0'){
 						html+='<a href="add-violation-towing.html?uid='+uid+'&v='+res['vehicles']['vehiclelist'][index]['id']+'&usertype='+usertype+'"><i class="fa fa-truck"></i></a>';
 					}
-					html+='</div></div>';
+					html+='</div></div></div>';
 			   });
+			   if(parseInt(res['vehicles']['total'])>(parseInt(res['vehicles']['pageid'])*parseInt(res['vehicles']['vehiclelist'].length)))
+			   {
+			   		var pageid=parseInt(res['vehicles']['pageid'])+1;
+			   		html+='<a href="javascript:;" class="loadmore" pageid="'+pageid+'">Load More</a>';
+			   }
 			   jQuery('.vehiclelisting').html(html);
 				
 				activdeactivvehicle();
@@ -91,6 +100,69 @@ jQuery(document).ready(function(){
 			}); 
          } 
        });
+	   jQuery('a.loadmore').live('click',function(){
+		var pageid=jQuery(this).attr('pageid');
+		var $this=jQuery(this);
+		jQuery.ajax({ 
+			 type: 'POST',  
+			 url: url,  
+			 //contentType: contentType,  
+			 dataType: 'json',  
+			 data: {uid:uid,selectoption:selectoption,vtype:vtype,searcht:searcht,status:0,show:pageid},  
+			 crossDomain: true,  
+			 beforeSend: function() {
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .preloader').remove();
+				var html='<div class="bodyoverlay"></div><div class="preloader"></div>';
+				jQuery('body').append(html);					
+			 },		
+			 complete: function() {
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .preloader').remove();					
+			 },
+			 success: function(res) {  
+			   if(res['vehicles']['vehiclelist'])
+			   {
+					var html='';
+					
+					jQuery(res['vehicles']['vehiclelist']).each(function(index){
+						html+='<div class="mnger_frst vehiclilist"><div class="list vlist"><div class="vdetail">'+res['vehicles']['vehiclelist'][index]['year']+' '+res['vehicles']['vehiclelist'][index]['make']+' '+res['vehicles']['vehiclelist'][index]['model']+' ('+res['vehicles']['vehiclelist'][index]['color']+')<br />License No: '+res['vehicles']['vehiclelist'][index]['tagnumber']+' Vin Number: '+res['vehicles']['vehiclelist'][index]['vinnumber']+'</div>';
+					if(typeof res['vehicles']['vehiclelist'][index]['address']['Address'] != 'undefined'){
+						html+='<div class="addetail">'+res['vehicles']['vehiclelist'][index]['address']['Address']+'</div>';
+					}
+					if(typeof res['vehicles']['vehiclelist'][index]['towing']['locationto'] != 'undefined'){
+						html+='<div class="towdetail">Towed To: '+res['vehicles']['vehiclelist'][index]['towing']['locationto']+'</div>';
+					}
+					html+='<div class="overlay_div"><a href="violation-towing-detail.html?uid='+uid+'&v='+res['vehicles']['vehiclelist'][index]['id']+'&usertype='+usertype+'"><i class="fa fa-eye"></i></a>';
+					if(usertype=='driver' && res['vehicles']['vehiclelist'][index]['status']=='0'){
+						html+='<a href="add-violation-towing.html?uid='+uid+'&v='+res['vehicles']['vehiclelist'][index]['id']+'&usertype='+usertype+'"><i class="fa fa-truck"></i></a>';
+					}
+					html+='</div></div></div>';
+				   });
+				   if(parseInt(res['vehicles']['total'])>(parseInt(res['vehicles']['pageid'])*parseInt(res['vehicles']['vehiclelist'].length)))
+				   {
+						var pageid=parseInt(res['vehicles']['pageid'])+1;
+						html+='<a href="javascript:;" class="loadmore" pageid="'+pageid+'">Load More</a>';
+				   }
+				   jQuery('.vehiclelisting').append(html);
+				   
+				}
+				jQuery($this).remove();
+				
+			 },  
+			 error: function(response, d, a){
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .popupbox').remove();
+				var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Server Error.</h1><button class="okbox">OK</button></div>';
+				jQuery('body').append(html);
+				
+				jQuery('.okbox').click(function(){
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .popupbox').remove();
+				}); 
+			 } 
+		   });
+	});
 });		
 </script>
 <body>
