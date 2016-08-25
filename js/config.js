@@ -91,7 +91,7 @@ setTimeout(function(){
 			jQuery(this).addClass('show');
 		}
 	});
-},500);
+},1000);
 function checkloggedin(uid)
 {
 	
