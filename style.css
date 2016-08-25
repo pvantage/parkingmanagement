@@ -565,3 +565,29 @@ a.loadmore {
 .vlist strong{ width:auto !important; padding-right:8px; margin-top:0px;}
 #loginuser li{ margin-bottom:0px;}
 #loginuser{margin-bottom:10px;}
+#floating-panel > input[type="text"] {
+	width: 73%;
+	padding:5px;
+	margin:0px;
+}
+#floating-panel > input[type="button"] {
+	cursor: pointer;
+	float: right;
+	padding: 10px;
+	width: 70px;
+	margin-right:3px;
+}
+  #floating-panel {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: 5;
+	background-color: #fff;
+	padding: 3px;
+	border: 1px solid #999;
+	text-align: left;
+	line-height: 30px;
+	width:98%;
+  }
+  #area_map{margin-top:52px !important;}
+  

@@ -5,12 +5,11 @@
 <title>VIOLATIONS TOWING</title>
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,100italic,300,100,300italic,400italic,500,500italic,700,700italic,900italic,900' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" type="text/css" href="../style.css">
-</head>
+
 
 <script type="text/javascript" src="../js/jquery.js"></script>
 <script type="text/javascript" src="../js/validate.js"></script>
 <script type="text/javascript" src="../js/config.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdRw4y6QbeCa2AVoQcI_j7NMQZPYDrabU" type="text/javascript"></script>
 <script type="text/javascript">
 jQuery(document).ready(function(){
 	
@@ -101,8 +100,12 @@ jQuery(document).ready(function(){
 			}
 			
 			html+='<tr><th>Photo</th><td>'+photo+'</td></tr><tr><th>Reason</th><td>'+json['towingdetail'][key]['reason']+'</td></tr><tr><th>From</th><td>'+json['towingdetail'][key]['locationfrom']+'</td></tr><tr><th>To</th><td>'+json['towingdetail'][key]['locationto']+'</td></tr><tr><th>Truck</th><td>'+json['towingdetail'][key]['truck']+'</td></tr><tr><th>Driver</th><td>'+json['towingdetail'][key]['by_name']+'</td></tr><tr><th>Date</th><td>'+json['towingdetail'][key]['cdate']+'</td></tr>';
-			html+='<tr><td colspan="2"><div id="area_map" style="height:200px; margin-top:5px; display:none; color:#000000;"></div></td></tr>';
+			
 			gaddress=json['towingdetail'][key]['locationto'];
+			if(usertype=='driver'){
+			var gaddress2=json['towingdetail'][key]['locationfrom'];
+			html+='<tr><td colspan="2" style="position:relative;"><div id="floating-panel"><input type="text" name="start" id="start" value="'+gaddress2+'" /><input type="button" id="searchdir" value="Search" /><div style="display:none;"><b>End: </b><input type="text" name="end" id="end" value="'+gaddress+'" /></div></div><div id="area_map" style="height:400px; margin-top:5px; color:#000000;"></div><div id="warnings-panel"></div></td></tr>';
+			}
 		});
 		
 		html+='</table>';
@@ -113,62 +116,33 @@ jQuery(document).ready(function(){
 			jQuery('#showphotos').modal('show');
 		});
 	 
-		if(jQuery.trim(gaddress)!=''){
-			var url2=siteurl+'/api/gmap';
-			jQuery('#area_map').show(400);
-			jQuery.ajax({
-			url: url2+'?gnmap=sales&address='+gaddress,
-			type: 'post',
-			dataType: 'json',
-			beforeSend: function() {},	
-			complete: function() {},			
-			success: function(json){
-				if(json['error']){			
-					var map = new google.maps.Map(document.getElementById('left_area_map'), {
-					  zoom: 11,
-					  center: new google.maps.LatLng(40.1329091, -87.5681211),
-					  mapTypeId: google.maps.MapTypeId.ROADMAP
-					//mapTypeId: 'terrain'
-					});
-				}else{
-					var lati_center = json['success']['lat'];
-					var longi_center = json['success']['longi'];
-					var map = new google.maps.Map(document.getElementById('area_map'), {
-					  zoom: 11,
-					  center: new google.maps.LatLng(lati_center, longi_center),
-					  mapTypeId: google.maps.MapTypeId.ROADMAP
-					//mapTypeId: 'terrain'
-						});
-				}
-					if(json['success']){					
-						// GOOGLE MAP START HERE //////////////////						
-						var locations = new Array();	
-						locations = json['success']['map'];						
-						var marker = new Array();
-						var i;							
-						var addinfo = new Array();
-						var latitude = new Array();
-						var longitude = new Array();
-						for (i = 0; i < locations.length; i++){ 						
-							var map_info = locations[i].split('@@');
-							if(map_info.length == 3){							
-								addinfo[i] = decodeURIComponent(map_info[0]).replace(/\+/g, ' ');								
-								latitude[i] = map_info[1];
-								longitude[i] = map_info[2];
-								marker[i] = new google.maps.Marker({
-									position: new google.maps.LatLng(latitude[i], longitude[i]),
-									radius: 500,
-									types: ['store'],
-									map: map
-							  	});
-								addInfoWindow(marker[i], addinfo[i], map);
-						  	} // MAP LENGTH
-						}											
-						// SALES GOOGLE MAP END  //
-					}	
-				}	
+		if(jQuery.trim(gaddress)!='' && usertype=='driver'){
+			var markerArray = [];
+
+			// Instantiate a directions service.
+			var directionsService = new google.maps.DirectionsService;
+	
+			// Create a map and center it on Manhattan.
+			var map = new google.maps.Map(document.getElementById('area_map'), {
+			  zoom: 13,
+			  center: {lat: 40.771, lng: -73.974}
 			});
-			//return false;
+	
+			// Create a renderer for directions and bind it to the map.
+			var directionsDisplay = new google.maps.DirectionsRenderer({map: map});
+	
+			// Instantiate an info window to hold step text.
+			var stepDisplay = new google.maps.InfoWindow;
+	
+			// Display the route between the initial start and end selections.
+			calculateAndDisplayRoute(
+				directionsDisplay, directionsService, markerArray, stepDisplay, map);
+			// Listen to change events from the start and end lists.
+			var onChangeHandler = function() {
+			  calculateAndDisplayRoute(
+				  directionsDisplay, directionsService, markerArray, stepDisplay, map);
+			};
+			document.getElementById('searchdir').addEventListener('click', onChangeHandler);
 		}
 		$("#owner_namea").html(owner_name);
 		$("#Emaila").html(Email);		
@@ -205,17 +179,56 @@ jQuery(document).ready(function(){
          } 
        });
 });	
-function addInfoWindow(marker, message, map){
-	var info = message;
-	var infoWindow = new google.maps.InfoWindow({
-		content: message
+function calculateAndDisplayRoute(directionsDisplay, directionsService,
+	  markerArray, stepDisplay, map) {
+	// First, remove any existing markers from the map.
+	for (var i = 0; i < markerArray.length; i++) {
+	  markerArray[i].setMap(null);
+	}
+
+	// Retrieve the start and end locations and create a DirectionsRequest using
+	// WALKING directions.
+	directionsService.route({
+	  origin: document.getElementById('start').value,
+	  destination: document.getElementById('end').value,
+	  travelMode: 'DRIVING'
+	}, function(response, status) {
+	  // Route the directions and pass the response to a function to create
+	  // markers for each step.
+	  if (status === 'OK') {
+		directionsDisplay.setDirections(response);
+		showSteps(response, markerArray, stepDisplay, map);
+	  } else {
+		alert('Directions request failed due to ' + status);
+	  }
 	});
-	google.maps.event.addListener(marker, 'click', function () {
-		infoWindow.open(map, marker);
+  }
+
+  function showSteps(directionResult, markerArray, stepDisplay, map) {
+	// For each step, place a marker, and add the text to the marker's infowindow.
+	// Also attach the marker to an array so we can keep track of it and remove it
+	// when calculating new routes.
+	var myRoute = directionResult.routes[0].legs[0];
+	for (var i = 0; i < myRoute.steps.length; i++) {
+	  var marker = markerArray[i] = markerArray[i] || new google.maps.Marker;
+	  marker.setMap(map);
+	  marker.setPosition(myRoute.steps[i].start_location);
+	  attachInstructionText(
+		  stepDisplay, marker, myRoute.steps[i].instructions, map);
+	}
+  }
+
+  function attachInstructionText(stepDisplay, marker, text, map) {
+	google.maps.event.addListener(marker, 'click', function() {
+	  // Open an info window when the marker is clicked on, containing the text
+	  // of the step.
+	  stepDisplay.setContent(text);
+	  stepDisplay.open(map, marker);
 	});
-}	
-	
+  }
 </script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdRw4y6QbeCa2AVoQcI_j7NMQZPYDrabU" type="text/javascript"></script>
+</head>
 <body>
 <div class="wrapper">
 	<div class="container">
@@ -245,7 +258,7 @@ function addInfoWindow(marker, message, map){
 								<li class="superadmin"><strong>Manager Name:</strong> <p id="managername"></p></li>
 								<li class="superadmin"><strong>Email:</strong><p id="manageremail"></p></li>
 								<li class="superadmin"><strong>Manager Phone:</strong><p id="managerphone"></p></li>
-								<li class="superadmin"><h2>Vechile Details</h2></li>
+								<li class="superadmin"><h2>Vehicle Details</h2></li>
 								<li><strong>Vin Number:</strong><p id="vinnumbera"></p></li>
 								<li><strong>License No:</strong><p id="tagnumbera"></p></li>
 								<li><strong>Make:</strong><p id="makea"></p></li>
