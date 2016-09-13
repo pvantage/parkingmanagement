@@ -1,15 +1,25 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Vehicles</title>
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,100italic,300,100,300italic,400italic,500,500italic,700,700italic,900italic,900' rel='stylesheet' type='text/css'>
+<link href="../css/bootstrap.min.css" rel="stylesheet">
+<link href="../css/font-awesome.css" rel="stylesheet">
+<link href="../css/offcanvas.min.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" type="text/css" href="../style.css">
 <link rel="stylesheet" type="text/css" href="../css/font-awesome.css">
-</head>
+
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
 
 <script type="text/javascript" src="../js/jquery.js"></script>
-
 <script type="text/javascript" src="../js/validate.js"></script>
 <script type="text/javascript" src="../js/config.js"></script>
 <script type="text/javascript">
@@ -63,31 +73,31 @@ jQuery(document).ready(function(){
             	var html='';
 				
 				jQuery(res['vehicles']['vehiclelist']).each(function(index){
-					html+='<div class="mnger_frst vehiclilist"><div class="list vlist"><div class="vdetail">'+res['vehicles']['vehiclelist'][index]['year']+' '+res['vehicles']['vehiclelist'][index]['make']+' '+res['vehicles']['vehiclelist'][index]['model']+' ('+res['vehicles']['vehiclelist'][index]['color']+')<br />License No: '+res['vehicles']['vehiclelist'][index]['tagnumber']+' Vin Number: '+res['vehicles']['vehiclelist'][index]['vinnumber']+'</div>';
+					html+='<div><div class="list vlist"><table class="table table-bordered table-striped"><tr class="vdetail"><td colspan="2">'+res['vehicles']['vehiclelist'][index]['year']+' '+res['vehicles']['vehiclelist'][index]['make']+' '+res['vehicles']['vehiclelist'][index]['model']+' ('+res['vehicles']['vehiclelist'][index]['color']+')</td></tr><tr><td>License No:</td> <td> '+res['vehicles']['vehiclelist'][index]['tagnumber']+' </td></tr><tr><td>Vin Number:</td><td> '+res['vehicles']['vehiclelist'][index]['vinnumber']+'</td></tr>';
 					if(typeof res['vehicles']['vehiclelist'][index]['address']['Address'] != 'undefined'){
-						html+='<div class="addetail">'+res['vehicles']['vehiclelist'][index]['address']['Address']+'</div>';
+						html+='<tr class="addetail"><td colspan="2">'+res['vehicles']['vehiclelist'][index]['address']['Address']+'</td></tr>';
 					}
 					if(typeof res['vehicles']['vehiclelist'][index]['towing']['locationto'] != 'undefined'){
-						html+='<div class="towdetail">Towed To: '+res['vehicles']['vehiclelist'][index]['towing']['locationto']+'</div>';
+						html+='<tr class="towdetail"><td>Towed To: </td><td>'+res['vehicles']['vehiclelist'][index]['towing']['locationto']+'</td></tr>';
 					}
-					html+='<div class="overlay_div">';
+					html+='<tr class="overlay_div"> <td colspan="2">';
 					if(res['vehicles']['vehiclelist'][index]['status']!='24' && res['vehicles']['vehiclelist'][index]['status']!='25'){
 						if(res['vehicles']['vehiclelist'][index]['status']=='0'){
-							html+='<a href="javascript:;" class="activdeactivvehicle" coords="0" vid="'+res['vehicles']['vehiclelist'][index]['id']+'"><i class="fa fa-times"></i></a>';
+							html+='<a href="javascript:;" class="activdeactivvehicle" coords="0" vid="'+res['vehicles']['vehiclelist'][index]['id']+'"><i class="fa fa-times"></i> </a>';
 						}
 						else if(res['vehicles']['vehiclelist'][index]['status']=='1'){
-							html+='<a href="javascript:;" class="activdeactivvehicle" coords="1" vid="'+res['vehicles']['vehiclelist'][index]['id']+'"><i class="fa fa-check"></i></a>';
+							html+='<a href="javascript:;" class="activdeactivvehicle" coords="1" vid="'+res['vehicles']['vehiclelist'][index]['id']+'"><i class="fa fa-check"></i> </a>';
 						}
 					}
 					if(usertype=='admin' || usertype=='user')
 					{
-						html+='<a href="edit-authorized-vehicle.html?uid='+uid+'&v='+res['vehicles']['vehiclelist'][index]['id']+'&usertype='+usertype+'"><i class="fa fa-pencil"></i></a>';
+						html+='<a href="edit-authorized-vehicle.html?uid='+uid+'&v='+res['vehicles']['vehiclelist'][index]['id']+'&usertype='+usertype+'"><i class="fa fa-pencil"></i> </a>';
 					}
 					else
 					{
-						html+='<a href="authorized-vehicle-detail.html?uid='+uid+'&v='+res['vehicles']['vehiclelist'][index]['id']+'&usertype='+usertype+'"><i class="fa fa-eye"></i></a>';
+						html+='<a href="authorized-vehicle-detail.html?uid='+uid+'&v='+res['vehicles']['vehiclelist'][index]['id']+'&usertype='+usertype+'"><i class="fa fa-eye"></i> </a>';
 					}
-					html+='</div></div></div>';
+					html+='</td></tr></table</div></div>';
 			   });
 			   if(parseInt(res['vehicles']['total'])>(parseInt(res['vehicles']['pageid'])*parseInt(res['vehicles']['vehiclelist'].length)))
 			   {
@@ -194,66 +204,74 @@ jQuery(document).ready(function(){
 	});
 });		
 </script>
+</head>
 <body>
+<div class="overlay"></div>
+<nav class="navbar navbar-inverse navbar-static-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed pull-left" data-toggle="offcanvas"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+    </div>
+    <div id="navbar" class="menu_div collapse navbar-collapse sidebar-offcanvas">
+      <ul class="menus nav navbar-nav">
+      </ul>
+    </div>
+    <!--/.nav-collapse --> 
+  </div>
+</nav>
 <div class="wrapper">
-	<div class="container">
-		<header>
-			<div class="menu_div">
-				<a href="javascript:;" class="showhidemenus"><img src="../images/menu32@64.png"></a>
-				<ul class="menus"></ul>
-			</div>
-			<script type="text/javascript">document.write(language_en_menus());</script>
-				<div class="logo_div">
-					<a href="#"><img src="../images/logo.png"></a>
-				</div>
-		</header><!------------------header close-------------------------------->
-		<!--------------------------content-div starts------------------------------------------->	
-			<div class="content_div manager_search">
-				
-				<div class="inner_content"><!--------------------------inner_content------------------------------------------->
-					<h4 class="search_headng">VEHICLES</h4>
-						 
-					      <div class="select_div">
-						  <a href="add-vehicle.html" id="addnewuser" class="btn btn-success add-new">Add New Vehicle</a>
-						  <form class="searchbox" action="vehicles.html" method="get">
-						  <input type="hidden" name="uid" id="usid" />
-						  <input type="hidden" name="usertype" id="usertype" />
-						  <div class="field">
-							 <select name="selectoption" class="form-control">
-							  <option value="all">All</option>
-							   <option value="tag"> License Plate </option>
-							  <option value="vin">Vin Number </option>
-							  <option value="location">Location</option>
-							  <option value="company">Company</option>
-							</select>
-						</div>
-							<div class="field">
-							  <select name="vtype" class="form-control" >
-								  <option value="">Type</option>
-								   <option value="remove"> To Be Remove </option>
-								  <option value="removed">Removed </option>
-								</select>
-							</div>
-							<div class="field">
-								<input type="text" class="form-control" id="vehicle_search" placeholder="Search" value="" name="searcht">
-							</div>
-							<div class="field">
-								<input class="btn btn-success btn-sm" type="submit" value="Search">
-							</div>
-					     </form>
-					   </div>
-					   <div class="detail_div">
-					   	<div class="vehiclelisting"></div>
-					   </div>
-							
-				</div><!--------------------------inner_content------------------------------------------->	
-				</div>
-			</div>
-		
-		<!--------------------------content-div endss------------------------------------------->	
-	</div>
+  <header class="border-header" style="margin-bottom:0px;">
+    <div class="container">
+      <div class="logo pull-left"> <a href="#"><img src="../images/logo.png"></a> </div>
+      <script type="text/javascript">document.write(language_en_menus());</script> 
+    </div>
+  </header>
+  <!------------------header close--------------------------------> 
+  <!--------------------------content-div starts------------------------------------------->
+  <div class="content_div manager_search">
+    <h4 style="margin-top:0px;" class="search_headng">VEHICLES</h4>
+    <div class="container">
+      <div class="inner_content"><!--------------------------inner_content------------------------------------------->
+        
+        <div class="select_div"> <a href="add-vehicle.html" id="addnewuser"  class="pull-right">Add New Vehicle</a>
+          <form class="searchbox" action="vehicles.html" method="get">
+            <input type="hidden" name="uid" id="usid" />
+            <input type="hidden" name="usertype" id="usertype" />
+            <div class="field">
+              <select name="selectoption" class="form-control">
+                <option value="all">All</option>
+                <option value="tag"> License Plate </option>
+                <option value="vin">Vin Number </option>
+                <option value="location">Location</option>
+                <option value="company">Property</option>
+              </select>
+            </div>
+            <div class="field">
+              <select name="vtype" class="form-control" >
+                <option value="">Type</option>
+                <option value="remove"> To Be Remove </option>
+                <option value="removed">Removed </option>
+              </select>
+            </div>
+            <div class="field">
+              <input type="text" class="form-control" id="vehicle_search" placeholder="Search" value="" name="searcht">
+            </div>
+            <div class="field">
+              <input class="btn btn-primary" type="submit" value="Search">
+            </div>
+          </form>
+        </div>
+        <div class="detail_div">
+          <div class="vehiclelisting"></div>
+        </div>
+      </div>
+      <!--------------------------inner_content-------------------------------------------> 
+    </div>
+  </div>
+  
+  <!--------------------------content-div endss-------------------------------------------> 
 </div>
-
+</div>
+<script src="../js/offcanvas.js"></script>
 </body>
 </html>
-

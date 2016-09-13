@@ -17,7 +17,7 @@ function gup(sParam) {
 }
 function language_en_menus()
 {
-	var menu='<div class="lang_div"><ul><li class="active"><a href="#">English</a></li><li><a href="#">Espanol</a></li></ul></div>';
+	var menu=' <div class="lang pull-right"><ul class="list-inline"><li class="active"><a href="#"><img src="../images/icon-en.png"> English</a></li><li><a href="#"><img src="../images/icon-es.png"> Espanol</a></li></ul></div>';
 	return menu;
 }
 function driver_menus(para)

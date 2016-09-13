@@ -1,11 +1,21 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>EDIT VEHICLE</title>
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,100italic,300,100,300italic,400italic,500,500italic,700,700italic,900italic,900' rel='stylesheet' type='text/css'>
+<link href="../css/bootstrap.min.css" rel="stylesheet">
+<link href="../css/font-awesome.css" rel="stylesheet">
+<link href="../css/offcanvas.min.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" type="text/css" href="../style.css">
-</head>
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
 
 <script type="text/javascript" src="../js/jquery.js"></script>
 <script type="text/javascript" src="../js/config.js"></script>
@@ -196,94 +206,89 @@ jQuery(document).ready(function(){
 	 });
 });		
 </script>
+</head>
 <body>
+<div class="overlay"></div>
+<nav class="navbar navbar-inverse navbar-static-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed pull-left" data-toggle="offcanvas"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+    </div>
+    <div id="navbar" class="menu_div collapse navbar-collapse sidebar-offcanvas">
+      <ul class="menus nav navbar-nav">
+      </ul>
+    </div>
+    <!--/.nav-collapse --> 
+  </div>
+</nav>
 <div class="wrapper">
-	<div class="container">
-		<header>
-			<div class="menu_div">
-				<a href="javascript:;" class="showhidemenus"><img src="../images/menu32@64.png"></a>
-				<ul class="menus"></ul>
-			</div>
-			<script type="text/javascript">document.write(language_en_menus());</script>
-				<div class="logo_div">
-					<a href="#"><img src="../images/logo.png"></a>
-				</div>
-		</header><!------------------header close-------------------------------->
-		<!--------------------------content-div starts------------------------------------------->	
-			<div class="content_div manager_search">
-				
-				<div class="inner_content"><!--------------------------inner_content------------------------------------------->
-					<h4 class="search_headng">EDIT VEHICLE</h4>
-					   <div class="select_div">
-						  <form name="edituser" id="edituser" action="" method="post">
-							<div class="field"> Resident Name
-							<input type="text" class="form-control required" placeholder="Name" id="owner_namea" name="owner_name" value="">
-							</div>
-							<div class="field"> Email
-							  <input type="text" id="emaila" value="" placeholder="Email" class="form-control required email" name="email">
-							</div>
-							<div class="field"> 
-								Phone
-							  <input type="text" class="form-control required" value="" id="Phonepa" placeholder="Phone" name="phone">
-							</div>
-							<div class="field">
-							Unit Number
-							<input type="text" class="form-control" id="aprtmenta" placeholder="Unit Number" name="aprtment" value="">
-							</div>
-							<div class="field">
-							Vin Number
-							  <input type="text" class="form-control required" id="vinnumbera" placeholder="Vin Number" value="" name="vinnumber">
-							</div>
-							<div class="field">
-								License No
-							  <input type="text" class="form-control" id="tagnumbera" placeholder="License No" name="tagnumber">
-							</div>
-							
-							<div class="field"> 
-							 Year
-							  <input type="text" class="form-control" id="yeara" placeholder="Year" value="" name="year">
-							</div>
-							
-							<div class="field"> 
-							 Make
-							  <input type="text" class="form-control" id="makea" placeholder="Make" value="" name="make">
-							</div>
-							<div class="field"> 
-							 Model
-							  <input type="text" class="form-control" id="modela" placeholder="Model" value="" name="model">
-							</div>
-							<div class="field"> 
-							 Color
-							  <input type="text" class="form-control" id="colora" placeholder="Color" value="" name="color">
-							</div>
-							<div class="field"> 
-							 Expiry Date
-							  <input type="text" class="form-control" id="expdatea" placeholder="Expiry Date" value="" disabled="disabled">
-							</div>
-							<div class="field"> 
-							 Type Of Permit
-							  <select name="typeofpermit" id="typeofpermita" class="form-control required">
-							  
-							  </select>
-							</div>
-							<div class="field"> 
-							 Reserved Space
-							  <input type="text" name="reservedspace" placeholder="" id="reservedspacea" class="form-control">
-							</div>
-							<div class="field"> 
-							 Notes
-							  <textarea name="notes" id="notespa" class="form-control"></textarea>
-							</div>
-							<div class="signature"></div>
-							<div class="clr"></div>
-							<button class="btn btn-success" name="update" type="submit">Update</button>
-						  </form>
-					   </div>
-				</div>
-			</div>
-		
-	</div>
+  <header class="border-header" style="margin-bottom:0px;">
+    <div class="container">
+      <div class="logo pull-left"> <a href="#"><img src="../images/logo.png"></a> </div>
+      <script type="text/javascript">document.write(language_en_menus());</script> 
+    </div>
+  </header>
+  <!------------------header close--------------------------------> 
+  <!--------------------------content-div starts------------------------------------------->
+  <div class="content_div manager_search">
+    <h4 style="margin:0px;" class="search_headng">EDIT VEHICLE</h4>
+    <div class="container" style="padding-bottom:20px;">
+      <div class="inner_content"><!--------------------------inner_content------------------------------------------->
+        
+        <div class="select_div">
+          <form name="edituser" id="edituser" action="" method="post">
+            <div class="field"> Resident Name
+              <input type="text" class="form-control required" placeholder="Name" id="owner_namea" name="owner_name" value="">
+            </div>
+            <div class="field"> Email
+              <input type="text" id="emaila" value="" placeholder="Email" class="form-control required email" name="email">
+            </div>
+            <div class="field"> Phone
+              <input type="text" class="form-control required" value="" id="Phonepa" placeholder="Phone" name="phone">
+            </div>
+            <div class="field"> Unit Number
+              <input type="text" class="form-control" id="aprtmenta" placeholder="Unit Number" name="aprtment" value="">
+            </div>
+            <div class="field"> Vin Number
+              <input type="text" class="form-control required" id="vinnumbera" placeholder="Vin Number" value="" name="vinnumber">
+            </div>
+            <div class="field"> License No
+              <input type="text" class="form-control" id="tagnumbera" placeholder="License No" name="tagnumber">
+            </div>
+            <div class="field"> Year
+              <input type="text" class="form-control" id="yeara" placeholder="Year" value="" name="year">
+            </div>
+            <div class="field"> Make
+              <input type="text" class="form-control" id="makea" placeholder="Make" value="" name="make">
+            </div>
+            <div class="field"> Model
+              <input type="text" class="form-control" id="modela" placeholder="Model" value="" name="model">
+            </div>
+            <div class="field"> Color
+              <input type="text" class="form-control" id="colora" placeholder="Color" value="" name="color">
+            </div>
+            <div class="field"> Expiry Date
+              <input type="text" class="form-control" id="expdatea" placeholder="Expiry Date" value="" disabled="disabled">
+            </div>
+            <div class="field"> Type Of Permit
+              <select name="typeofpermit" id="typeofpermita" class="form-control required">
+              </select>
+            </div>
+            <div class="field"> Reserved Space
+              <input type="text" name="reservedspace" placeholder="" id="reservedspacea" class="form-control">
+            </div>
+            <div class="field"> Notes
+              <textarea name="notes" id="notespa" class="form-control"></textarea>
+            </div>
+            <div class="signature"></div>
+            <div class="clr"></div>
+            <button class="btn btn-primary" name="update" type="submit">Update</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-
+<script src="../js/offcanvas.js"></script>
 </body>
 </html>

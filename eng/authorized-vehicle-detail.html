@@ -1,11 +1,21 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VEHICLE DETAIL</title>
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,100italic,300,100,300italic,400italic,500,500italic,700,700italic,900italic,900' rel='stylesheet' type='text/css'>
+<link href="../css/bootstrap.min.css" rel="stylesheet">
+<link href="../css/font-awesome.css" rel="stylesheet">
+<link href="../css/offcanvas.min.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" type="text/css" href="../style.css">
-
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
 <script type="text/javascript" src="../js/jquery.js"></script>
 <script type="text/javascript" src="../js/validate.js"></script>
 <script type="text/javascript" src="../js/config.js"></script>
@@ -297,23 +307,34 @@ function calculateAndDisplayRoute(directionsDisplay, directionsService,
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdRw4y6QbeCa2AVoQcI_j7NMQZPYDrabU" type="text/javascript"></script>
 </head>
 <body>
+<div class="overlay"></div>
+<nav class="navbar navbar-inverse navbar-static-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed pull-left" data-toggle="offcanvas"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+    </div>
+    <div id="navbar" class="menu_div collapse navbar-collapse sidebar-offcanvas">
+      <ul class="menus nav navbar-nav">
+      </ul>
+    </div>
+    <!--/.nav-collapse --> 
+  </div>
+</nav>
+
 <div class="wrapper">
-	<div class="container">
-		<header>
-			<div class="menu_div">
-				<a href="javascript:;" class="showhidemenus"><img src="../images/menu32@64.png"></a>
-				<ul class="menus"></ul>
-			</div>
-			<script type="text/javascript">document.write(language_en_menus());</script>
-				<div class="logo_div">
-					<a href="#"><img src="../images/logo.png"></a>
-				</div>
-		</header><!------------------header close-------------------------------->
+	
+		<header class="border-header" style="margin-bottom:0px;">
+    <div class="container">
+      <div class="logo pull-left"> <a href="#"><img src="../images/logo.png"></a> </div>
+      <script type="text/javascript">document.write(language_en_menus());</script> 
+    </div>
+  </header><!------------------header close-------------------------------->
 		<!--------------------------content-div starts------------------------------------------->	
 			<div class="content_div manager_search">
-				
+            <h4 style="margin-top:0px;" class="search_headng">VEHICLE DETAIL</h4>
+				<div class="container">
 				<div class="inner_content"><!--------------------------inner_content------------------------------------------->
-					<h4 class="search_headng">VEHICLE DETAIL</h4>
+					
 					   
 					   <div class="detail_div">
 					   <div class="vehiclelisting">
@@ -321,7 +342,7 @@ function calculateAndDisplayRoute(directionsDisplay, directionsService,
 							<div class="list vlist">
 							<p id="maddress"></p>
 							<div class="clr"></div>
-							<strong>Company Name: </strong><p id="mcompany_name"></p>
+							<strong>Property Name: </strong><p id="mcompany_name"></p>
 							<div class="clr"></div>
 							<strong>Manager Name:</strong> <p id="managername"></p>
 							<div class="clr"></div>
@@ -376,7 +397,7 @@ function calculateAndDisplayRoute(directionsDisplay, directionsService,
 		<!--------------------------content-div endss------------------------------------------->	
 	</div>
 </div>
-
+<script src="../js/offcanvas.js"></script>
 </body>
 </html>
 
