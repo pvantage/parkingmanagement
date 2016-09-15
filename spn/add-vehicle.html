@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Añadir Vehículo</title>
+<link href='https://fonts.googleapis.com/css?family=Roboto:400,100italic,300,100,300italic,400italic,500,500italic,700,700italic,900italic,900' rel='stylesheet' type='text/css'>
+<link href="../css/bootstrap.min.css" rel="stylesheet">
+<link href="../css/font-awesome.css" rel="stylesheet">
+<link href="../css/offcanvas.min.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link href="../css/jquery-ui.css" rel="stylesheet" />
+<link href="../css/signature-pad.css" rel="stylesheet" />
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<script type="text/javascript" src="../js/jquery.js"></script>
+<script type="text/javascript" src="../js/validate.js"></script>
+<script src="../js/jquery-ui.js"></script>
+<script type="text/javascript" src="../js/config_es.js"></script>
+<script type="text/javascript">
+jQuery(document).ready(function(){
+	
+	
+	jQuery( document ).on( "mobileinit", function() {
+		jQuery.mobile.allowCrossDomainPages = true;
+	});
+	var contentType ="application/x-www-form-urlencoded; charset=utf-8";
+    if(window.XDomainRequest){contentType = "text/plain";}
+	jQuery.support.cors = true;
+	var uid=gup('uid');
+	checkloggedin(uid);
+	var url=siteurl+'/api/update-vehicle';
+    
+		jQuery.ajax({  
+			 type: 'POST',  
+			 url: url,  
+			 dataType: 'json',  
+			 data: {uid:uid, selectoptions:1,lang:'es'},  
+			 crossDomain: true,  
+			 beforeSend: function() {
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .preloader').remove();
+				var html='<div class="bodyoverlay"></div><div class="preloader"></div>';
+				jQuery('body').append(html);					
+			 },		
+			 complete: function() {
+				//jQuery('body .bodyoverlay').remove();
+				jQuery('body .preloader').remove();					
+			 },
+			 success: function(res) {  
+				
+				jQuery('body .bodyoverlay').remove();
+				jQuery(res['yearlist']).each(function(k){
+					jQuery('#year').append('<option value="'+res['yearlist'][k]+'">'+res['yearlist'][k]+'</option>');
+				});
+				jQuery(res['tyepofpermits']).each(function(k){
+					jQuery('#typeofpermit').append('<option value="'+res['tyepofpermits'][k]+'">'+res['tyepofpermits'][k]+'</option>');
+				});
+				jQuery('body .popupbox').remove();
+			 },  
+			 error: function(response, d, a){
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .popupbox').remove();
+				var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Error del Servidor.</h1><button class="okbox">DE ACUERDO</button></div>';
+				jQuery('body').append(html);
+				
+				jQuery('.okbox').click(function(){
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .popupbox').remove();
+				});
+				return false; 
+			 } 
+		   });
+	   jQuery('#edituser').validate();
+	 jQuery('#edituser').submit(function(){
+	 	
+		var error=false;
+		jQuery('#edituser input, #edituser textarea').each(function(){
+			if(jQuery(this).hasClass('error'))
+			{
+				error=true;
+			}
+		});
+		var formData = jQuery('#edituser').serialize();
+		
+		formData = formData + '&uid=' + uid+ '&addvehicle=1&lang=es';
+		
+		if(!error)
+		{
+			jQuery.ajax({  
+			 type: 'POST',  
+			 url: url,  
+			 dataType: 'json',  
+			 data: formData,  
+			 crossDomain: true,  
+			 beforeSend: function() {
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .preloader').remove();
+				var html='<div class="bodyoverlay"></div><div class="preloader"></div>';
+				jQuery('body').append(html);					
+			 },		
+			 complete: function() {
+				//jQuery('body .bodyoverlay').remove();
+				jQuery('body .preloader').remove();					
+			 },
+			 success: function(res) {  
+				if(res['vehicles']['error'])
+				{
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .popupbox').remove();
+					var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>';
+					jQuery(res['vehicles']['error']).each(function(k){
+						html+=res['vehicles']['error'][k]+'<br />';
+					});
+					
+					html+='</h1><button class="okbox">DE ACUERDO</button></div>';
+					jQuery('body').append(html);
+					
+				}
+				else if(res['vehicles']['addedvehicle'])
+				{
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .popupbox').remove();
+					var html='<div class="bodyoverlay"></div><div class="popupbox"><div class="popupimg"><img src="../images/pop.png" /></div><h1 class="success">ÉXITO</h1><h1>'+res['vehicles']['addedvehicle']+'.</h1><button class="okbox">DE ACUERDO</button></div>';
+					jQuery('body').append(html);
+					jQuery('#edituser')[0].reset();
+					
+				}
+				jQuery('.okbox').click(function(){
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .popupbox').remove();
+				}); 
+				
+				
+				return false;
+			 },  
+			 error: function(response, d, a){
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .popupbox').remove();
+				var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Error del Servidor.</h1><button class="okbox">DE ACUERDO</button></div>';
+				jQuery('body').append(html);
+				
+				jQuery('.okbox').click(function(){
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .popupbox').remove();
+				});
+				return false; 
+			 } 
+		   });
+	   }
+	   return false;
+	 });
+});		
+</script>
+</head>
+<body>
+<div class="overlay"></div>
+<nav class="navbar navbar-inverse navbar-static-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed pull-left" data-toggle="offcanvas"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+    </div>
+    <div id="navbar" class="menu_div collapse navbar-collapse sidebar-offcanvas">
+      <ul class="menus nav navbar-nav">
+      </ul>
+    </div>
+    <!--/.nav-collapse --> 
+  </div>
+</nav>
+<div class="wrapper">
+	
+		<header class="border-header" style="margin-bottom:0px;">
+    <div class="container">
+      <div class="logo pull-left"> <a href="#"><img src="../images/logo.png"></a> </div>
+      <script type="text/javascript">document.write(language_en_menus());</script> 
+    </div>
+  </header><!------------------header close-------------------------------->
+		<!--------------------------content-div starts------------------------------------------->	
+			<div class="content_div manager_search">
+            <h4 style="margin-top:0px;" class="search_headng">Añadir Vehículo</h4>
+				<div class="container" style="padding-bottom:20px;">
+				<div class="inner_content"><!--------------------------inner_content------------------------------------------->
+					
+					   <div class="select_div">
+						  <form name="edituser" id="edituser" action="" method="post">
+							<div class="field">
+								<input type="text" name="owner_name" placeholder="Nombre del Residente" id="owner_name" class="form-control required">
+							</div>
+							  <div class="field">
+								<div id="emailcheck" style="text-align:center;"></div>
+								<input type="text"  name="Email" placeholder="Email" id="Email" class="form-control has-feedback-left email">
+							  </div>
+							  
+							  <div class="field">
+								<div id="phncheck" style="text-align:center;"></div>
+								<input type="text" name="Phone" placeholder="Teléfono" id="Phone"  class="form-control required">
+								</div>
+							  <div class="field">
+								<input type="text" name="aprtment" id="aprtment" placeholder="Unidad numérica" class="form-control required">
+							  </div>
+							  <div class="field">
+								<input type="text" name="vinnumber" id="vinnumber" placeholder="Número VIN" class="form-control required">
+							  </div>
+							  <div class="field">
+								<input type="text" name="tagnumber" id="tagnumber" placeholder="Sin Licencia" class="form-control required">
+							  </div>
+							  <div class="field">
+								<select name="year" id="year" class="form-control required">
+									<option value="">Seleccionar año</option></select>
+							  </div>
+							  <div class="field">
+								<input type="text" name="make" id="make" placeholder="Hacer" class="form-control required">
+							  </div>
+							  <div class="field">
+								<input type="text" name="model" id="model" placeholder="Modelo" class="form-control required">
+							  </div>
+							  <div class="field">
+								<input type="text" name="color" id="color" placeholder="Color" class="form-control required">
+							  </div>
+							  <div class="field">
+								<select type="text" class="form-control" name="typeofpermit" id="typeofpermit"></select>
+							  </div>
+							  <div class="field">
+								<label>Activo</label>
+								<input type="checkbox" value="1" name="status" id="status">
+							  </div>
+							  <div class="field">
+								<input type="text" name="expdate" id="expdate" placeholder="Fecha de caducidad" class="form-control required">
+							  </div>
+							  <div class="field">
+								<input type="text" name="reservedspace" id="reservedspace" placeholder="Espacio reservado" class="form-control">
+							  </div>
+							  <div class="field">
+								<textarea class="form-control" id="notes" placeholder="notas" name="notes"></textarea>
+							  </div>
+							  <div class="field">
+								<label for="signature">Firma</label>
+								<div>
+								<div class="canvas_container">
+								  <div id="signature-pad" class="m-signature-pad">
+									<div class="m-signature-pad--body">
+									  <canvas id="canvas" width="300" height="40"></canvas>
+									</div>
+								  </div>
+								</div>
+								<div class="patent_submit nextbox">
+								  <button type="button" class="btn btn-default clearsignature" data-action="clear">claro Firma</button>
+								  <button type="button" class="btn btn-default savesignature" data-action="save">Guardar Firma</button>
+								</div>
+								<input type="hidden" name="signaturefile" id="signaturefile" value="" />
+							  </div>
+							  </div>
+							<div class="clr"></div>
+							<button class="btn btn-success" name="update" type="submit">Añadir</button>
+						  </form>
+					   </div>
+				</div>
+			</div>
+		
+	</div>
+</div>
+<script type="text/javascript" src="../js/signature_pad.js"></script>
+<script type="text/javascript" src="../js/app.js"></script>
+<script type="text/javascript">
+jQuery(document).ready(function(){
+	jQuery('.clearsignature').click(function () {
+		signaturePad.clear();
+		jQuery('.m-signature-pad--body img').remove();
+		jQuery('.m-signature-pad--body canvas').show();
+		jQuery(".savesignature").attr('disabled',false);
+		jQuery('#signaturefile').val('');
+	});
+	jQuery(".savesignature").click(function(){
+	
+		var canvasData = signaturePad.toDataURL("image/png");
+		var url=siteurl+'/api/save-signature';
+		jQuery.ajax({  
+			 type: 'POST',  
+			 url: url,  
+			 dataType: 'json',  
+			 data: {"save-signature": "canvasSave", "image":canvasData, "uid":uid},  
+			 crossDomain: true,  
+			 beforeSend: function() {
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .preloader').remove();
+				var html='<div class="bodyoverlay"></div><div class="preloader"></div>';
+				jQuery('body').append(html);					
+			 },		
+			 complete: function() {
+				//jQuery('body .bodyoverlay').remove();
+				jQuery('body .preloader').remove();					
+			 },
+			 success: function(res) {  
+				jQuery('.m-signature-pad--body img').remove();
+				jQuery('.m-signature-pad--body canvas').hide();
+				jQuery('.m-signature-pad--body').append('<img src="'+res['image1']+'" alt="" />');
+				setTimeout(function(){jQuery('.m-signature-pad--body img').attr('src',res['image1']);},1000);
+				jQuery(".savesignature").attr('disabled',true);
+				jQuery('#signaturefile').val(res['image2']);
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .popupbox').remove();
+				return false;
+			 },  
+			 error: function(response, d, a){
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .popupbox').remove();
+				var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Error del Servidor.</h1><button class="okbox">DE ACUERDO</button></div>';
+				jQuery('body').append(html);
+				
+				jQuery('.okbox').click(function(){
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .popupbox').remove();
+				});
+				return false; 
+			 } 
+		   });
+
+	});
+	
+	$( "#expdate" ).datepicker({
+	  dateFormat: 'mm-yy',
+        changeMonth: true,
+        changeYear: true,
+        showButtonPanel: true,
+		'minDate': new Date(),
+
+        onClose: function(dateText, inst) {  
+            var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val(); 
+            var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val(); 
+            $(this).val($.datepicker.formatDate('mm-yy', new Date(year, month, 1)));
+		}
+	});
+	$("#expdate").focus(function () {
+        $(".ui-datepicker-calendar").hide();
+        $("#ui-datepicker-div").position({
+            my: "center top",
+            at: "center bottom",
+            of: $(this)
+        });    
+	});
+});
+</script>
+<script src="../js/offcanvas.js"></script>
+</body>
+</html>

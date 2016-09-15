@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Login</title>
+<link href='https://fonts.googleapis.com/css?family=Roboto:400,100italic,300,100,300italic,400italic,500,500italic,700,700italic,900italic,900' rel='stylesheet' type='text/css'>
+<link href="../css/bootstrap.min.css" rel="stylesheet">
+<link href="../css/font-awesome.css" rel="stylesheet">
+<link href="../css/offcanvas.min.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="../style.css">
+
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<script type="text/javascript" src="../js/jquery.js"></script>
+<script type="text/javascript" src="../js/validate.js"></script>
+<script type="text/javascript" src="../js/config_es.js"></script>
+<script type="text/javascript">
+jQuery(document).ready(function(){
+	
+	
+	jQuery( document ).on( "mobileinit", function() {
+		jQuery.mobile.allowCrossDomainPages = true;
+	});
+	var contentType ="application/x-www-form-urlencoded; charset=utf-8";
+    if(window.XDomainRequest){contentType = "text/plain";}
+	jQuery.support.cors = true;
+	
+	var uid=gup('uid');
+	//checkloggedin(uid);
+	var usertype=gup('usertype');
+			
+		var user_login=jQuery('#username').val();
+		var user_pass=jQuery('#pwd').val();
+		var url=siteurl+'/api/login';
+		if(uid=='')
+		{
+			return false;
+		}
+		else
+		{
+			 jQuery.ajax({  
+			 type: 'POST',  
+			 url: url,           
+			 dataType: 'json',  
+			 data: {uid:uid,logoutuser:1,lang:'es'}, 
+			 beforeSend: function() {
+			 	jQuery('body .bodyoverlay').remove();
+				jQuery('body .preloader').remove();
+				var html='<div class="bodyoverlay"></div><div class="preloader"><br /><br /><br /><br /><br /><br /><br /><br />Going for logout</div>';
+				jQuery('body').append(html);
+			 },		
+			 complete: function() {
+			 	jQuery('body .bodyoverlay').remove();
+				jQuery('body .preloader').remove();
+			 }, 
+			 crossDomain: true,  
+			 success: function(res) { 
+				if(res['checkout']['success'])
+				{
+					
+					window.location ='../index-es.html';
+				
+					//localStorage.setItem('userInfo', res['success']['userid']);
+					//window.location ='category.html';
+				}else if(res['checkout']['error']){				
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .popupbox').remove();
+					var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="images/error.png" /></div><h1 class="success">ERROR</h1><h1>'+res['checkout']['error']+'</h1><button class="okbox">DE ACUERDO</button></div>';
+					jQuery('body').append(html);
+					
+					jQuery('.okbox').click(function(){
+						jQuery('body .bodyoverlay').remove();
+						jQuery('body .popupbox').remove();
+					});
+					
+				}
+				else
+				{
+					alert('Server error');
+				}
+				return false; 
+			 },  
+			 error: function(response, d, a){
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .popupbox').remove();
+				var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="images/error.png" /></div><h1 class="success">ERROR</h1><h1>Error del Servidor.</h1><button class="okbox">DE ACUERDO</button></div>';
+				jQuery('body').append(html);
+				
+				jQuery('.okbox').click(function(){
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .popupbox').remove();
+				});
+				return false; 
+			 }
+			        
+		   });
+		 }	
+		 return false;   
+	});
+	
+	
+</script>
+</head>
+
+<body>
+<div class="wrapper">
+  <header class="border-header" style="margin-bottom:0px;">
+    <div class="container">
+      <div class="logo pull-left"> <a href="#"><img src="../images/logo.png"></a> </div>
+      <script type="text/javascript">document.write(language_en_menus());</script> 
+    </div>
+  </header>
+  <!------------------header close--------------------------------> 
+  
+  <!--------------------------content-div endss-------------------------------------------> 
+</div>
+</body>
+</html>

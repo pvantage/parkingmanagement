@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Find Vehicles</title>
+<link href='https://fonts.googleapis.com/css?family=Roboto:400,100italic,300,100,300italic,400italic,500,500italic,700,700italic,900italic,900' rel='stylesheet' type='text/css'>
+<link href="../css/bootstrap.min.css" rel="stylesheet">
+<link href="../css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="../style.css">
+
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<script type="text/javascript" src="../js/jquery.js"></script>
+<script type="text/javascript" src="../js/validate.js"></script>
+<script type="text/javascript" src="../js/config_es.js"></script>
+<script type="text/javascript">
+jQuery(document).ready(function(){
+	
+	jQuery( document ).on( "mobileinit", function() {
+		jQuery.mobile.allowCrossDomainPages = true;
+	});
+	var contentType ="application/x-www-form-urlencoded; charset=utf-8";
+    if(window.XDomainRequest){contentType = "text/plain";}
+	jQuery.support.cors = true;
+	
+	var url=siteurl+'/api/find-your-vehicle';
+    
+	var selectoption=gup('selectoption');
+	if(jQuery.trim(selectoption)==''){selectoption='tag';}
+	jQuery('select[name="selectoption"]').val(selectoption);
+	var searcht=gup('searcht');
+	jQuery('input[name="searcht"]').val(searcht);
+	
+	if(jQuery.trim(selectoption)!='' && jQuery.trim(searcht)!='')
+	{
+	
+		jQuery.ajax({ 
+			 type: 'POST',  
+			 url: url,  
+			 //contentType: contentType,  
+			 dataType: 'json',  
+			 data: {selectoption:selectoption,searcht:searcht,lang:'es'},  
+			 crossDomain: true,  
+			 beforeSend: function() {
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .preloader').remove();
+				var html='<div class="bodyoverlay"></div><div class="preloader"></div>';
+				jQuery('body').append(html);					
+			 },		
+			 complete: function() {
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .preloader').remove();					
+			 },
+			 success: function(res) {  
+			   if(res['vehicles']['vehiclelist'])
+			   {
+					var html='';
+					
+					jQuery(res['vehicles']['vehiclelist']).each(function(index){
+						html+='<div><div class="list vlist"><table class="table table-bordered table-striped"><tr class="vdetail"> <td colspan="2">'+res['vehicles']['vehiclelist'][index]['year']+' '+res['vehicles']['vehiclelist'][index]['make']+' '+res['vehicles']['vehiclelist'][index]['model']+' ('+res['vehicles']['vehiclelist'][index]['color']+')</td><tr><td>Sin Licencia:</td><td> '+res['vehicles']['vehiclelist'][index]['tagnumber']+'</td></tr><tr> <td>Número VIN:</td> <td>'+res['vehicles']['vehiclelist'][index]['vinnumber']+'</td></tr>';
+						if(typeof res['vehicles']['vehiclelist'][index]['address']['Address'] != 'undefined'){
+							html+='<tr class="addetail"><td colspan="2">'+res['vehicles']['vehiclelist'][index]['address']['Address']+'</td></tr>';
+						}
+						if(typeof res['vehicles']['vehiclelist'][index]['towing']['locationto'] != 'undefined'){
+							html+='<tr class="towdetail"><td>Para remolcado:</td><td> '+res['vehicles']['vehiclelist'][index]['towing']['locationto']+'</td></tr>';
+						}
+						html+='<tr class="overlay_div"><td colspan="2">';
+						
+						html+='<a href="find-vehicle-detail.html?v='+res['vehicles']['vehiclelist'][index]['id']+'"><i class="fa fa-eye"></i></a>';
+						html+='</td></tr></table></div></div>';
+				   });
+				   if(parseInt(res['vehicles']['total'])>(parseInt(res['vehicles']['pageid'])*parseInt(res['vehicles']['vehiclelist'].length)))
+				   {
+						var pageid=parseInt(res['vehicles']['pageid'])+1;
+						html+='<a href="javascript:;" class="btn btn-danger loadmore" pageid="'+pageid+'">Carga más</a>';
+				   }
+				   jQuery('.vehiclelisting').html(html);
+					
+					activdeactivvehicle();
+				}
+				else
+				{
+					//window.location='index.html';
+				}
+			 },  
+			 error: function(response, d, a){
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .popupbox').remove();
+				var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Error del Servidor.</h1><button class="okbox">DE ACUERDO</button></div>';
+				jQuery('body').append(html);
+				
+				jQuery('.okbox').click(function(){
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .popupbox').remove();
+				}); 
+			 } 
+		   });
+		  jQuery('a.loadmore').live('click',function(){
+			var pageid=jQuery(this).attr('pageid');
+			var $this=jQuery(this);
+			jQuery.ajax({ 
+				 type: 'POST',  
+				 url: url,  
+				 //contentType: contentType,  
+				 dataType: 'json',  
+				 data: {selectoption:selectoption,searcht:searcht,show:pageid,lang:'es'},  
+				 crossDomain: true,  
+				 beforeSend: function() {
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .preloader').remove();
+					var html='<div class="bodyoverlay"></div><div class="preloader"></div>';
+					jQuery('body').append(html);					
+				 },		
+				 complete: function() {
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .preloader').remove();					
+				 },
+				 success: function(res) {  
+				   if(res['vehicles']['vehiclelist'])
+				   {
+						var html='';
+						
+						jQuery(res['vehicles']['vehiclelist']).each(function(index){
+							html+='<div><div class="list vlist"><table class="table table-bordered table-striped"><tr class="vdetail"> <td colspan="2">'+res['vehicles']['vehiclelist'][index]['year']+' '+res['vehicles']['vehiclelist'][index]['make']+' '+res['vehicles']['vehiclelist'][index]['model']+' ('+res['vehicles']['vehiclelist'][index]['color']+')</td><tr><td>Sin Licencia:</td><td> '+res['vehicles']['vehiclelist'][index]['tagnumber']+'</td></tr><tr> <td>Número VIN:</td> <td>'+res['vehicles']['vehiclelist'][index]['vinnumber']+'</td></tr>';
+						if(typeof res['vehicles']['vehiclelist'][index]['address']['Address'] != 'undefined'){
+							html+='<tr class="addetail"><td colspan="2">'+res['vehicles']['vehiclelist'][index]['address']['Address']+'</td></tr>';
+						}
+						if(typeof res['vehicles']['vehiclelist'][index]['towing']['locationto'] != 'undefined'){
+							html+='<tr class="towdetail"><td>Para remolcado:</td><td> '+res['vehicles']['vehiclelist'][index]['towing']['locationto']+'</td></tr>';
+						}
+						html+='<tr class="overlay_div"><td colspan="2">';
+						
+						html+='<a href="find-vehicle-detail.html?v='+res['vehicles']['vehiclelist'][index]['id']+'"><i class="fa fa-eye"></i></a>';
+						html+='</td></tr></table></div></div>';
+					   });
+					   if(parseInt(res['vehicles']['total'])>(parseInt(res['vehicles']['pageid'])*parseInt(res['vehicles']['vehiclelist'].length)))
+					   {
+							var pageid=parseInt(res['vehicles']['pageid'])+1;
+							html+='<a href="javascript:;" class="btn btn-danger loadmore" pageid="'+pageid+'">Carga más</a>';
+					   }
+					   jQuery('.vehiclelisting').append(html);
+					   activdeactivvehicle();
+					   
+					}
+					jQuery($this).remove();
+					
+				 },  
+				 error: function(response, d, a){
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .popupbox').remove();
+					var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Error del Servidor.</h1><button class="okbox">DE ACUERDO</button></div>';
+					jQuery('body').append(html);
+					
+					jQuery('.okbox').click(function(){
+						jQuery('body .bodyoverlay').remove();
+						jQuery('body .popupbox').remove();
+					}); 
+				 } 
+			   });
+		});
+	}
+});		
+</script>
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <div class="container">
+      <div class="logo pull-left"> <a href="#"><img src="../images/logo.png"></a> </div>
+      <script type="text/javascript">document.write(language_en_menus());</script> 
+    </div>
+  </header>
+  
+  <!------------------header close--------------------------------> 
+  <!--------------------------content-div starts------------------------------------------->
+  <div class="content_div manager_search">
+    <h4 class="search_headng"><i class="fa fa-car" aria-hidden="true"></i> VEHICLES</h4>
+    <div class="container" style="padding-bottom:20px;"><!--------------------------inner_content------------------------------------------->
+      
+      <div class="select_div" style="padding-bottom:15px;">
+        <form class="searchbox" action="find-vehicles.html" method="get">
+          <div class="field">
+            <select name="selectoption" class="form-control">
+              <option value="tag"> License Plate </option>
+              <option value="vin">Vin Number </option>
+              <option value="model">Model </option>
+              <option value="color">Color </option>
+              <option value="location">Location</option>
+              <option value="company">Company</option>
+            </select>
+          </div>
+          <div class="field">
+            <input type="text" class="form-control" id="vehicle_search" placeholder="Buscar" value="" name="searcht">
+          </div>
+          <div class="field">
+            <input class="btn btn-primary" type="submit" value="Buscar">
+          </div>
+        </form>
+      </div>
+      <div class="detail_div">
+        <div class="vehiclelisting"></div>
+      </div>
+    </div>
+    <!--------------------------inner_content-------------------------------------------> 
+  </div>
+  
+  <!--------------------------content-div endss-------------------------------------------> 
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Add Unauthorized Tow Vehicle</title>
+<link href='https://fonts.googleapis.com/css?family=Roboto:400,100italic,300,100,300italic,400italic,500,500italic,700,700italic,900italic,900' rel='stylesheet' type='text/css'>
+<link href="../css/bootstrap.min.css" rel="stylesheet">
+<link href="../css/font-awesome.css" rel="stylesheet">
+<link href="../css/offcanvas.min.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="../css/build.css"/>
+<link rel="stylesheet" type="text/css" href="../style.css">
+
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+<script type="text/javascript" src="../js/jquery.js"></script>
+<script type="text/javascript" src="../js/validate.js"></script>
+<script src="../js/jquery-ui.js"></script>
+<script type="text/javascript" src="../js/config_es.js"></script>
+<script type="text/javascript" src="../cordova.js"></script>
+<script type="text/javascript">
+var uid=gup('uid');
+document.addEventListener("deviceready", init, false);
+function init() {
+	//document.querySelector("#startScan").addEventListener("touchend", startScan, false);
+	jQuery("#addPicture").on("touchend", selPic);
+    $imagesDiv = jQuery("#images");  
+    //jQuery("#uploadPictures").on("touchend", uploadPics);
+}
+var images = [];
+var $imagesDiv;
+function savetotow()
+{
+	var url=siteurl+'/api/towvehicle';
+	var formData = jQuery('#edituser').serialize();
+	
+	
+	formData = formData + '&uid=' + uid + '&unauthsubmit=1&lang=es';
+	jQuery.ajax({
+	  
+		 type: 'POST',  
+		 url: url,  
+		 dataType: 'json',  
+		 data: formData,  
+		 crossDomain: true,  
+		 beforeSend: function() {
+			jQuery('body .bodyoverlay').remove();
+			jQuery('body .preloader').remove();
+			var html='<div class="bodyoverlay"></div><div class="preloader"></div>';
+			jQuery('body').append(html);					
+		 },
+		 	
+		 complete: function() {
+			//jQuery('body .bodyoverlay').remove();
+			jQuery('body .preloader').remove();					
+		 },
+		 success: function(res) {  
+			if(res['vehicles']['error'])
+			{
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .popupbox').remove();
+				var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>';
+				jQuery(res['vehicles']['error']).each(function(k){
+					html+=res['vehicles']['error'][k]+'<br />';
+				});
+				
+				html+='</h1><button class="okbox">DE ACUERDO</button></div>';
+				jQuery('body').append(html);
+				
+				jQuery('.okbox').click(function(){
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .popupbox').remove();
+				});
+				
+			}
+			else if(res['vehicles']['updatevehicle'])
+			{
+				jQuery('#edituser .vphotos').remove();
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .popupbox').remove();
+				var html='<div class="bodyoverlay"></div><div class="popupbox"><div class="popupimg"><img src="../images/pop.png" /></div><h1 class="success">ÉXITO</h1><h1>'+res['vehicles']['updatevehicle']+'.</h1><button class="okbox">DE ACUERDO</button></div>';
+				jQuery('body').append(html);
+				jQuery('#edituser')[0].reset();
+				jQuery("#images").html('');
+				navigator.notification.beep(1);
+				jQuery('.okbox').click(function(){
+					window.location='add-violation-towing.html?uid='+uid+'&usertype='+usertype;
+				});
+				
+			}
+			 
+			return false;
+		 },  
+		 error: function(response, d, a){
+			jQuery('body .bodyoverlay').remove();
+			jQuery('body .popupbox').remove();
+			var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Error del Servidor.</h1><button class="okbox">DE ACUERDO</button></div>';
+			jQuery('body').append(html);
+			
+			jQuery('.okbox').click(function(){
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .popupbox').remove();
+			});
+			return false; 
+		 } 
+	   });
+}
+function selPic() {
+    navigator.camera.getPicture(function(f) {
+		//alert(f);
+        var newHtml = '<div class="img"><img src="'+f+'"><a href="javascript:;" class="closeimg" data="'+f+'">X</a></div>';
+        $imagesDiv.append(newHtml);
+        images.push(f);
+        jQuery('a.closeimg').click(function(){
+			var pat=jQuery(this).attr('data');
+			var index = images.indexOf(pat);
+			if (index > -1) {
+				images.splice(index, 1);
+			}
+			jQuery(this).parent('.img').remove();
+		});
+    }, function(e) {
+        alert("Error, check console.");
+        console.dir(e);
+    }, { 
+        quality: 50,
+        sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+        destinationType: Camera.DestinationType.FILE_URI
+    });
+    
+}
+var j=0;
+function win(r) {
+	jQuery('#edituser').append('<input type="hidden" name="photos[]" class="vphotos" value="'+r.response+'" />');
+	j=parseInt(j)+1;
+	
+	if(j==images.length)
+	{
+		savetotow();
+	}
+}
+
+function fail(error) {
+	alert("upload error source " + error.source);
+	alert("upload error target " + error.target);
+	//def.resolve(0);
+}
+function uploadPics() {
+	var vechileid=jQuery('#vechileid').val();
+	
+    jQuery(images).each(function(i) {
+        var filetrasfer=images[i];
+
+        var uri = encodeURI(siteurl+"/api/save-vehicle-images?uid="+uid+'&i='+i+'&unauthvehicle=1');
+
+        var options = new FileUploadOptions();
+        options.fileKey="file";
+        options.fileName=filetrasfer.substr(filetrasfer.lastIndexOf('/')+1);
+        options.mimeType="image/jpeg";
+
+        var ft = new FileTransfer();
+		ft.onprogress = function(progressEvent) {
+			if (progressEvent.lengthComputable) {
+			  loadingStatus.setPercentage(progressEvent.loaded / progressEvent.total);
+			} else {
+			  loadingStatus.increment();
+			}
+		};
+        var t=ft.upload(filetrasfer, uri, win, fail, options);
+    });
+	
+	
+   if(parseInt(images.length)<=0)
+   {
+   		var error=false;
+		jQuery('#edituser input, #edituser textarea, #edituser select').each(function(){
+			if(jQuery(this).hasClass('error'))
+			{
+				error=true;
+			}
+			if(jQuery(this).hasClass('required') && jQuery.trim(jQuery(this).val())=='')
+			{
+				error=true;
+			}
+		});
+		if(!error)
+		{
+			savetotow();
+		}
+   }
+   else
+   {
+   		jQuery('body .bodyoverlay').remove();
+		jQuery('body .preloader').remove();
+		var html='<div class="bodyoverlay"></div><div class="preloader"><br /><br /><br /><br /><br /><br /><br />por favor espera....</div>';
+		jQuery('body').append(html);
+   }
+
+}
+
+jQuery(document).ready(function(){
+	
+	
+	jQuery( document ).on( "mobileinit", function() {
+		jQuery.mobile.allowCrossDomainPages = true;
+	});
+	var contentType ="application/x-www-form-urlencoded; charset=utf-8";
+    if(window.XDomainRequest){contentType = "text/plain";}
+	jQuery.support.cors = true;
+	var uid=gup('uid');
+	var v=gup('v');
+	checkloggedin(uid);
+	var url=siteurl+'/api/towvehicle';
+    var v=gup('v');
+		jQuery.ajax({  
+			 type: 'POST',  
+			 url: url,  
+			 dataType: 'json',  
+			 data: {uid:uid, unauthorisedvehicles:1,lang:'es'},  
+			 crossDomain: true,  
+			 beforeSend: function() {
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .preloader').remove();
+				var html='<div class="bodyoverlay"></div><div class="preloader"></div>';
+				jQuery('body').append(html);					
+			 },		
+			 complete: function() {
+				//jQuery('body .bodyoverlay').remove();
+				jQuery('body .preloader').remove();					
+			 },
+			 success: function(res) {  
+				
+				jQuery('body .bodyoverlay').remove();
+				jQuery(res['vehiclelist']).each(function(k){
+					jQuery('#vechileid2').append('<option value="'+res['vehiclelist'][k]['id']+'">'+res['vehiclelist'][k]['name']+'</option>');
+				});
+				jQuery('#vechileid2').val(v);
+				
+				
+				jQuery(res['trucklist']).each(function(k){
+					jQuery('#truckid').append('<option value="'+res['trucklist'][k]['id']+'">'+res['trucklist'][k]['name']+'</option>');
+				});
+				jQuery(res['storagelist']).each(function(k){
+					jQuery('#storage_id').append('<option value="'+res['storagelist'][k]['id']+'">'+res['storagelist'][k]['name']+'</option>');
+				});
+				var treson=''
+				jQuery(res['towingreasons']).each(function(k){
+					treson+='<div class="checkbox checkbox-primary"><input type="checkbox" id="towres_'+k+'" name="towingreasons[]" value="'+res['towingreasons'][k]+'" /> <label for="towres_'+k+'">'+res['towingreasons'][k]+'</label></div>';
+				});
+				jQuery('.towingreasons').html(treson);
+				
+				jQuery(res['locationlist']).each(function(k){
+					jQuery('#location_id').append('<option value="'+res['locationlist'][k]['id']+'">'+res['locationlist'][k]['name']+'</option>');
+				});
+				
+				jQuery('body .popupbox').remove();
+			 },  
+			 error: function(response, d, a){
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .popupbox').remove();
+				var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Error del Servidor.</h1><button class="okbox">DE ACUERDO</button></div>';
+				jQuery('body').append(html);
+				
+				jQuery('.okbox').click(function(){
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .popupbox').remove();
+				});
+				return false; 
+			 } 
+		   });
+	   jQuery('#edituser').validate();
+	 jQuery('#edituser').submit(function(){
+	 	
+		var error=false;
+		jQuery('#edituser input, #edituser textarea, #edituser select').each(function(){
+			if(jQuery(this).hasClass('error'))
+			{
+				error=true;
+			}
+		});
+		
+		
+		if(!error)
+		{
+			uploadPics();
+			return false;
+	   }
+	   return false;
+	 });
+	 jQuery('#vechileid2').change(function(){
+		var vechileid2=jQuery(this).val();
+		if(jQuery.trim(vechileid2)==''){
+			jQuery('.unauthorized input,.unauthorized select').attr('disabled',false);
+			jQuery('.unauthorized input,.unauthorized select').addClass('required');
+		}
+		else
+		{
+			jQuery('.unauthorized input,.unauthorized select').attr('disabled',true);
+			jQuery('.unauthorized input,.unauthorized select').removeClass('required');
+			
+		}
+		jQuery(this).attr('disabled',false);
+		jQuery(this).removeClass('required');
+	});
+	setTimeout(function(){jQuery('#vechileid2').trigger('change');},500);
+});		
+</script>
+</head>
+<body>
+<div class="overlay"></div>
+<nav class="navbar navbar-inverse navbar-static-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed pull-left" data-toggle="offcanvas"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+    </div>
+    <div id="navbar" class="menu_div collapse navbar-collapse sidebar-offcanvas">
+      <ul class="menus nav navbar-nav">
+      </ul>
+    </div>
+    <!--/.nav-collapse --> 
+  </div>
+</nav>
+<div class="wrapper">
+  <header class="border-header" style="margin-bottom:0px;">
+    <div class="container">
+      <div class="logo pull-left"> <a href="#"><img src="../images/logo.png"></a> </div>
+      <script type="text/javascript">document.write(language_en_menus());</script> 
+    </div>
+  </header>
+  <!------------------header close--------------------------------> 
+  <!--------------------------content-div starts------------------------------------------->
+  <div class="content_div manager_search">
+    <h4 class="search_headng" style="margin-top:0px;">Añadir vehículo remolcador no autorizada</h4>
+    <div class="container" style="padding-bottom:20px;">
+      <div class="inner_content"><!--------------------------inner_content------------------------------------------->
+        
+        <div class="select_div">
+          <form name="edituser" id="edituser" action="" method="post">
+            <div class="unauthorized">
+              <div class="field">
+                <select class="selectpicker form-control required" name="vechileid2" id="vechileid2">
+                  <option data-tokens="" value="">Seleccionar vehículo</option>
+                </select>
+              </div>
+              <div class="field">
+                <input type="text" name="vinnumber" placeholder="Número VIN" class="form-control">
+              </div>
+              <div class="field">
+                <input type="text" name="tagnumber" placeholder="Sin Licencia" class="form-control required">
+              </div>
+              <div class="field">
+                <input type="text" name="make" placeholder="Hacer" class="form-control required">
+              </div>
+              <div class="field">
+                <input type="text" name="model" placeholder="Modelo" class="form-control required">
+              </div>
+              <div class="field">
+                <input type="text" name="color" placeholder="Color" class="form-control required">
+              </div>
+              <div class="field">
+                <select class="selectpicker form-control required" name="location_id" id="location_id" data-live-search="true">
+                  <option data-tokens="" value="">Seleccionar ubicación</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <select class="selectpicker form-control required" name="truckid" id="truckid" data-live-search="true">
+                <option data-tokens="" value="">Seleccione Camión</option>
+              </select>
+            </div>
+            <div class="field">
+              <select class="selectpicker form-control required" name="storage_id" id="storage_id" data-live-search="true">
+                <option data-tokens="" value="">Seleccionar almacenamiento</option>
+              </select>
+            </div>
+            <div class="clr"></div>
+            <div>
+              <h4  style="margin:10px 0 15px;">Razones de remolque</h4>
+              <div class="clr"></div>
+              <div class="towingreasons"></div>
+            </div>
+            <!--<div class="field">
+								<div class="cmra"><a href="javascript:;" id="startScan"></a></div>
+							  </div>
+							  <div class="clr"></div>-->
+            <div class="clr"></div>
+            <table class="table table-bordered">
+              <tr>
+                <td><div class="cmra" id="images"></div></td>
+              </tr>
+			  <tr>
+                <td><div class="cmra"><a href="javascript:;" id="addPicture"><img src="../images/camera.png"></a></div></td>
+			  </tr>
+            </table>
+            <div class="clr"></div>
+            <button class="btn btn-primary" name="update" type="submit">Añadir</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="../js/offcanvas.js"></script>
+</body>
+</html>

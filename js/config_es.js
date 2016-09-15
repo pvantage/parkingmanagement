@@ -17,41 +17,40 @@ function gup(sParam) {
 }
 function language_en_menus()
 {
-	var par='?uid='+uid+'&usertype='+usertype;
-	var menu=' <div class="lang pull-right"><ul class="list-inline"><li class="active"><a href="#"><img src="../images/icon-en.png"> English</a></li><li><a href="../spn/dashboard.html'+par+'"><img src="../images/icon-es.png"> Espanol</a></li></ul></div>';
+		var par='?uid='+uid+'&usertype='+usertype;
+	var menu=' <div class="lang pull-right"><ul class="list-inline"><li><a href="../eng/dashboard.html'+par+'"><img src="../images/icon-en.png"> English</a></li><li class="active"><a href="#"><img src="../images/icon-es.png"> Espanol</a></li></ul></div>';
 	return menu;
 }
 function driver_menus(para)
 {
-	var menu='<li><a href="violations-towing.html'+para+'">Violation Towing</a></li>';
-		menu+='<li><a href="unauthorized-vehicles.html'+para+'">Unauthorized Vehicles</a></li>';
-		menu+='<li><a href="inactive-vehicles.html'+para+'">Inactive Vehicles</a></li>';
-		menu+='<li><a href="my-account.html'+para+'">My Account</a></li>';
-		menu+='<li><a href="logout.html'+para+'">Log Out</a></li>';
+	var menu='<li><a href="violations-towing.html'+para+'">Remolque violaci&oacute;n</a></li>';
+		menu+='<li><a href="unauthorized-vehicles.html'+para+'">Los veh&iacute;culos no autorizados</a></li>';
+		menu+='<li><a href="inactive-vehicles.html'+para+'">Veh&iacute;culos inactivos</a></li>';
+		menu+='<li><a href="my-account.html'+para+'">Mi cuenta</a></li>';
+		menu+='<li><a href="logout.html'+para+'">Cerrar sesi&oacute;n</a></li>';
 	return menu;
 }
-
 function manager_menus(para)
 {
-	var menu='<li><a href="vehicles.html'+para+'">Vehicles</a></li>';
-		menu+='<li><a href="violations-towing.html'+para+'">Violation Towing</a></li>';
-		menu+='<li><a href="unauthorized-vehicles.html'+para+'">Unauthorized Vehicles</a></li>';
-		menu+='<li><a href="users.html'+para+'">Users</a></li>';
-		menu+='<li><a href="my-account.html'+para+'">My Account</a></li>';
-		menu+='<li><a href="report-parking-violation.html'+para+'">Report Parking Violation</a></li>';
-		menu+='<li><a href="report-unathorized-vehicle.html'+para+'">Report Unauthorized Vehicle</a></li>';
-		menu+='<li><a href="logout.html'+para+'">Log Out</a></li>';
+	var menu='<li><a href="vehicles.html'+para+'">veh&iacute;culos</a></li>';
+		menu+='<li><a href="violations-towing.html'+para+'">Remolque violaci&oacute;n</a></li>';
+		menu+='<li><a href="unauthorized-vehicles.html'+para+'">Los veh&iacute;culos no autorizados</a></li>';
+		menu+='<li><a href="users.html'+para+'">usuarios</a></li>';
+		menu+='<li><a href="my-account.html'+para+'">Mi cuenta</a></li>';
+		menu+='<li><a href="report-parking-violation.html'+para+'">Informar Violaci&oacute;n Aparcamiento</a></li>';
+		menu+='<li><a href="report-unathorized-vehicle.html'+para+'">Informe de veh&iacute;culo no autorizado</a></li>';
+		menu+='<li><a href="logout.html'+para+'">Cerrar sesi&oacute;n</a></li>';
 	return menu;
 }
 function users_menus(para)
 {
-	var menu='<li><a href="vehicles.html'+para+'">Vehicles</a></li>';
-		menu+='<li><a href="violations-towing.html'+para+'">Violation Towing</a></li>';
-		menu+='<li><a href="unauthorized-vehicles.html'+para+'">Unauthorized Vehicles</a></li>';
-		menu+='<li><a href="my-account.html'+para+'">My Account</a></li>';
-		menu+='<li><a href="report-parking-violation.html'+para+'">Report Parking Violation</a></li>';
-		menu+='<li><a href="report-unathorized-vehicle.html'+para+'">Report Unauthorized Vehicle</a></li>';
-		menu+='<li><a href="logout.html'+para+'">Log Out</a></li>';
+	var menu='<li><a href="vehicles.html'+para+'">veh&iacute;culos</a></li>';
+		menu+='<li><a href="violations-towing.html'+para+'">Remolque violaci&oacute;n</a></li>';
+		menu+='<li><a href="unauthorized-vehicles.html'+para+'">Los veh&iacute;culos no autorizados</a></li>';
+		menu+='<li><a href="my-account.html'+para+'">Mi cuenta</a></li>';
+		menu+='<li><a href="report-parking-violation.html'+para+'">Informar Violaci&oacute;n Aparcamiento</a></li>';
+		menu+='<li><a href="report-unathorized-vehicle.html'+para+'">Informe de veh&iacute;culo no autorizado</a></li>';
+		menu+='<li><a href="logout.html'+para+'">Cerrar sesi&oacute;n</a></li>';
 	return menu;
 }
 
@@ -126,7 +125,7 @@ function checkloggedin(uid)
 	 error: function(response, d, a){
 		jQuery('body .bodyoverlay').remove();
 		jQuery('body .popupbox').remove();
-		var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Server Error.</h1><button class="okbox">OK</button></div>';
+		var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Error del Servidor.</h1><button class="okbox">DE ACUERDO</button></div>';
 		jQuery('body').append(html);
 		
 		jQuery('.okbox').click(function(){
@@ -169,7 +168,7 @@ function activdeactivvehicle()
 			   {
 					jQuery('body .bodyoverlay').remove();
 					jQuery('body .popupbox').remove();
-					var html='<div class="bodyoverlay"></div><div class="popupbox"><div class="popupimg"><img src="../images/pop.png" /></div><h1 class="success">SUCCESS</h1><h1>'+res['vehicles']['modevehicle']+'</h1><button class="okbox">OK</button></div>';
+					var html='<div class="bodyoverlay"></div><div class="popupbox"><div class="popupimg"><img src="../images/pop.png" /></div><h1 class="success">&Eacute;XITO</h1><h1>'+res['vehicles']['modevehicle']+'</h1><button class="okbox">DE ACUERDO</button></div>';
 					jQuery('body').append(html);
 				}
 				jQuery('.okbox').click(function(){
@@ -192,7 +191,7 @@ function activdeactivvehicle()
 			 error: function(response, d, a){
 				jQuery('body .bodyoverlay').remove();
 				jQuery('body .popupbox').remove();
-				var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Server Error.</h1><button class="okbox">OK</button></div>';
+				var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Error del Servidor.</h1><button class="okbox">DE ACUERDO</button></div>';
 				jQuery('body').append(html);
 				
 				jQuery('.okbox').click(function(){
@@ -237,7 +236,7 @@ function activdeactivuser()
 			   {
 					jQuery('body .bodyoverlay').remove();
 					jQuery('body .popupbox').remove();
-					var html='<div class="bodyoverlay"></div><div class="popupbox"><div class="popupimg"><img src="../images/pop.png" /></div><h1 class="success">SUCCESS</h1><h1>'+res['users']['modeuser']+'</h1><button class="okbox">OK</button></div>';
+					var html='<div class="bodyoverlay"></div><div class="popupbox"><div class="popupimg"><img src="../images/pop.png" /></div><h1 class="success">&Eacute;XITO</h1><h1>'+res['users']['modeuser']+'</h1><button class="okbox">DE ACUERDO</button></div>';
 					jQuery('body').append(html);
 				}
 				jQuery('.okbox').click(function(){
@@ -260,7 +259,7 @@ function activdeactivuser()
 			 error: function(response, d, a){
 				jQuery('body .bodyoverlay').remove();
 				jQuery('body .popupbox').remove();
-				var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Server Error.</h1><button class="okbox">OK</button></div>';
+				var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Error del Servidor.</h1><button class="okbox">DE ACUERDO</button></div>';
 				jQuery('body').append(html);
 				
 				jQuery('.okbox').click(function(){

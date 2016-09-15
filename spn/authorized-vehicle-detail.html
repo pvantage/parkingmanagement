@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VEHICLE DETAIL</title>
+<link href='https://fonts.googleapis.com/css?family=Roboto:400,100italic,300,100,300italic,400italic,500,500italic,700,700italic,900italic,900' rel='stylesheet' type='text/css'>
+<link href="../css/bootstrap.min.css" rel="stylesheet">
+<link href="../css/font-awesome.css" rel="stylesheet">
+<link href="../css/offcanvas.min.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="../style.css">
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+<script type="text/javascript" src="../js/jquery.js"></script>
+<script type="text/javascript" src="../js/validate.js"></script>
+<script type="text/javascript" src="../js/config_es.js"></script>
+<script type="text/javascript">
+jQuery(document).ready(function(){
+	
+	
+	jQuery( document ).on( "mobileinit", function() {
+		jQuery.mobile.allowCrossDomainPages = true;
+	});
+	var contentType ="application/x-www-form-urlencoded; charset=utf-8";
+    if(window.XDomainRequest){contentType = "text/plain";}
+	jQuery.support.cors = true;
+	
+	var url=siteurl+'/api/vehicle_details';
+    var uid=gup('uid');
+	checkloggedin(uid);
+	var v=gup('v');
+	var href=jQuery('.backtopage').attr('href')+'?uid='+uid;
+	jQuery('.backtopage').attr('href',href);
+	jQuery.ajax({  
+         type: 'POST',  
+         url: url,  
+         //contentType: contentType,  
+         dataType: 'json',  
+         data: {uid:uid,id:v,lang:'es'},  
+         crossDomain: true,  
+		 beforeSend: function() {
+			jQuery('body .bodyoverlay').remove();
+			jQuery('body .preloader').remove();
+			var html='<div class="bodyoverlay"></div><div class="preloader"></div>';
+			jQuery('body').append(html);					
+		 },		
+		 complete: function() {
+			jQuery('body .bodyoverlay').remove();
+			jQuery('body .preloader').remove();					
+		 },
+         success: function(json) {  
+          var key='vehicle';
+		
+		 var owner_name =  json[key]["owner_name"];
+		 var Email =  json[key]["Email"];
+		 var Phone =  json[key]["Phone"];
+		 var aprtment =  json[key]["aprtment"];
+		 var vinnumber =  json[key]["vinnumber"];
+		 var tagnumber =  json[key]["tagnumber"];
+		 var year =  json[key]["year"];
+		 var make =  json[key]["make"];
+		 var model =  json[key]["model"];
+		 var color =  json[key]["color"];
+		 var typeofpermit =   json[key]["typeofpermit"];
+		 var notes =  json[key]["notes"];
+		 var maddress =  json[key]["Address"];
+		 var company_name =  json[key]["company_name"];
+		 var managername =  json[key]["managername"];
+		 var managerphone =  json[key]["managerphone"];
+		 var manageremail =  json[key]["manageremail"];
+		 var expdate =  json[key]["expdate"];
+		 var site_url =  json[key]["site_url"];
+		 var usertype =  json[key]["usertype"];
+		 
+		 if(jQuery.trim(manageremail)!=''){
+		 	$("#manageremail").html(manageremail);
+			$("#mcompany_name").html(company_name);
+			$("#managername").html(managername);
+			$("#managerphone").html(managerphone);
+			$("#maddress").html(maddress);
+		 }
+		var html='';
+		var shoph='';
+		var gaddress='';
+		if(typeof json['towingdetail'] != 'undefined'){
+		html+='<h2" style="margin-top:3%;">Towing Detail</h2><table class="table table-bordered towingtable">';
+		jQuery.each(json['towingdetail'], function (key) {
+			var photo='';
+			if(jQuery.trim(json['towingdetail'][key]['photo'])!=''){
+			var p=json['towingdetail'][key]['photo'];
+			var ps=p.split(',');
+			var pt='';
+			if(typeof ps[0] != 'undefined'){
+				pt=site_url+ps[0];
+			}
+			else
+			{
+				p=site_url+'files/towvehicle/'+p;
+				pt=p;
+				shoph+='<div class="item"><img src="'+p+'" alt=""></div>';
+			}
+			if(pt!=''){
+				photo='<a href="violation-towing-images.html?uid='+uid+'&v='+v+'&usertype='+usertype+'" class="showallphotos"><img src="'+pt+'" /></a>';
+			}
+			}
+			
+			html+='<tr><td colspan="2">'+photo+'</td></tr><tr><th valign="top">Razón</th><td valign="top">'+json['towingdetail'][key]['reason']+'</td></tr><tr><th valign="top">De</th><td valign="top">'+json['towingdetail'][key]['locationfrom']+'</td></tr><tr><th valign="top">A</th><td valign="top">'+json['towingdetail'][key]['locationto']+'</td></tr><tr><th valign="top">Camión</th><td valign="top">'+json['towingdetail'][key]['truck']+'</td></tr><tr><th valign="top">Conductor</th><td valign="top">'+json['towingdetail'][key]['by_name']+'</td></tr><tr><th valign="top">Fecha</th><td valign="top">'+json['towingdetail'][key]['cdate']+'</td></tr>';
+			gaddress=json['towingdetail'][key]['locationto'];
+			if(usertype=='driver'){
+			var gaddress2=json['towingdetail'][key]['locationfrom'];
+			html+='<tr><td colspan="2" style="position:relative;"><div id="floating-panel"><input type="text" name="start" id="start" value="'+gaddress2+'" /><input type="button" id="searchdir" value="Buscar" /><div style="display:none;"><b>Fin: </b><input type="text" name="end" id="end" value="'+gaddress+'" /></div></div><div id="area_map" style="height:400px; margin-top:5px; color:#000000;"></div><div id="warnings-panel"></div></td></tr>';
+			}
+			
+		});
+		
+		html+='</table>';
+		jQuery('.showtowong').show();
+		}
+		jQuery('#towingdetails').html(html);
+		jQuery('#myCarousel .item:first').addClass('active');
+		jQuery('.showallphotos').click(function(){
+			jQuery('#showphotos').modal('show');
+		});
+	 	if(jQuery.trim(gaddress)!='' && usertype=='driver'){
+			var markerArray = [];
+
+			// Instantiate a directions service.
+			var directionsService = new google.maps.DirectionsService;
+	
+			// Create a map and center it on Manhattan.
+			var map = new google.maps.Map(document.getElementById('area_map'), {
+			  zoom: 13,
+			  center: {lat: 40.771, lng: -73.974}
+			});
+	
+			// Create a renderer for directions and bind it to the map.
+			var directionsDisplay = new google.maps.DirectionsRenderer({map: map});
+	
+			// Instantiate an info window to hold step text.
+			var stepDisplay = new google.maps.InfoWindow;
+	
+			// Display the route between the initial start and end selections.
+			calculateAndDisplayRoute(
+				directionsDisplay, directionsService, markerArray, stepDisplay, map);
+			// Listen to change events from the start and end lists.
+			var onChangeHandler = function() {
+			  calculateAndDisplayRoute(
+				  directionsDisplay, directionsService, markerArray, stepDisplay, map);
+			};
+			document.getElementById('searchdir').addEventListener('click', onChangeHandler);
+		}
+		if(jQuery.trim(maddress)!=''){
+			var url2=siteurl+'/api/gmap';
+			jQuery('#area_map2').show(400);
+			jQuery.ajax({
+			url: url2+'?gnmap=sales&address='+maddress,
+			type: 'post',
+			dataType: 'json',
+			beforeSend: function() {},	
+			complete: function() {},			
+			success: function(json){
+				if(json['error']){			
+					var map = new google.maps.Map(document.getElementById('area_map2'), {
+					  zoom: 11,
+					  center: new google.maps.LatLng(40.1329091, -87.5681211),
+					  mapTypeId: google.maps.MapTypeId.ROADMAP
+					//mapTypeId: 'terrain'
+					});
+				}else{
+					var lati_center = json['success']['lat'];
+					var longi_center = json['success']['longi'];
+					var map = new google.maps.Map(document.getElementById('area_map2'), {
+					  zoom: 11,
+					  center: new google.maps.LatLng(lati_center, longi_center),
+					  mapTypeId: google.maps.MapTypeId.ROADMAP
+					//mapTypeId: 'terrain'
+						});
+				}
+					if(json['success']){					
+						// GOOGLE MAP START HERE //////////////////						
+						var locations = new Array();	
+						locations = json['success']['map'];						
+						var marker = new Array();
+						var i;							
+						var addinfo = new Array();
+						var latitude = new Array();
+						var longitude = new Array();
+						for (i = 0; i < locations.length; i++){ 						
+							var map_info = locations[i].split('@@');
+							if(map_info.length == 3){							
+								addinfo[i] = decodeURIComponent(map_info[0]).replace(/\+/g, ' ');								
+								latitude[i] = map_info[1];
+								longitude[i] = map_info[2];
+								marker[i] = new google.maps.Marker({
+									position: new google.maps.LatLng(latitude[i], longitude[i]),
+									radius: 500,
+									types: ['store'],
+									map: map
+							  	});
+								addInfoWindow(marker[i], addinfo[i], map);
+						  	} // MAP LENGTH
+						}											
+						// SALES GOOGLE MAP END  //
+					}	
+				}	
+			});
+			//return false;
+		}
+		$("#owner_namea").html(owner_name);
+		$("#Emaila").html(Email);		
+		$("#Phonepa").html(Phone);
+		$("#aprtmenta").html(aprtment);
+		$("#vinnumbera").html(vinnumber);
+		$("#tagnumbera").html(tagnumber);
+		$("#yeara").html(year);
+		$("#makea").html(make);
+		$("#modela").html(model);
+		$("#colora").html(color);
+		$("#notespa").html(notes);
+		$("#expdatea").html(expdate);
+		$("#typeofpermita").html(typeofpermit);
+			if(usertype=='admin' || usertype=='user')
+			{
+				jQuery('.admin').show();
+			}
+			if(usertype=='superadmin')
+			{
+				jQuery('.superadmin').show();
+			}
+         },  
+         error: function(response, d, a){
+            jQuery('body .bodyoverlay').remove();
+			jQuery('body .popupbox').remove();
+			var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Error del Servidor.</h1><button class="okbox">DE ACUERDO</button></div>';
+			jQuery('body').append(html);
+			
+			jQuery('.okbox').click(function(){
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .popupbox').remove();
+			}); 
+         } 
+       });
+});	
+function calculateAndDisplayRoute(directionsDisplay, directionsService,
+	  markerArray, stepDisplay, map) {
+	// First, remove any existing markers from the map.
+	for (var i = 0; i < markerArray.length; i++) {
+	  markerArray[i].setMap(null);
+	}
+
+	// Retrieve the start and end locations and create a DirectionsRequest using
+	// WALKING directions.
+	directionsService.route({
+	  origin: document.getElementById('start').value,
+	  destination: document.getElementById('end').value,
+	  travelMode: 'DRIVING'
+	}, function(response, status) {
+	  // Route the directions and pass the response to a function to create
+	  // markers for each step.
+	  if (status === 'OK') {
+		directionsDisplay.setDirections(response);
+		showSteps(response, markerArray, stepDisplay, map);
+	  } else {
+		alert('Directions request failed due to ' + status);
+	  }
+	});
+  }
+
+  function showSteps(directionResult, markerArray, stepDisplay, map) {
+	// For each step, place a marker, and add the text to the marker's infowindow.
+	// Also attach the marker to an array so we can keep track of it and remove it
+	// when calculating new routes.
+	var myRoute = directionResult.routes[0].legs[0];
+	for (var i = 0; i < myRoute.steps.length; i++) {
+	  var marker = markerArray[i] = markerArray[i] || new google.maps.Marker;
+	  marker.setMap(map);
+	  marker.setPosition(myRoute.steps[i].start_location);
+	  attachInstructionText(
+		  stepDisplay, marker, myRoute.steps[i].instructions, map);
+	}
+  }
+
+  function attachInstructionText(stepDisplay, marker, text, map) {
+	google.maps.event.addListener(marker, 'click', function() {
+	  // Open an info window when the marker is clicked on, containing the text
+	  // of the step.
+	  stepDisplay.setContent(text);
+	  stepDisplay.open(map, marker);
+	});
+  }
+  function addInfoWindow(marker, message, map){
+	var info = message;
+	var infoWindow = new google.maps.InfoWindow({
+		content: message
+	});
+	google.maps.event.addListener(marker, 'click', function () {
+		infoWindow.open(map, marker);
+	});
+}	
+
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdRw4y6QbeCa2AVoQcI_j7NMQZPYDrabU" type="text/javascript"></script>
+</head>
+<body>
+<div class="overlay"></div>
+<nav class="navbar navbar-inverse navbar-static-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed pull-left" data-toggle="offcanvas"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+    </div>
+    <div id="navbar" class="menu_div collapse navbar-collapse sidebar-offcanvas">
+      <ul class="menus nav navbar-nav">
+      </ul>
+    </div>
+    <!--/.nav-collapse --> 
+  </div>
+</nav>
+
+<div class="wrapper">
+	
+		<header class="border-header" style="margin-bottom:0px;">
+    <div class="container">
+      <div class="logo pull-left"> <a href="#"><img src="../images/logo.png"></a> </div>
+      <script type="text/javascript">document.write(language_en_menus());</script> 
+    </div>
+  </header><!------------------header close-------------------------------->
+		<!--------------------------content-div starts------------------------------------------->	
+			<div class="content_div manager_search">
+            <h4 style="margin-top:0px;" class="search_headng">VEHICLE DETAIL</h4>
+				<div class="container">
+				<div class="inner_content"><!--------------------------inner_content------------------------------------------->
+					
+					   
+					   <div class="detail_div">
+					   <div class="vehiclelisting">
+					   	<div class="mnger_frst vehiclilist"><!--------------------------mnger_frstt------------------------------------------->	
+							<div class="list vlist">
+							<p id="maddress"></p>
+							<div class="clr"></div>
+							<strong>Nombre de la propiedad: </strong><p id="mcompany_name"></p>
+							<div class="clr"></div>
+							<strong>Nombre del gerente:</strong> <p id="managername"></p>
+							<div class="clr"></div>
+							<strong>Email:</strong><p id="manageremail"></p>
+							<div class="clr"></div>
+							<strong>Phone Manager:</strong><p id="managerphone"></p>
+							<div class="clr"></div>
+							<div id="area_map2" style="height:200px; margin-top:5px; display:none; color:#000000;"></div>
+							
+							</div>
+          
+						</div>
+						<div class="mnger_frst vehiclilist"><!--------------------------mnger_frstt------------------------------------------->	
+							<div class="list vlist">
+								
+								<h2>Vehicle Details</h2>
+								<div class="clr"></div>
+								<strong>Owner Name:</strong><p id="owner_namea"></p>
+								<div class="clr"></div>
+								<strong>Email:</strong><p id="Emaila"></p>
+								<div class="clr"></div>
+								<strong>Phone:</strong><p id="Phonepa"></p>
+								<strong>&nbsp;&nbsp;Unit Number:</strong><p id="aprtmenta"></p>
+								<div class="clr"></div>
+								<strong>Número VIN:</strong><p id="vinnumbera"></p>
+								<strong>&nbsp;&nbsp;License No:</strong><p id="tagnumbera"></p>
+								<div class="clr"></div>
+								<strong>Año:</strong><p id="yeara"></p>
+								<strong>&nbsp;&nbsp;Make:</strong><p id="makea"></p>
+								<div class="clr"></div>
+								<strong>Modelo:</strong><p id="modela"></p>
+								<strong>&nbsp;&nbsp;Color:</strong><p id="colora"></p>
+								<div class="clr"></div>
+								<strong>Fecha de caducidad:</strong><p id="expdatea"></p>
+								<strong>&nbsp;&nbsp;Type Of Permit:</strong><p id="typeofpermita"></p>
+								<div class="clr"></div>
+								<strong>notas:</strong><p id="notespa"></p>
+								
+								
+							</div>
+          
+						</div>
+						<div class="mnger_frst vehiclilist showtowong" style="display:none;"><!--------------------------mnger_frstt------------------------------------------->	
+							<div id="towingdetails"></div>
+						</div>
+					   </div>
+							
+				</div><!--------------------------inner_content------------------------------------------->	
+				</div>
+			</div>
+		
+		<!--------------------------content-div endss------------------------------------------->	
+	</div>
+</div>
+<script src="../js/offcanvas.js"></script>
+</body>
+</html>
+

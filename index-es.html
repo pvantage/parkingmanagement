@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Login</title>
+<title>Iniciar sesión</title>
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,100italic,300,100,300italic,400italic,500,500italic,700,700italic,900italic,900' rel='stylesheet' type='text/css'>
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <link href="css/font-awesome.css" rel="stylesheet">
@@ -46,7 +46,7 @@ jQuery(document).ready(function(){
 			 type: 'POST',  
 			 url: url,           
 			 dataType: 'json',  
-			 data: {uname:user_login,pwd:user_pass,loginuser:1}, 
+			 data: {uname:user_login,pwd:user_pass,loginuser:1,lang:'es'}, 
 			 beforeSend: function() {
 			 	jQuery('body .bodyoverlay').remove();
 				jQuery('body .preloader').remove();
@@ -62,14 +62,14 @@ jQuery(document).ready(function(){
 				if(res['checklogin']['udetail'])
 				{
 					
-					window.location ='eng/dashboard.html?uid='+res['checklogin']['udetail']['uid']+'&usertype='+res['checklogin']['udetail']['user_type'];
+					window.location ='spn/dashboard.html?uid='+res['checklogin']['udetail']['uid']+'&usertype='+res['checklogin']['udetail']['user_type'];
 				
 					//localStorage.setItem('userInfo', res['success']['userid']);
 					//window.location ='category.html';
 				}else if(res['checklogin']['error']){				
 					jQuery('body .bodyoverlay').remove();
 					jQuery('body .popupbox').remove();
-					var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="images/error.png" /></div><h1 class="success">ERROR</h1><h1>'+res['checklogin']['error']+'</h1><button class="okbox">OK</button></div>';
+					var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="images/error.png" /></div><h1 class="success">ERROR</h1><h1>'+res['checklogin']['error']+'</h1><button class="okbox">DE ACUERDO</button></div>';
 					jQuery('body').append(html);
 					
 					jQuery('.okbox').click(function(){
@@ -87,7 +87,7 @@ jQuery(document).ready(function(){
 			 error: function(response, d, a){
 				jQuery('body .bodyoverlay').remove();
 				jQuery('body .popupbox').remove();
-				var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="images/error.png" /></div><h1 class="success">ERROR</h1><h1>Server Error.</h1><button class="okbox">OK</button></div>';
+				var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="images/error.png" /></div><h1 class="success">ERROR</h1><h1>Error del Servidor.</h1><button class="okbox">DE ACUERDO</button></div>';
 				jQuery('body').append(html);
 				
 				jQuery('.okbox').click(function(){
@@ -116,7 +116,7 @@ jQuery(document).ready(function(){
 			 type: 'POST',  
 			 url: url,           
 			 dataType: 'json',  
-			 data: {forgotemail:forgotemail,forgotpwd:1}, 
+			 data: {forgotemail:forgotemail,forgotpwd:1,lang:'es'}, 
 			 beforeSend: function() {
 				jQuery('body .bodyoverlay').remove();
 				jQuery('body .preloader').remove();
@@ -133,7 +133,7 @@ jQuery(document).ready(function(){
 				{
 					jQuery('body .bodyoverlay').remove();
 					jQuery('body .popupbox').remove();
-					var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="images/error.png" /></div><h1 class="success">ERROR</h1><h1>'+res['forgotpwd']['error']+'</h1><button class="okbox">OK</button></div>';
+					var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="images/error.png" /></div><h1 class="success">ERROR</h1><h1>'+res['forgotpwd']['error']+'</h1><button class="okbox">DE ACUERDO</button></div>';
 					jQuery('body').append(html);
 					
 				}
@@ -141,7 +141,7 @@ jQuery(document).ready(function(){
 				{
 					jQuery('body .bodyoverlay').remove();
 					jQuery('body .popupbox').remove();
-					var html='<div class="bodyoverlay"></div><div class="popupbox"><div class="popupimg"><img src="images/pop.png" /></div><h1 class="success">SUCCESS</h1><h1>'+res['forgotpwd']['update']+'</h1><button class="okbox">OK</button></div>';
+					var html='<div class="bodyoverlay"></div><div class="popupbox"><div class="popupimg"><img src="images/pop.png" /></div><h1 class="success">ÉXITO</h1><h1>'+res['forgotpwd']['update']+'</h1><button class="okbox">DE ACUERDO</button></div>';
 					jQuery('body').append(html);
 					
 				}
@@ -154,7 +154,7 @@ jQuery(document).ready(function(){
 			 error: function(response, d, a){
 				jQuery('body .bodyoverlay').remove();
 				jQuery('body .popupbox').remove();
-				var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="images/error.png" /></div><h1 class="success">ERROR</h1><h1>Server Error.</h1><button class="okbox">OK</button></div>';
+				var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="images/error.png" /></div><h1 class="success">ERROR</h1><h1>Error del Servidor.</h1><button class="okbox">DE ACUERDO</button></div>';
 				jQuery('body').append(html);
 				
 				jQuery('.okbox').click(function(){
@@ -190,8 +190,8 @@ jQuery(document).ready(function(){
       <div class="logo pull-left"> <a href="#"><img src="images/logo.png"></a> </div>
       <div class="lang pull-right">
         <ul class="list-inline">
-          <li class="active"><a href="index.html"><img src="images/icon-en.png"> English</a></li>
-          <li><a href="index-es.html"> <img src="images/icon-es.png"> Espanol</a></li>
+          <li><a href="index.html"><img src="images/icon-en.png"> English</a></li>
+          <li class="active"><a href="index-es.html"> <img src="images/icon-es.png"> Espanol</a></li>
         </ul>
       </div>
       </div>
@@ -200,31 +200,31 @@ jQuery(document).ready(function(){
     <!--------------------------content-div starts------------------------------------------->
    
     <div class="content_div">
-      <h3><a href="eng/find-vehicles.html"><i aria-hidden="true" class="fa fa-car"></i>&nbsp;find your vehicle</a></h3>
+      <h3><a href="spn/find-vehicles.html"><i aria-hidden="true" class="fa fa-car"></i>&nbsp;encontrar su vehículo</a></h3>
        <div class="container">
        
        
        <div id="loginbox" style="margin:20px 0 30px;" class="mainbox loginform">
   <div class="panel panel-info" >
     <div class="panel-heading">
-      <div class="panel-title">Login</div>
+      <div class="panel-title">Iniciar sesión</div>
     </div>
     <div style="padding-top:20px" class="panel-body" >
       <form name="loginuser" id="loginuser" action="" method="post">
         <div style="margin-bottom: 25px" class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-          <input type="text" class="required form-control" name="username" id="username"   placeholder="User Name">
+          <input type="text" class="required form-control" name="username" id="username"   placeholder="Nombre de usuario">
         </div>
         <div style="margin-bottom: 10px" class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-          <input type="password" class="required form-control" name="pwd" id="pwd"  placeholder="Password">
+          <input type="password" class="required form-control" name="pwd" id="pwd"  placeholder="Contraseña">
         </div>
         <div style="margin-top:10px" class="form-group"> 
           <!-- Button -->
           
-          <div class="controls"><input class="btn btn-primary" type="submit" value="Login"></div>
+          <div class="controls"><input class="btn btn-primary" type="submit" value="Iniciar sesión"></div>
         </div>
         <div class="form-group">
           <div class=" control">
-            <div style="border-top: 1px solid #ccc; padding-top:15px;" > <a href="#" class="forgotpwd"> Forgot Password </a> </div>
+            <div style="border-top: 1px solid #ccc; padding-top:15px;" > <a href="#" class="forgotpwd"> Se te olvidó tu contraseña </a> </div>
           </div>
         </div>
       </form>
@@ -239,7 +239,7 @@ jQuery(document).ready(function(){
       <div class="forgotform mainbox" style="display:none; margin-top:20px;">
       <div class="panel panel-info">
       <div class="panel-heading">
-      <div class="panel-title">Forgot Password</div>
+      <div class="panel-title">Se te olvidó tu contraseña</div>
     </div>
      <div style="padding-top:30px" class="panel-body" >
        
@@ -247,14 +247,14 @@ jQuery(document).ready(function(){
          
          <div style="margin-bottom:10px" class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
          
-         <input type="text" class="required email form-control" name="email" id="email" placeholder="Enter Your Email">
+         <input type="text" class="required email form-control" name="email" id="email" placeholder="Introduce tu correo electrónico">
           
         </div>
-       <div class="controls">  <input class="btn btn-primary" class="submit" type="submit" value="Submit"></div>
+       <div class="controls">  <input class="btn btn-primary submit" type="submit" value="Enviar"></div>
          
          <div class="form-group" style="margin-top:10px;">
           <div class=" control">
-            <div style="border-top: 1px solid #ccc; padding-top:15px; " > <a href="#" class="loginp">Login here</a></div>
+            <div style="border-top: 1px solid #ccc; padding-top:15px; " > <a href="#" class="loginp">Entre aquí</a></div>
           </div>
         </div>
           

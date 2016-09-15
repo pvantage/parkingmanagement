@@ -44,7 +44,7 @@ jQuery(document).ready(function($) {
         });
     });
 
-    $('.overlay').swiperight(function () {
+    /*$('.overlay').swiperight(function () {
         $('.overlay').addClass('active');
         $('body').addClass('active');
         $('#navbar').addClass('in');
@@ -65,6 +65,6 @@ jQuery(document).ready(function($) {
              function(e) {
                $('.navbar-collapse').removeClass('transition');
         });
-    });
+    });*/
 
 });
