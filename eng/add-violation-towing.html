@@ -114,7 +114,6 @@ function selPic() {
 		var i, path, len;
 		for (i = 0, len = mediaFiles.length; i < len; i += 1) {
 			path = mediaFiles[i].fullPath;
-			alert(path);
 			// do something interesting with the file
 			
 			var newHtml = '<div class="img"><img src="'+path+'"><a href="javascript:;" class="closeimg" data="'+path+'">X</a></div>';
@@ -150,7 +149,7 @@ function selPic() {
 			jQuery(this).parent('.img').remove();
 		});
     }, function(e) {
-        navigator.device.capture.captureImage(captureSuccess, captureError, {limit:5});
+        navigator.device.capture.captureImage(captureSuccess, captureError, {limit:1});
     }, { 
         quality: 50,
         sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
@@ -377,9 +376,10 @@ jQuery(document).ready(function(){
 							  <div class="clr"></div>-->
             
             <table class="table table-bordered">
+			  <tr><td><div class="cmra" id="images"></div></td></tr>
               <tr>
                 <td><div class="cmra"><a href="javascript:;" id="addPicture"><img src="../images/camera.png"></a></div></td>
-                <td><div class="cmra" id="images"></div></td>
+                
               </tr>
             </table>
             <div class="clr"></div>
