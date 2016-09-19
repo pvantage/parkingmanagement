@@ -54,7 +54,18 @@ function users_menus(para)
 		menu+='<li><a href="logout.html'+para+'">Log Out</a></li>';
 	return menu;
 }
-
+function superadmins_menus(para)
+{
+	var menu='<li><a href="vehicles.html'+para+'">Vehicles</a></li>';
+		menu+='<li><a href="violations-towing.html'+para+'">Violation Towing</a></li>';
+		menu+='<li><a href="unauthorized-vehicles.html'+para+'">Unauthorized Vehicles</a></li>';
+		menu+='<li><a href="users.html'+para+'">Users</a></li>';
+		menu+='<li><a href="my-account.html'+para+'">My Account</a></li>';
+		menu+='<li><a href="report-parking-violation.html'+para+'">Report Parking Violation</a></li>';
+		menu+='<li><a href="report-unathorized-vehicle.html'+para+'">Report Unauthorized Vehicle</a></li>';
+		menu+='<li><a href="logout.html'+para+'">Log Out</a></li>';
+	return menu;
+}
 var uid=gup('uid');
 
 var usertype=gup('usertype');
@@ -78,6 +89,13 @@ setTimeout(function(){
 	{
 		jQuery('.admin').show();
 		var menu=users_menus('?uid='+uid+'&usertype='+usertype);
+		jQuery('.menu_div ul.menus').html(menu);
+		jQuery('.logo_div a').attr('href','dashboard.html?uid='+uid+'&usertype='+usertype);
+	}
+	if(usertype=='superadmin')
+	{
+		jQuery('.superadmin').show();
+		var menu=superadmins_menus('?uid='+uid+'&usertype='+usertype);
 		jQuery('.menu_div ul.menus').html(menu);
 		jQuery('.logo_div a').attr('href','dashboard.html?uid='+uid+'&usertype='+usertype);
 	}

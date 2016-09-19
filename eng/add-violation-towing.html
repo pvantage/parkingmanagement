@@ -109,6 +109,31 @@ function savetotow()
 	   });
 }
 function selPic() {
+	navigator.device.capture.captureImage(captureSuccess, captureError, {limit:5});
+	var captureSuccess = function(mediaFiles) {
+		var i, path, len;
+		for (i = 0, len = mediaFiles.length; i < len; i += 1) {
+			path = mediaFiles[i].fullPath;
+			// do something interesting with the file
+			
+			var newHtml = '<div class="img"><img src="'+path+'"><a href="javascript:;" class="closeimg" data="'+path+'">X</a></div>';
+			$imagesDiv.append(newHtml);
+			images.push(path);
+			jQuery('a.closeimg').click(function(){
+				var pat=jQuery(this).attr('data');
+				var index = images.indexOf(pat);
+				if (index > -1) {
+					images.splice(index, 1);
+				}
+				jQuery(this).parent('.img').remove();
+			});
+		}
+	};
+	
+	// capture error callback
+	var captureError = function(error) {
+		navigator.notification.alert('Error code: ' + error.code, null, 'Capture Error');
+	};
     navigator.camera.getPicture(function(f) {
 		//alert(f);
         var newHtml = '<div class="img"><img src="'+f+'"><a href="javascript:;" class="closeimg" data="'+f+'">X</a></div>';
