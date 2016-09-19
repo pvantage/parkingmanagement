@@ -31,6 +31,7 @@ document.addEventListener("deviceready", init, false);
 function init() {
 	//document.querySelector("#startScan").addEventListener("touchend", startScan, false);
 	jQuery("#addPicture").on("touchend", selPic);
+	jQuery("#addPicture2").on("touchend", selPic2);
     $imagesDiv = jQuery("#images");  
     //jQuery("#uploadPictures").on("touchend", uploadPics);
 }
@@ -109,6 +110,7 @@ function savetotow()
 	   });
 }
 function selPic() {
+	
     navigator.camera.getPicture(function(f) {
 		//alert(f);
         var newHtml = '<div class="img"><img src="'+f+'"><a href="javascript:;" class="closeimg" data="'+f+'">X</a></div>';
@@ -123,13 +125,40 @@ function selPic() {
 			jQuery(this).parent('.img').remove();
 		});
     }, function(e) {
-        alert("Error, check console.");
-        console.dir(e);
     }, { 
         quality: 50,
         sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
         destinationType: Camera.DestinationType.FILE_URI
     });
+    
+}
+function selPic2() {
+	
+	var captureSuccess = function(mediaFiles) {
+		var i, path, len;
+		for (i = 0, len = mediaFiles.length; i < len; i += 1) {
+			path = mediaFiles[i].fullPath;
+			// do something interesting with the file
+			
+			var newHtml = '<div class="img"><img src="'+path+'"><a href="javascript:;" class="closeimg" data="'+path+'">X</a></div>';
+			$imagesDiv.append(newHtml);
+			images.push(path);
+			jQuery('a.closeimg').click(function(){
+				var pat=jQuery(this).attr('data');
+				var index = images.indexOf(pat);
+				if (index > -1) {
+					images.splice(index, 1);
+				}
+				jQuery(this).parent('.img').remove();
+			});
+		}
+	};
+	// capture error callback
+	var captureError = function(error) {
+		navigator.notification.alert('Error code: ' + error.code, null, 'Capture Error');
+	};
+	navigator.device.capture.captureImage(captureSuccess, captureError, {limit:1});
+    
     
 }
 var j=0;
@@ -351,13 +380,11 @@ jQuery(document).ready(function(){
 							  <div class="clr"></div>-->
             
             <table class="table table-bordered">
-              
-			  <tr>
-                <td><div class="cmra" id="images"></div></td>
+			  <tr><td colspan="2"><div class="cmra" id="images"></div></td></tr>
+              <tr>
+                <td><div class="cmra"><a href="javascript:;" id="addPicture2"><img src="../images/camera.png"></a></div></td>
+                <td><div class="cmra"><a href="javascript:;" id="addPicture"><img src="../images/gallery.png"></a></div></td>
               </tr>
-			  <tr>
-                <td><div class="cmra"><a href="javascript:;" id="addPicture"><img src="../images/camera.png"></a></div></td>
-			  </tr>
             </table>
             <div class="clr"></div>
             <button class="btn btn-primary" name="update" type="submit">Añadir</button>
