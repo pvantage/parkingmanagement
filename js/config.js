@@ -24,7 +24,9 @@ function language_en_menus()
 function driver_menus(para)
 {
 	var menu='<li><a href="violations-towing.html'+para+'">Violation Towing</a></li>';
+		menu+='<li><a href="violations-tag.html'+para+'">Violation Tag</a></li>';
 		menu+='<li><a href="unauthorized-vehicles.html'+para+'">Unauthorized Vehicles</a></li>';
+		menu+='<li><a href="unauthorized-tag.html'+para+'">Unauthorized Tag</a></li>';
 		menu+='<li><a href="inactive-vehicles.html'+para+'">Inactive Vehicles</a></li>';
 		menu+='<li><a href="my-account.html'+para+'">My Account</a></li>';
 		menu+='<li><a href="logout.html'+para+'">Log Out</a></li>';
@@ -35,7 +37,9 @@ function manager_menus(para)
 {
 	var menu='<li><a href="vehicles.html'+para+'">Vehicles</a></li>';
 		menu+='<li><a href="violations-towing.html'+para+'">Violation Towing</a></li>';
+		menu+='<li><a href="violations-tag.html'+para+'">Violation Tag</a></li>';
 		menu+='<li><a href="unauthorized-vehicles.html'+para+'">Unauthorized Vehicles</a></li>';
+		menu+='<li><a href="unauthorized-tag.html'+para+'">Unauthorized Tag</a></li>';
 		menu+='<li><a href="users.html'+para+'">Users</a></li>';
 		menu+='<li><a href="my-account.html'+para+'">My Account</a></li>';
 		menu+='<li><a href="report-parking-violation.html'+para+'">Report Parking Violation</a></li>';
@@ -47,7 +51,9 @@ function users_menus(para)
 {
 	var menu='<li><a href="vehicles.html'+para+'">Vehicles</a></li>';
 		menu+='<li><a href="violations-towing.html'+para+'">Violation Towing</a></li>';
+		menu+='<li><a href="violations-tag.html'+para+'">Violation Tag</a></li>';
 		menu+='<li><a href="unauthorized-vehicles.html'+para+'">Unauthorized Vehicles</a></li>';
+		menu+='<li><a href="unauthorized-tag.html'+para+'">Unauthorized Tag</a></li>';
 		menu+='<li><a href="my-account.html'+para+'">My Account</a></li>';
 		menu+='<li><a href="report-parking-violation.html'+para+'">Report Parking Violation</a></li>';
 		menu+='<li><a href="report-unathorized-vehicle.html'+para+'">Report Unauthorized Vehicle</a></li>';
@@ -56,10 +62,19 @@ function users_menus(para)
 }
 function superadmins_menus(para)
 {
-	var menu='<li><a href="vehicles.html'+para+'">Vehicles</a></li>';
+	var menu='<li><a href="locations.html'+para+'">Locations</a></li>';
+		menu+='<li><a href="vehicles.html'+para+'">Vehicles</a></li>';
 		menu+='<li><a href="violations-towing.html'+para+'">Violation Towing</a></li>';
+		menu+='<li><a href="violations-tag.html'+para+'">Violation Tag</a></li>';
 		menu+='<li><a href="unauthorized-vehicles.html'+para+'">Unauthorized Vehicles</a></li>';
+		menu+='<li><a href="unauthorized-tag.html'+para+'">Unauthorized Tag</a></li>';
 		menu+='<li><a href="users.html'+para+'">Users</a></li>';
+		menu+='<li><a href="superadmins.html'+para+'">Super Admins</a></li>';
+		menu+='<li><a href="service-staff.html'+para+'">Service Staff</a></li>';
+		menu+='<li><a href="parking-lot-manager.html'+para+'">Parking Lot Owners</a></li>';
+		menu+='<li><a href="trucks.html'+para+'">Trucks</a></li>';
+		menu+='<li><a href="drivers.html'+para+'">Drivers</a></li>';
+		menu+='<li><a href="storage-locations.html'+para+'">Storage Locations</a></li>';
 		menu+='<li><a href="my-account.html'+para+'">My Account</a></li>';
 		menu+='<li><a href="report-parking-violation.html'+para+'">Report Parking Violation</a></li>';
 		menu+='<li><a href="report-unathorized-vehicle.html'+para+'">Report Unauthorized Vehicle</a></li>';
@@ -96,6 +111,7 @@ setTimeout(function(){
 	{
 		jQuery('.superadmin').show();
 		var menu=superadmins_menus('?uid='+uid+'&usertype='+usertype);
+		jQuery('.menu_div ul.menus').addClass('supermenus');
 		jQuery('.menu_div ul.menus').html(menu);
 		jQuery('.logo_div a').attr('href','dashboard.html?uid='+uid+'&usertype='+usertype);
 	}
@@ -205,6 +221,68 @@ function activdeactivvehicle()
 					jQuery('i',$this).addClass('fa-check');
 					
 				}
+				return false;
+			 },  
+			 error: function(response, d, a){
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .popupbox').remove();
+				var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Server Error.</h1><button class="okbox">OK</button></div>';
+				jQuery('body').append(html);
+				
+				jQuery('.okbox').click(function(){
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .popupbox').remove();
+				}); 
+				
+			 } 
+		   });
+		}
+	});
+}
+
+function deleteuser()
+{
+	jQuery('.deleteuser').click(function(){
+		var $this=jQuery(this);
+		var id=jQuery(this).attr('vid');	
+		var mode=jQuery(this).attr('coords');
+		var url=siteurl+'/api/users';
+		
+		if(id!='' && mode!='')
+		{
+			jQuery.ajax({  
+			 type: 'POST',  
+			 url: url,  
+			 //contentType: contentType,  
+			 dataType: 'json',  
+			 data: {id:id,deleteuser:1,uid:uid},  
+			 crossDomain: true,  
+			 beforeSend: function() {
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .preloader').remove();
+				var html='<div class="bodyoverlay"></div><div class="preloader"></div>';
+				jQuery('body').append(html);					
+			 },		
+			 complete: function() {
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .preloader').remove();					
+			 },
+			 success: function(res) {  
+			   if(res['users']['modeuser'])
+			   {
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .popupbox').remove();
+					var html='<div class="bodyoverlay"></div><div class="popupbox"><div class="popupimg"><img src="../images/pop.png" /></div><h1 class="success">SUCCESS</h1><h1>'+res['users']['modeuser']+'</h1><button class="okbox">OK</button></div>';
+					jQuery('body').append(html);
+					
+					var $this2=jQuery($this).parents('div.list');
+					jQuery($this2).parent('div').remove();
+				}
+				jQuery('.okbox').click(function(){
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .popupbox').remove();
+				}); 
+				
 				return false;
 			 },  
 			 error: function(response, d, a){

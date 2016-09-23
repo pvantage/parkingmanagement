@@ -507,3 +507,5 @@ overflow-wrap: break-word;
 
 .dashmenu a{ display:block; text-decoration:none; color:#333;}
 a.add-new{ color:#333; float:right;font-family: 'Roboto', sans-serif;}
+.supermenus.navbar-nav > li > a{ padding-top:7px; padding-bottom:7px;}
+.btn-group-vertical > .btn, .btn-group > .btn {background: #cccccc;}

@@ -4,11 +4,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Add User</title>
+<title>Add Truck</title>
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,100italic,300,100,300italic,400italic,500,500italic,700,700italic,900italic,900' rel='stylesheet' type='text/css'>
 <link href="../css/bootstrap.min.css" rel="stylesheet">
 <link href="../css/font-awesome.css" rel="stylesheet">
 <link href="../css/offcanvas.min.css" rel="stylesheet" type="text/css">
+<link href="../css/jquery-ui.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" type="text/css" href="../style.css">
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -20,10 +21,15 @@
 <script type="text/javascript" src="../js/jquery.js"></script>
 <script type="text/javascript" src="../js/validate.js"></script>
 <script type="text/javascript" src="../js/config.js"></script>
+<script src="../js/jquery-ui.js"></script>
 <script type="text/javascript">
 jQuery(document).ready(function(){
 	
-	
+	jQuery( "#expdate" ).datepicker({
+	  changeMonth: true,
+	  changeYear: true,
+	  dateFormat:'yy-mm-dd'
+	});
 	jQuery( document ).on( "mobileinit", function() {
 		jQuery.mobile.allowCrossDomainPages = true;
 	});
@@ -31,17 +37,15 @@ jQuery(document).ready(function(){
     if(window.XDomainRequest){contentType = "text/plain";}
 	jQuery.support.cors = true;
 	
-	var url=siteurl+'/api/users';
+	var url=siteurl+'/api/trucks';
     var uid=gup('uid');
 	var usertype=gup('usertype');
 	checkloggedin(uid);
-	if(usertype=='superadmin')
-	{
-		jQuery.ajax({ 
+	jQuery.ajax({ 
 		 type: 'POST',  
 		 url: url,  
 		 dataType: 'json',  
-		 data: {uid:uid, listlocations:1},  
+		 data: {uid:uid, listtypes:1},  
 		 crossDomain: true,  
 		 beforeSend: function() {
 			jQuery('body .bodyoverlay').remove();
@@ -55,11 +59,15 @@ jQuery(document).ready(function(){
 		 success: function(res) {  
 			
 			jQuery('body .bodyoverlay').remove();
-			jQuery(res['locationlist']).each(function(k){
-				jQuery('#location_id').append('<option value="'+res['locationlist'][k]['id']+'">'+res['locationlist'][k]['name']+'</option>');
+			jQuery(res['tucktypes']).each(function(k){
+				jQuery('#trucktype').append('<option value="'+res['tucktypes'][k]+'">'+res['tucktypes'][k]+'</option>');
 			});
-			
-			
+			jQuery(res['dutytypes']).each(function(k){
+				jQuery('#duty').append('<option value="'+res['dutytypes'][k]+'">'+res['dutytypes'][k]+'</option>');
+			});
+			jQuery(res['years']).each(function(k){
+				jQuery('#year').append('<option value="'+res['years'][k]+'">'+res['years'][k]+'</option>');
+			});
 			jQuery('body .popupbox').remove();
 		 },  
 		 error: function(response, d, a){
@@ -75,25 +83,9 @@ jQuery(document).ready(function(){
 			return false; 
 		 } 
 	   });
-	}
-	else
-	{
-		jQuery('.locations').remove();
-	}
 	   jQuery('#edituser').validate();
 	 jQuery('#edituser').submit(function(){
 	 	
-		var email=jQuery('#email').val();
-		var phone=jQuery('#phone').val();
-		var name=jQuery('#name').val();
-		var username=jQuery('#username').val();
-		var password=jQuery('#password').val();
-		var notes=jQuery('#notes').val();
-		var location_id=uid;
-		if(usertype=='superadmin')
-		{
-			location_id=jQuery('#location_id').val();
-		}
 		var error=false;
 		jQuery('#edituser input, #edituser textarea').each(function(){
 			if(jQuery(this).hasClass('error'))
@@ -103,11 +95,13 @@ jQuery(document).ready(function(){
 		});
 		if(!error)
 		{
+			var formData = jQuery('#edituser').serialize();
+			formData = formData + '&uid=' + uid + '&addnewuser=1';
 			jQuery.ajax({  
 			 type: 'POST',  
 			 url: url,  
 			 dataType: 'json',  
-			 data: {uid:uid, name:name, email:email, phone:phone, username:username, password:password, notes:notes, addnewuser:1, user_type:'user',location_id:location_id},  
+			 data: formData,  
 			 crossDomain: true,  
 			 beforeSend: function() {
 				jQuery('body .bodyoverlay').remove();
@@ -145,7 +139,7 @@ jQuery(document).ready(function(){
 					jQuery('body').append(html);
 					
 					jQuery('.okbox').click(function(){
-						window.location='users.html?uid='+uid+'&usertype='+usertype;
+						window.location='trucks.html?uid='+uid+'&usertype='+usertype;
 					});
 					
 				}
@@ -195,34 +189,48 @@ jQuery(document).ready(function(){
   <!------------------header close--------------------------------> 
   <!--------------------------content-div starts------------------------------------------->
   <div class="content_div manager_search">
-    <h4 style="margin:0px;" class="search_headng">ADD USER</h4>
+    <h4 style="margin:0px;" class="search_headng">ADD Truck</h4>
     <div class="container" style="padding-bottom:20px;">
       <div class="inner_content"><!--------------------------inner_content------------------------------------------->
         
         <div class="select_div">
           <form name="edituser" id="edituser" action="" method="post">
-		  	<div class="field locations" id="intro">
-                <select class="form-control required" name="location_id" id="location_id">
-                  <option value="">Select Location</option>
-                </select>
-              </div>
-            <div class="field"> Name
+			<div class="field"> Name
               <input type="text" name="name" id="name" placeholder="Name" value="" class="form-control required">
             </div>
-            <div class="field"> Email
-              <input type="text" id="email" value="" placeholder="Email" class="form-control required email" name="email">
+            <div class="field"> Type
+              <select class="form-control required" name="trucktype" id="trucktype">
+                  <option value="">Select Type</option>
+                </select>
             </div>
-            <div class="field"> Phone
-              <input type="text" class="form-control required" value="" id="phone" placeholder="Phone" name="phone">
+			<div class="field"> Duty
+              <select class="form-control required" name="duty" id="duty">
+                  <option value="">Select Duty</option>
+                </select>
             </div>
-            <div class="field"> Username
-              <input type="text" name="username" id="username" placeholder="Username" value="" class="form-control required">
+			<div class="field"> License Plate
+              <input type="text" name="license" id="license" placeholder="License Plate" value="" class="form-control required">
             </div>
-            <div class="field"> Password
-              <input type="password" name="password" id="password" placeholder="Password" value="" class="form-control required">
+			<div class="field"> Vin Number
+			  <input type="text" name="vin" id="vin" placeholder="Vin Number" value="" class="form-control required">
+			</div>
+            <div class="field"> Manufacturer
+              <input type="text" name="manufacturer" id="manufacturer" placeholder="Manufacturer" value="" class="form-control required">
             </div>
-            <div class="field"> Notes
-              <textarea name="notes" placeholder="Notes" id="notes" class="form-control"></textarea>
+			
+            <div class="field"> Model
+              <input type="text" name="model" id="model" placeholder="Model" value="" class="form-control required">
+            </div>
+			<div class="field"> Year
+              <select class="form-control required" name="year" id="year">
+                  <option value="">Select Year</option>
+                </select>
+            </div>
+			<div class="field"> Plate Expiry Date
+              <input type="text" name="expdate" id="expdate" placeholder="Plate Expiry Date" value="" class="form-control required">
+            </div>
+			<div class="field"> Truck TDLR
+              <input type="text" name="tdlr" id="tdlr" placeholder="Truck TDLR" value="" class="form-control required">
             </div>
             <div class="clr"></div>
             <button class="btn btn-primary" name="update" type="submit">Add</button>

@@ -4,18 +4,20 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Add User</title>
+<title>Edit Service Staff</title>
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,100italic,300,100,300italic,400italic,500,500italic,700,700italic,900italic,900' rel='stylesheet' type='text/css'>
 <link href="../css/bootstrap.min.css" rel="stylesheet">
 <link href="../css/font-awesome.css" rel="stylesheet">
 <link href="../css/offcanvas.min.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" type="text/css" href="../style.css">
+
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
 
 <script type="text/javascript" src="../js/jquery.js"></script>
 <script type="text/javascript" src="../js/validate.js"></script>
@@ -30,19 +32,17 @@ jQuery(document).ready(function(){
 	var contentType ="application/x-www-form-urlencoded; charset=utf-8";
     if(window.XDomainRequest){contentType = "text/plain";}
 	jQuery.support.cors = true;
-	
-	var url=siteurl+'/api/users';
-    var uid=gup('uid');
-	var usertype=gup('usertype');
+	var v=gup('v');
+	var uid=gup('uid');
 	checkloggedin(uid);
-	if(usertype=='superadmin')
-	{
-		jQuery.ajax({ 
-		 type: 'POST',  
-		 url: url,  
-		 dataType: 'json',  
-		 data: {uid:uid, listlocations:1},  
-		 crossDomain: true,  
+	var url=siteurl+'/api/service-staff';
+    jQuery.ajax({  
+         type: 'POST',  
+         url: url,  
+         //contentType: contentType,  
+         dataType: 'json',  
+         data: {uid:uid,id:v},  
+         crossDomain: true,  
 		 beforeSend: function() {
 			jQuery('body .bodyoverlay').remove();
 			jQuery('body .preloader').remove();
@@ -50,20 +50,18 @@ jQuery(document).ready(function(){
 			jQuery('body').append(html);					
 		 },		
 		 complete: function() {
+			jQuery('body .bodyoverlay').remove();
 			jQuery('body .preloader').remove();					
 		 },
-		 success: function(res) {  
-			
-			jQuery('body .bodyoverlay').remove();
-			jQuery(res['locationlist']).each(function(k){
-				jQuery('#location_id').append('<option value="'+res['locationlist'][k]['id']+'">'+res['locationlist'][k]['name']+'</option>');
-			});
-			
-			
-			jQuery('body .popupbox').remove();
-		 },  
-		 error: function(response, d, a){
-			jQuery('body .bodyoverlay').remove();
+         success: function(json) {  
+			 jQuery("#name").val(json['locations']['locationlist'][0]["name"]);
+			 jQuery("#username").val(json['locations']['locationlist'][0]["username"]);
+			 jQuery("#email").val(json['locations']['locationlist'][0]["email"]);
+			 jQuery("#phone").val(json['locations']['locationlist'][0]["phone"]);
+				
+         },  
+         error: function(response, d, a){
+            jQuery('body .bodyoverlay').remove();
 			jQuery('body .popupbox').remove();
 			var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Server Error.</h1><button class="okbox">OK</button></div>';
 			jQuery('body').append(html);
@@ -71,15 +69,10 @@ jQuery(document).ready(function(){
 			jQuery('.okbox').click(function(){
 				jQuery('body .bodyoverlay').remove();
 				jQuery('body .popupbox').remove();
-			});
-			return false; 
-		 } 
-	   });
-	}
-	else
-	{
-		jQuery('.locations').remove();
-	}
+			}); 
+         } 
+       });
+	
 	   jQuery('#edituser').validate();
 	 jQuery('#edituser').submit(function(){
 	 	
@@ -89,11 +82,8 @@ jQuery(document).ready(function(){
 		var username=jQuery('#username').val();
 		var password=jQuery('#password').val();
 		var notes=jQuery('#notes').val();
-		var location_id=uid;
-		if(usertype=='superadmin')
-		{
-			location_id=jQuery('#location_id').val();
-		}
+		var company_name=jQuery('#company_name').val();
+		var Address=jQuery('#Address').val();
 		var error=false;
 		jQuery('#edituser input, #edituser textarea').each(function(){
 			if(jQuery(this).hasClass('error'))
@@ -107,7 +97,7 @@ jQuery(document).ready(function(){
 			 type: 'POST',  
 			 url: url,  
 			 dataType: 'json',  
-			 data: {uid:uid, name:name, email:email, phone:phone, username:username, password:password, notes:notes, addnewuser:1, user_type:'user',location_id:location_id},  
+			 data: {uid:uid, name:name, email:email, phone:phone, password:password, updateuser:1, id:v},  
 			 crossDomain: true,  
 			 beforeSend: function() {
 				jQuery('body .bodyoverlay').remove();
@@ -131,25 +121,20 @@ jQuery(document).ready(function(){
 					
 					html+='</h1><button class="okbox">OK</button></div>';
 					jQuery('body').append(html);
-					jQuery('.okbox').click(function(){
-						jQuery('body .bodyoverlay').remove();
-						jQuery('body .popupbox').remove();
-					});
 					
 				}
-				else if(res['users']['addeduser'])
+				else if(res['users']['updateuser'])
 				{
 					jQuery('body .bodyoverlay').remove();
 					jQuery('body .popupbox').remove();
-					var html='<div class="bodyoverlay"></div><div class="popupbox"><div class="popupimg"><img src="../images/pop.png" /></div><h1 class="success">SUCCESS</h1><h1>'+res['users']['addeduser']+'.</h1><button class="okbox">OK</button></div>';
+					var html='<div class="bodyoverlay"></div><div class="popupbox"><div class="popupimg"><img src="../images/pop.png" /></div><h1 class="success">SUCCESS</h1><h1>'+res['users']['updateuser']+'.</h1><button class="okbox">OK</button></div>';
 					jQuery('body').append(html);
 					
-					jQuery('.okbox').click(function(){
-						window.location='users.html?uid='+uid+'&usertype='+usertype;
-					});
-					
 				}
-				 
+				jQuery('.okbox').click(function(){
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .popupbox').remove();
+				}); 
 				return false;
 			 },  
 			 error: function(response, d, a){
@@ -185,52 +170,47 @@ jQuery(document).ready(function(){
     <!--/.nav-collapse --> 
   </div>
 </nav>
+
 <div class="wrapper">
   <header class="border-header" style="margin-bottom:0px;">
     <div class="container">
       <div class="logo pull-left"> <a href="#"><img src="../images/logo.png"></a> </div>
       <script type="text/javascript">document.write(language_en_menus());</script> 
     </div>
-  </header>
-  <!------------------header close--------------------------------> 
-  <!--------------------------content-div starts------------------------------------------->
-  <div class="content_div manager_search">
-    <h4 style="margin:0px;" class="search_headng">ADD USER</h4>
-    <div class="container" style="padding-bottom:20px;">
-      <div class="inner_content"><!--------------------------inner_content------------------------------------------->
-        
-        <div class="select_div">
-          <form name="edituser" id="edituser" action="" method="post">
-		  	<div class="field locations" id="intro">
-                <select class="form-control required" name="location_id" id="location_id">
-                  <option value="">Select Location</option>
-                </select>
-              </div>
-            <div class="field"> Name
-              <input type="text" name="name" id="name" placeholder="Name" value="" class="form-control required">
-            </div>
-            <div class="field"> Email
-              <input type="text" id="email" value="" placeholder="Email" class="form-control required email" name="email">
-            </div>
-            <div class="field"> Phone
-              <input type="text" class="form-control required" value="" id="phone" placeholder="Phone" name="phone">
-            </div>
-            <div class="field"> Username
-              <input type="text" name="username" id="username" placeholder="Username" value="" class="form-control required">
-            </div>
-            <div class="field"> Password
-              <input type="password" name="password" id="password" placeholder="Password" value="" class="form-control required">
-            </div>
-            <div class="field"> Notes
-              <textarea name="notes" placeholder="Notes" id="notes" class="form-control"></textarea>
-            </div>
-            <div class="clr"></div>
-            <button class="btn btn-primary" name="update" type="submit">Add</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
+  </header><!------------------header close-------------------------------->
+		<!--------------------------content-div starts------------------------------------------->	
+			<div class="content_div manager_search">
+            <h4 style="margin-top:0px;" class="search_headng">EDIT Service Staff</h4>
+				<div class="container">
+				<div class="inner_content"><!--------------------------inner_content------------------------------------------->
+					
+					   <div class="select_div">
+						  <form name="edituser" id="edituser" action="" method="post">
+							<div class="field"> Name
+							<input type="text" name="name" id="name" placeholder="Name" value="" class="form-control required">
+							</div>
+							<div class="field"> Email
+							  <input type="text" id="email" value="" placeholder="Email" class="form-control required email" name="email">
+							</div>
+							<div class="field"> Phone
+							  <input type="text" name="phone" id="phone" placeholder="Phone" value="" class="form-control required">
+							</div>
+							<div class="field">
+							Username
+							<input type="text" name="username" id="username" disabled="disabled" placeholder="Username" value="" class="form-control required">
+							</div>
+							<div class="field">
+							Password
+							 <input type="password" name="password" id="password" placeholder="Password" value="" class="form-control">
+							</div>
+							<div class="clr"></div>
+							<button class="btn btn-success" name="update" type="submit">Update</button>
+						  </form>
+					   </div>
+				</div>
+			</div>
+		
+	</div>
 </div>
 <script src="../js/offcanvas.js"></script>
 </body>

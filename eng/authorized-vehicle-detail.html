@@ -334,64 +334,97 @@ function calculateAndDisplayRoute(directionsDisplay, directionsService,
             <h4 style="margin-top:0px;" class="search_headng">VEHICLE DETAIL</h4>
 				<div class="container">
 				<div class="inner_content"><!--------------------------inner_content------------------------------------------->
-					
-					   
-					   <div class="detail_div">
-					   <div class="vehiclelisting">
-					   	<div class="mnger_frst vehiclilist"><!--------------------------mnger_frstt------------------------------------------->	
-							<div class="list vlist">
-							<p id="maddress"></p>
-							<div class="clr"></div>
-							<strong>Property Name: </strong><p id="mcompany_name"></p>
-							<div class="clr"></div>
-							<strong>Manager Name:</strong> <p id="managername"></p>
-							<div class="clr"></div>
-							<strong>Email:</strong><p id="manageremail"></p>
-							<div class="clr"></div>
-							<strong>Manager Phone:</strong><p id="managerphone"></p>
-							<div class="clr"></div>
-							<div id="area_map2" style="height:200px; margin-top:5px; display:none; color:#000000;"></div>
-							
-							</div>
-          
-						</div>
-						<div class="mnger_frst vehiclilist"><!--------------------------mnger_frstt------------------------------------------->	
-							<div class="list vlist">
-								
-								<h2>Vehicle Details</h2>
-								<div class="clr"></div>
-								<strong>Owner Name:</strong><p id="owner_namea"></p>
-								<div class="clr"></div>
-								<strong>Email:</strong><p id="Emaila"></p>
-								<div class="clr"></div>
-								<strong>Phone:</strong><p id="Phonepa"></p>
-								<strong>&nbsp;&nbsp;Unit Number:</strong><p id="aprtmenta"></p>
-								<div class="clr"></div>
-								<strong>Vin Number:</strong><p id="vinnumbera"></p>
-								<strong>&nbsp;&nbsp;License No:</strong><p id="tagnumbera"></p>
-								<div class="clr"></div>
-								<strong>Year:</strong><p id="yeara"></p>
-								<strong>&nbsp;&nbsp;Make:</strong><p id="makea"></p>
-								<div class="clr"></div>
-								<strong>Model:</strong><p id="modela"></p>
-								<strong>&nbsp;&nbsp;Color:</strong><p id="colora"></p>
-								<div class="clr"></div>
-								<strong>Expiry Date:</strong><p id="expdatea"></p>
-								<strong>&nbsp;&nbsp;Type Of Permit:</strong><p id="typeofpermita"></p>
-								<div class="clr"></div>
-								<strong>Notes:</strong><p id="notespa"></p>
-								
-								
-							</div>
-          
-						</div>
-						<div class="mnger_frst vehiclilist showtowong" style="display:none;"><!--------------------------mnger_frstt------------------------------------------->	
-							<div id="towingdetails"></div>
-						</div>
-					   </div>
-							
-				</div><!--------------------------inner_content------------------------------------------->	
-				</div>
+        
+        <div class="detail_div">
+          <div class="vehiclelisting">
+            <div ><!--------------------------mnger_frstt------------------------------------------->
+              <div class="list vlist">
+                <table class="table table-bordered table-striped">
+                  <tr class="superadmin">
+                    <td><strong>Address:</strong></td>
+                    <td><div id="maddress"></div></td>
+                  </tr>
+                  <tr class="superadmin">
+                    <td><strong>Property Name: </strong></td>
+                    <td><div id="mcompany_name"></div></td>
+                  </tr>
+                  <tr class="superadmin">
+                    <td><strong>Manager Name:</strong></td>
+                    <td><div id="managername"></div></td>
+                  </tr>
+                  <tr class="superadmin">
+                    <td><strong>Email:</strong></td>
+                    <td><div id="manageremail"></div></td>
+                  </tr>
+                  <tr class="superadmin">
+                    <td><strong>Manager Phone:</strong></td>
+                    <td><div id="managerphone"></div></td>
+                  </tr>
+                  <tr class="superadmin">
+                    <td><h2>Vehicle Details</h2></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Name:</strong></td>
+                    <td><div id="owner_namea"></div></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Email:</strong></td>
+                    <td><div id="Emaila"></div></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Phone:</strong></td>
+                    <td><div id="Phonepa"></div></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Unit Number:</strong></td>
+                    <td><div id="aprtmenta"></div></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Vin Number:</strong></td>
+                    <td><div id="vinnumbera"></div></td>
+                  </tr>
+                  <tr>
+                    <td><strong>License No:</strong></td>
+                    <td><div id="tagnumbera"></div></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Year:</strong></td>
+                    <td><div id="yeara"></div></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Make:</strong></td>
+                    <td><div id="makea"></div></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Model:</strong></td>
+                    <td><div id="modela"></div></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Color:</strong></td>
+                    <td><div id="colora"></div></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Expiry Date:</strong></td>
+                    <td><div id="expdatea"></div></td>
+                  </tr>
+                  <tr>
+                    <td><strong class="admin">Type Of Permit:</strong></td>
+                    <td><div class="admin" id="aprtmenta"></div></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Notes:</strong></td>
+                    <td><div id="notespa"></div></td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div class=" showtowong" style="display:none;"><!--------------------------mnger_frstt------------------------------------------->
+              <div id="towingdetails"></div>
+            </div>
+          </div>
+        </div>
+        <!--------------------------inner_content-------------------------------------------> 
+      </div>
 			</div>
 		
 		<!--------------------------content-div endss------------------------------------------->	

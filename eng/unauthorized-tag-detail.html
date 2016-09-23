@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>VIOLATIONS TOWING</title>
+<title>VIOLATIONS TAG</title>
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,100italic,300,100,300italic,400italic,500,500italic,700,700italic,900italic,900' rel='stylesheet' type='text/css'>
 <link href="../css/bootstrap.min.css" rel="stylesheet">
 <link href="../css/font-awesome.css" rel="stylesheet">
@@ -29,8 +29,10 @@ jQuery(document).ready(function(){
 	var contentType ="application/x-www-form-urlencoded; charset=utf-8";
     if(window.XDomainRequest){contentType = "text/plain";}
 	jQuery.support.cors = true;
-	var url=siteurl+'/api/vehicle_details';
+	var url=siteurl+'/api/unauthorized-tag';
     var uid=gup('uid');
+	var usertype=gup('usertype');
+	
 	checkloggedin(uid);
 	var v=gup('v');
 	var href=jQuery('.backtopage').attr('href')+'?uid='+uid;
@@ -40,7 +42,7 @@ jQuery(document).ready(function(){
          url: url,  
          //contentType: contentType,  
          dataType: 'json',  
-         data: {uid:uid,id:v},  
+         data: {uid:uid,id:v,tagdetail:1},  
          crossDomain: true,  
 		 beforeSend: function() {
 			jQuery('body .bodyoverlay').remove();
@@ -74,7 +76,6 @@ jQuery(document).ready(function(){
 		 var manageremail =  json[key]["manageremail"];
 		 var expdate =  json[key]["expdate"];
 		 var site_url =  json[key]["site_url"];
-		 var usertype =  json[key]["usertype"];
 		 
 		 if(jQuery.trim(manageremail)!=''){
 		 	$("#manageremail").html(manageremail);
@@ -87,7 +88,7 @@ jQuery(document).ready(function(){
 		var shoph='';
 		var gaddress='';
 		if(typeof json['towingdetail'] != 'undefined'){
-		html+='<h3>Towing Detail  </h3><table class="table table-bordered towingtable">';
+		html+='<h3>UNAUTHORIZED Tags  </h3><table class="table table-bordered towingtable">';
 		jQuery.each(json['towingdetail'], function (key) {
 			var photo='';
 			if(jQuery.trim(json['towingdetail'][key]['photo'])!=''){
@@ -99,21 +100,17 @@ jQuery(document).ready(function(){
 			}
 			else
 			{
-				p=site_url+'files/towvehicle/'+p;
+				p=site_url+'files/violationtag/'+p;
 				pt=p;
 				shoph+='<div class="item"><img src="'+p+'" alt=""></div>';
 			}
 			if(pt!=''){
-				photo='<a href="violation-towing-images.html?uid='+uid+'&v='+v+'&usertype='+usertype+'" class="showallphotos"><img src="'+pt+'" /></a>';
+				photo='<a href="unauthorized-tag-images.html?uid='+uid+'&v='+json['towingdetail'][key]['id']+'&usertype='+usertype+'" class="showallphotos"><img src="'+pt+'" /></a>';
 			}
 			}
 			
-			html+='<tr><td colspan="2">'+photo+'</td></tr><tr><th valign="top">Reason</th><td valign="top">'+json['towingdetail'][key]['reason']+'</td></tr><tr><th valign="top">From</th><td valign="top">'+json['towingdetail'][key]['locationfrom']+'</td></tr><tr><th valign="top">To</th><td valign="top">'+json['towingdetail'][key]['locationto']+'</td></tr><tr><th valign="top">Truck</th><td valign="top">'+json['towingdetail'][key]['truck']+'</td></tr><tr><th valign="top">Driver</th><td valign="top">'+json['towingdetail'][key]['by_name']+'</td></tr><tr><th valign="top">Date</th><td valign="top">'+json['towingdetail'][key]['cdate']+'</td></tr>';
-			gaddress=json['towingdetail'][key]['locationto'];
-			if(usertype=='driver'){
-			var gaddress2=json['towingdetail'][key]['locationfrom'];
-			html+='<tr><td colspan="2" style="position:relative;"><div id="floating-panel"><input class="form-control" type="text" name="start" id="start" value="'+gaddress2+'" /><input  class="btn btn-primary" type="button" id="searchdir" value="Search" /><div style="display:none;"><b>End: </b><input type="text" name="end" id="end" value="'+gaddress+'" /></div></div><div id="area_map" style="height:400px; margin-top:5px; color:#000000;"></div><div id="warnings-panel"></div></td></tr>';
-			}
+			html+='<tr><td colspan="2">'+photo+'</td></tr><tr><th valign="top">Reason</th><td valign="top">'+json['towingdetail'][key]['reason']+'</td></tr><tr><th valign="top">Date</th><td valign="top">'+json['towingdetail'][key]['cdate']+'</td></tr>';
+			
 			
 		});
 		
@@ -126,34 +123,6 @@ jQuery(document).ready(function(){
 			jQuery('#showphotos').modal('show');
 		});
 	 
-	 	if(jQuery.trim(gaddress)!='' && usertype=='driver'){
-			var markerArray = [];
-
-			// Instantiate a directions service.
-			var directionsService = new google.maps.DirectionsService;
-	
-			// Create a map and center it on Manhattan.
-			var map = new google.maps.Map(document.getElementById('area_map'), {
-			  zoom: 13,
-			  center: {lat: 40.771, lng: -73.974}
-			});
-	
-			// Create a renderer for directions and bind it to the map.
-			var directionsDisplay = new google.maps.DirectionsRenderer({map: map});
-	
-			// Instantiate an info window to hold step text.
-			var stepDisplay = new google.maps.InfoWindow;
-	
-			// Display the route between the initial start and end selections.
-			calculateAndDisplayRoute(
-				directionsDisplay, directionsService, markerArray, stepDisplay, map);
-			// Listen to change events from the start and end lists.
-			var onChangeHandler = function() {
-			  calculateAndDisplayRoute(
-				  directionsDisplay, directionsService, markerArray, stepDisplay, map);
-			};
-			document.getElementById('searchdir').addEventListener('click', onChangeHandler);
-		}
 		
 		$("#owner_namea").html(owner_name);
 		$("#Emaila").html(Email);		
@@ -258,19 +227,14 @@ function calculateAndDisplayRoute(directionsDisplay, directionsService,
   <header>
     <div class="container">
       <div class="logo pull-left"> <a href="#"><img src="../images/logo.png"></a> </div>
-      <div class="lang pull-right">
-        <ul class="list-inline">
-          <li class="active"><a href="#"><img src="../images/icon-en.png"> English</a></li>
-          <li><a href="#"> <img src="../images/icon-es.png"> Espanol</a></li>
-        </ul>
-      </div>
+      <script type="text/javascript">document.write(language_en_menus());</script>
     </div>
   </header>
   
   <!------------------header close--------------------------------> 
   <!--------------------------content-div starts------------------------------------------->
   <div class="content_div manager_search">
-    <h4 class="search_headng">VIOLATIONS TOWING</h4>
+    <h4 class="search_headng">UNAUTHORIZED TAG</h4>
     <div class="container" style="padding-top:15px;">
       <div class="inner_content"><!--------------------------inner_content------------------------------------------->
         
@@ -279,45 +243,7 @@ function calculateAndDisplayRoute(directionsDisplay, directionsService,
             <div ><!--------------------------mnger_frstt------------------------------------------->
               <div class="list vlist">
                 <table class="table table-bordered table-striped">
-                  <tr class="superadmin">
-                    <td><strong>Address:</strong></td>
-                    <td><div id="maddress"></div></td>
-                  </tr>
-                  <tr class="superadmin">
-                    <td><strong>Property Name: </strong></td>
-                    <td><div id="mcompany_name"></div></td>
-                  </tr>
-                  <tr class="superadmin">
-                    <td><strong>Manager Name:</strong></td>
-                    <td><div id="managername"></div></td>
-                  </tr>
-                  <tr class="superadmin">
-                    <td><strong>Email:</strong></td>
-                    <td><div id="manageremail"></div></td>
-                  </tr>
-                  <tr class="superadmin">
-                    <td><strong>Manager Phone:</strong></td>
-                    <td><div id="managerphone"></div></td>
-                  </tr>
-                  <tr class="superadmin">
-                    <td><h2>Vehicle Details</h2></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Name:</strong></td>
-                    <td><div id="owner_namea"></div></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Email:</strong></td>
-                    <td><div id="Emaila"></div></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Phone:</strong></td>
-                    <td><div id="Phonepa"></div></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Unit Number:</strong></td>
-                    <td><div id="aprtmenta"></div></td>
-                  </tr>
+                  
                   <tr>
                     <td><strong>Vin Number:</strong></td>
                     <td><div id="vinnumbera"></div></td>
@@ -325,10 +251,6 @@ function calculateAndDisplayRoute(directionsDisplay, directionsService,
                   <tr>
                     <td><strong>License No:</strong></td>
                     <td><div id="tagnumbera"></div></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Year:</strong></td>
-                    <td><div id="yeara"></div></td>
                   </tr>
                   <tr>
                     <td><strong>Make:</strong></td>
@@ -341,18 +263,6 @@ function calculateAndDisplayRoute(directionsDisplay, directionsService,
                   <tr>
                     <td><strong>Color:</strong></td>
                     <td><div id="colora"></div></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Expiry Date:</strong></td>
-                    <td><div id="expdatea"></div></td>
-                  </tr>
-                  <tr>
-                    <td><strong class="admin">Type Of Permit:</strong></td>
-                    <td><div class="admin" id="aprtmenta"></div></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Notes:</strong></td>
-                    <td><div id="notespa"></div></td>
                   </tr>
                 </table>
               </div>

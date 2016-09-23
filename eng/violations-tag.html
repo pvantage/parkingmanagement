@@ -4,13 +4,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Vehicles</title>
+<title>VIOLATIONS TAG</title>
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,100italic,300,100,300italic,400italic,500,500italic,700,700italic,900italic,900' rel='stylesheet' type='text/css'>
 <link href="../css/bootstrap.min.css" rel="stylesheet">
 <link href="../css/font-awesome.css" rel="stylesheet">
 <link href="../css/offcanvas.min.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" type="text/css" href="../style.css">
-<link rel="stylesheet" type="text/css" href="../css/font-awesome.css">
 
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -33,7 +32,7 @@ jQuery(document).ready(function(){
     if(window.XDomainRequest){contentType = "text/plain";}
 	jQuery.support.cors = true;
 	
-	var url=siteurl+'/api/vehiclelist';
+	var url=siteurl+'/api/violations-tag';
     
 	var uid=gup('uid');
 	checkloggedin(uid);
@@ -47,14 +46,12 @@ jQuery(document).ready(function(){
 	jQuery('input[name="searcht"]').val(searcht);
 	
 	jQuery('#usid').val(uid);
-	jQuery('#usertype').val(usertype);
-	
-	if(usertype=='admin' || usertype=='user')
+	if(usertype=='driver' || usertype=='user' || usertype=='admin')
 	{
-		jQuery('.select_div').prepend('<a href="add-vehicle.html?uid='+uid+'&usertype='+usertype+'" id="addnewuser" class="add-new"><i aria-hidden="true" class="fa fa-truck"></i> Add New Vehicle</a>');
+		jQuery('.select_div').prepend('<a href="add-violation-tag.html?uid='+uid+'&usertype='+usertype+'" id="addnewuser" class="add-new"><i aria-hidden="true" class="fa fa-truck"></i> Add Violation Tag</a>');
 	}
-	
-	jQuery.ajax({ 
+	jQuery('#usertype').val(usertype);
+	jQuery.ajax({  
          type: 'POST',  
          url: url,  
          //contentType: contentType,  
@@ -75,33 +72,16 @@ jQuery(document).ready(function(){
            if(res['vehicles']['vehiclelist'])
 		   {
             	var html='';
-				
 				jQuery(res['vehicles']['vehiclelist']).each(function(index){
-					html+='<div><div class="list vlist"><table class="table table-bordered table-striped"><tr class="vdetail"><td colspan="2">'+res['vehicles']['vehiclelist'][index]['year']+' '+res['vehicles']['vehiclelist'][index]['make']+' '+res['vehicles']['vehiclelist'][index]['model']+' ('+res['vehicles']['vehiclelist'][index]['color']+')</td></tr><tr><td>License No:</td> <td> '+res['vehicles']['vehiclelist'][index]['tagnumber']+' </td></tr><tr><td>Vin Number:</td><td> '+res['vehicles']['vehiclelist'][index]['vinnumber']+'</td></tr>';
-					if(typeof res['vehicles']['vehiclelist'][index]['address']['Address'] != 'undefined'){
-						html+='<tr class="addetail"><td colspan="2">'+res['vehicles']['vehiclelist'][index]['address']['Address']+'</td></tr>';
-					}
+					html+='<div><div class="list vlist"><table class="table table-bordered table-striped"><tr class="vdetail"> <td colspan="2">'+res['vehicles']['vehiclelist'][index]['year']+' '+res['vehicles']['vehiclelist'][index]['make']+' '+res['vehicles']['vehiclelist'][index]['model']+' ('+res['vehicles']['vehiclelist'][index]['color']+')</td></tr> <tr><td>License No: </td><td>'+res['vehicles']['vehiclelist'][index]['tagnumber']+'</td></tr> <tr><td>Vin Number:</td><td> '+res['vehicles']['vehiclelist'][index]['vinnumber']+'</td></tr></td></tr><tr class="addetail"> <td colspan="2">'+res['vehicles']['vehiclelist'][index]['address']['Address']+'</td></tr>';
 					if(typeof res['vehicles']['vehiclelist'][index]['towing']['locationto'] != 'undefined'){
-						html+='<tr class="towdetail"><td>Towed To: </td><td>'+res['vehicles']['vehiclelist'][index]['towing']['locationto']+'</td></tr>';
+						html+='<tr class="towdetail"><td>Towed To:</td> <td> '+res['vehicles']['vehiclelist'][index]['towing']['locationto']+'</td></tr>';
 					}
-					html+='<tr class="overlay_div"> <td colspan="2">';
-					if(res['vehicles']['vehiclelist'][index]['status']!='24' && res['vehicles']['vehiclelist'][index]['status']!='25'){
-						if(res['vehicles']['vehiclelist'][index]['status']=='0'){
-							html+='<a href="javascript:;" class="activdeactivvehicle" coords="0" vid="'+res['vehicles']['vehiclelist'][index]['id']+'"><i class="fa fa-times"></i> </a>';
-						}
-						else if(res['vehicles']['vehiclelist'][index]['status']=='1'){
-							html+='<a href="javascript:;" class="activdeactivvehicle" coords="1" vid="'+res['vehicles']['vehiclelist'][index]['id']+'"><i class="fa fa-check"></i> </a>';
-						}
+					html+='<tr class="overlay_div"><td colspan="2"><a href="violation-tag-detail.html?uid='+uid+'&v='+res['vehicles']['vehiclelist'][index]['id']+'&usertype='+usertype+'"><i class="fa fa-eye"></i></a>';
+					if(res['vehicles']['usertype']=='driver' && res['vehicles']['vehiclelist'][index]['status']=='25'){
+						html+='<a href="add-violation-towing.html?uid='+uid+'&v='+res['vehicles']['vehiclelist'][index]['id']+'&usertype='+usertype+'"> &nbsp;&nbsp;<i class="fa fa-truck"></i></a>';
 					}
-					if(usertype=='admin' || usertype=='user')
-					{
-						html+='<a href="edit-authorized-vehicle.html?uid='+uid+'&v='+res['vehicles']['vehiclelist'][index]['id']+'&usertype='+usertype+'"><i class="fa fa-pencil"></i> </a>';
-					}
-					else
-					{
-						html+='<a href="authorized-vehicle-detail.html?uid='+uid+'&v='+res['vehicles']['vehiclelist'][index]['id']+'&usertype='+usertype+'"><i class="fa fa-eye"></i> </a>';
-					}
-					html+='</td></tr></table></div></div>';
+					html+='</td></tr></table></div> </div>';
 			   });
 			   if(parseInt(res['vehicles']['total'])>(parseInt(res['vehicles']['pageid'])*parseInt(res['vehicles']['vehiclelist'].length)))
 			   {
@@ -109,8 +89,7 @@ jQuery(document).ready(function(){
 			   		html+='<a href="javascript:;" class="btn btn-danger loadmore" pageid="'+pageid+'">Load More</a>';
 			   }
 			   jQuery('.vehiclelisting').html(html);
-				
-				activdeactivvehicle();
+				   
 			}
 			else
 			{
@@ -129,6 +108,7 @@ jQuery(document).ready(function(){
 			}); 
          } 
        });
+	  
 	  jQuery('a.loadmore').live('click',function(){
 		var pageid=jQuery(this).attr('pageid');
 		var $this=jQuery(this);
@@ -155,32 +135,15 @@ jQuery(document).ready(function(){
 					var html='';
 					
 					jQuery(res['vehicles']['vehiclelist']).each(function(index){
-						html+='<div><div class="list vlist"><table class="table table-bordered table-striped"><tr class="vdetail"><td colspan="2">'+res['vehicles']['vehiclelist'][index]['year']+' '+res['vehicles']['vehiclelist'][index]['make']+' '+res['vehicles']['vehiclelist'][index]['model']+' ('+res['vehicles']['vehiclelist'][index]['color']+')</td></tr><tr><td>License No:</td> <td> '+res['vehicles']['vehiclelist'][index]['tagnumber']+' </td></tr><tr><td>Vin Number:</td><td> '+res['vehicles']['vehiclelist'][index]['vinnumber']+'</td></tr>';
-						if(typeof res['vehicles']['vehiclelist'][index]['address']['Address'] != 'undefined'){
-							html+='<tr class="addetail"><td colspan="2">'+res['vehicles']['vehiclelist'][index]['address']['Address']+'</td></tr>';
-						}
-						if(typeof res['vehicles']['vehiclelist'][index]['towing']['locationto'] != 'undefined'){
-							html+='<tr class="towdetail"><td>Towed To: </td><td>'+res['vehicles']['vehiclelist'][index]['towing']['locationto']+'</td></tr>';
-						}
-						html+='<tr class="overlay_div"> <td colspan="2">';
-						if(res['vehicles']['vehiclelist'][index]['status']!='24' && res['vehicles']['vehiclelist'][index]['status']!='25'){
-							if(res['vehicles']['vehiclelist'][index]['status']=='0'){
-								html+='<a href="javascript:;" class="activdeactivvehicle" coords="0" vid="'+res['vehicles']['vehiclelist'][index]['id']+'"><i class="fa fa-times"></i> </a>';
-							}
-							else if(res['vehicles']['vehiclelist'][index]['status']=='1'){
-								html+='<a href="javascript:;" class="activdeactivvehicle" coords="1" vid="'+res['vehicles']['vehiclelist'][index]['id']+'"><i class="fa fa-check"></i> </a>';
-							}
-						}
-						if(usertype=='admin' || usertype=='user')
-						{
-							html+='<a href="edit-authorized-vehicle.html?uid='+uid+'&v='+res['vehicles']['vehiclelist'][index]['id']+'&usertype='+usertype+'"><i class="fa fa-pencil"></i> </a>';
-						}
-						else
-						{
-							html+='<a href="authorized-vehicle-detail.html?uid='+uid+'&v='+res['vehicles']['vehiclelist'][index]['id']+'&usertype='+usertype+'"><i class="fa fa-eye"></i> </a>';
-						}
-						html+='</td></tr></table></div></div>';
-						
+						html+='<div><div class="list vlist"><table class="table table-bordered table-striped"><tr class="vdetail"> <td colspan="2">'+res['vehicles']['vehiclelist'][index]['year']+' '+res['vehicles']['vehiclelist'][index]['make']+' '+res['vehicles']['vehiclelist'][index]['model']+' ('+res['vehicles']['vehiclelist'][index]['color']+')</td></tr> <tr><td>License No: </td><td>'+res['vehicles']['vehiclelist'][index]['tagnumber']+'</td></tr> <tr><td>Vin Number:</td><td> '+res['vehicles']['vehiclelist'][index]['vinnumber']+'</td></tr></td></tr><tr class="addetail"> <td colspan="2">'+res['vehicles']['vehiclelist'][index]['address']['Address']+'</td></tr>';
+					if(typeof res['vehicles']['vehiclelist'][index]['towing']['locationto'] != 'undefined'){
+						html+='<tr class="towdetail"><td>Towed To:</td> <td> '+res['vehicles']['vehiclelist'][index]['towing']['locationto']+'</td></tr>';
+					}
+					html+='<tr class="overlay_div"><td colspan="2"><a href="violation-tag-detail.html?uid='+uid+'&v='+res['vehicles']['vehiclelist'][index]['id']+'&usertype='+usertype+'"><i class="fa fa-eye"></i></a>';
+					if(res['vehicles']['usertype']=='driver' && res['vehicles']['vehiclelist'][index]['status']=='25'){
+						html+='<a href="add-violation-towing.html?uid='+uid+'&v='+res['vehicles']['vehiclelist'][index]['id']+'&usertype='+usertype+'"> &nbsp;&nbsp;<i class="fa fa-truck"></i></a>';
+					}
+					html+='</td></tr></table></div> </div>';
 				   });
 				   if(parseInt(res['vehicles']['total'])>(parseInt(res['vehicles']['pageid'])*parseInt(res['vehicles']['vehiclelist'].length)))
 				   {
@@ -188,7 +151,6 @@ jQuery(document).ready(function(){
 						html+='<a href="javascript:;" class="btn btn-danger loadmore" pageid="'+pageid+'">Load More</a>';
 				   }
 				   jQuery('.vehiclelisting').append(html);
-				   activdeactivvehicle();
 				   
 				}
 				jQuery($this).remove();
@@ -218,8 +180,7 @@ jQuery(document).ready(function(){
       <button type="button" class="navbar-toggle collapsed pull-left" data-toggle="offcanvas"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
     </div>
     <div id="navbar" class="menu_div collapse navbar-collapse sidebar-offcanvas">
-      <ul class="menus nav navbar-nav">
-      </ul>
+      <ul class="menus nav navbar-nav"></ul>
     </div>
     <!--/.nav-collapse --> 
   </div>
@@ -233,13 +194,13 @@ jQuery(document).ready(function(){
   </header>
   <!------------------header close--------------------------------> 
   <!--------------------------content-div starts------------------------------------------->
-  <div class="content_div manager_search">
-    <h4 style="margin-top:0px;" class="search_headng">VEHICLES</h4>
-    <div class="container">
+  <h4 class="search_headng" style="margin-top:0px;">VIOLATIONS TAG</h4>
+  <div class="container" style="padding-bottom:20px;">
+    <div class="content_div manager_search">
       <div class="inner_content"><!--------------------------inner_content------------------------------------------->
         
-        <div class="select_div">
-          <form class="searchbox" action="vehicles.html" method="get">
+        <div class="select_div" style="padding-bottom:20px;">
+          <form class="searchbox" action="violations-tag.html" method="get">
             <input type="hidden" name="uid" id="usid" />
             <input type="hidden" name="usertype" id="usertype" />
             <div class="field">
@@ -273,9 +234,6 @@ jQuery(document).ready(function(){
       <!--------------------------inner_content-------------------------------------------> 
     </div>
   </div>
-  
-  <!--------------------------content-div endss-------------------------------------------> 
-</div>
 </div>
 <script src="../js/offcanvas.js"></script>
 </body>
