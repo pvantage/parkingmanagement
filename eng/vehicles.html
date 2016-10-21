@@ -46,6 +46,9 @@ jQuery(document).ready(function(){
 	var searcht=gup('searcht');
 	jQuery('input[name="searcht"]').val(searcht);
 	
+	var locationid=gup('locationid');
+	
+	
 	jQuery('#usid').val(uid);
 	jQuery('#usertype').val(usertype);
 	
@@ -53,13 +56,54 @@ jQuery(document).ready(function(){
 	{
 		jQuery('.select_div').prepend('<a href="add-vehicle.html?uid='+uid+'&usertype='+usertype+'" id="addnewuser" class="add-new"><i aria-hidden="true" class="fa fa-truck"></i> Add New Vehicle</a>');
 	}
-	
+	jQuery.ajax({ 
+		 type: 'POST',  
+		 url: siteurl+'/api/locations',  
+		 //contentType: contentType,  
+		 dataType: 'json',  
+		 data: {uid:uid,selectoption:'',searcht:''},  
+		 crossDomain: true,  
+		 beforeSend: function() {
+								
+		 },		
+		 complete: function() {
+			jQuery('select#locationid').val(locationid);	
+		 },
+		 success: function(res) {  
+		   if(res['locations']['locationlist'])
+		   {
+				var html='';
+				
+				jQuery(res['locations']['locationlist']).each(function(index){
+					html+='<option value="'+res['locations']['locationlist'][index]['id']+'">'+res['locations']['locationlist'][index]['company_name']+', '+res['locations']['locationlist'][index]['Address']+'</option>';
+			   });
+			   jQuery('#locationid').append(html);
+			   
+			   
+			}
+			else
+			{
+				//window.location='index.html';
+			}
+		 },  
+		 error: function(response, d, a){
+			jQuery('body .bodyoverlay').remove();
+			jQuery('body .popupbox').remove();
+			var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Server Error.</h1><button class="okbox">OK</button></div>';
+			jQuery('body').append(html);
+			
+			jQuery('.okbox').click(function(){
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .popupbox').remove();
+			}); 
+		 } 
+	   });
 	jQuery.ajax({ 
          type: 'POST',  
          url: url,  
          //contentType: contentType,  
          dataType: 'json',  
-         data: {uid:uid,selectoption:selectoption,vtype:vtype,searcht:searcht},  
+         data: {uid:uid,selectoption:selectoption,vtype:vtype,searcht:searcht,locationid:locationid},  
          crossDomain: true,  
 		 beforeSend: function() {
 			jQuery('body .bodyoverlay').remove();
@@ -137,7 +181,7 @@ jQuery(document).ready(function(){
 			 url: url,  
 			 //contentType: contentType,  
 			 dataType: 'json',  
-			 data: {uid:uid,selectoption:selectoption,vtype:vtype,searcht:searcht,show:pageid},  
+			 data: {uid:uid,selectoption:selectoption,vtype:vtype,searcht:searcht,locationid:locationid,show:pageid},  
 			 crossDomain: true,  
 			 beforeSend: function() {
 				jQuery('body .bodyoverlay').remove();
@@ -249,6 +293,12 @@ jQuery(document).ready(function(){
                 <option value="vin">Vin Number </option>
                 <option value="location">Location</option>
                 <option value="company">Property</option>
+              </select>
+            </div>
+			<div class="field superadmin">
+              <select name="locationid" id="locationid" class="form-control">
+                <option value="">All</option>
+                
               </select>
             </div>
             <div class="field">
