@@ -31,6 +31,9 @@ jQuery(document).ready(function(){
     if(window.XDomainRequest){contentType = "text/plain";}
 	jQuery.support.cors = true;
 	jQuery('#loginuser').validate();
+	if(localStorage.getItem('UserRedirect')!=null){
+		window.location=localStorage.getItem('UserRedirect');
+	}
 	jQuery('#loginuser').submit( function(){	
 			
 		var user_login=jQuery('#username').val();
@@ -61,11 +64,9 @@ jQuery(document).ready(function(){
 			 success: function(res) { 
 				if(res['checklogin']['udetail'])
 				{
-					
+					localStorage.setItem('UserRedirect', 'eng/dashboard.html?uid='+res['checklogin']['udetail']['uid']+'&usertype='+res['checklogin']['udetail']['user_type']);
 					window.location ='eng/dashboard.html?uid='+res['checklogin']['udetail']['uid']+'&usertype='+res['checklogin']['udetail']['user_type'];
 				
-					//localStorage.setItem('userInfo', res['success']['userid']);
-					//window.location ='category.html';
 				}else if(res['checklogin']['error']){				
 					jQuery('body .bodyoverlay').remove();
 					jQuery('body .popupbox').remove();

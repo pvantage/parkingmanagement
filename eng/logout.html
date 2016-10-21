@@ -64,7 +64,7 @@ jQuery(document).ready(function(){
 			 success: function(res) { 
 				if(res['checkout']['success'])
 				{
-					
+					localStorage.clear();
 					window.location ='../index.html';
 				
 					//localStorage.setItem('userInfo', res['success']['userid']);
