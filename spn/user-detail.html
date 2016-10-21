@@ -57,7 +57,7 @@ jQuery(document).ready(function(){
 		 	 var index=0;
 			 
 			 
-			 html='<div class="mnger_frst"><div class="list"><ul><li><strong>ID:</strong> <p>'+res['users']['userlist'][index]['id']+'</p></li><li><strong>Name:</strong> <p>'+res['users']['userlist'][index]['name']+'</p></li><li><strong>Username:</strong> <p>'+res['users']['userlist'][index]['username']+'</p></li><li><strong>Email:</strong> <p>'+res['users']['userlist'][index]['email']+'</p></li><li><strong>Phone Number:</strong> <p>'+res['users']['userlist'][index]['phone']+'</p></li><li><strong>Note:</strong> <p>'+res['users']['userlist'][index]['notes']+'</p></li></ul></div>';
+			html='<div><div class="list"><table class="table table-bordered table-striped"><tr><th>CARNÉ DE IDENTIDAD:</th> <td>'+res['users']['userlist'][index]['id']+'</td></<tr><tr><th>Nombre:</th> <td>'+res['users']['userlist'][index]['name']+'</td></tr><tr><th>Nombre de usuario:</th> <td>'+res['users']['userlist'][index]['username']+'</td></tr><tr><th>Email:</th> <td>'+res['users']['userlist'][index]['email']+'</td></tr><tr><th>Número de teléfono:</th> <td>'+res['users']['userlist'][index]['phone']+'</td></tr><tr><th>Nota:</th> <td>'+res['users']['userlist'][index]['notes']+'</td></tr></table></div></div>';
 			
 			html+='</div>';
 			jQuery('.userlisting').html(html);
@@ -103,7 +103,7 @@ jQuery(document).ready(function(){
   <!------------------header close--------------------------------> 
   <!--------------------------content-div starts------------------------------------------->
   <div class="content_div manager_search">
-    <h4 style="margin-top:0px;" class="search_headng">USER DETAIL</h4>
+    <h4 style="margin-top:0px;" class="search_headng">Detalle del usuario</h4>
     <div class="container">
       <div class="inner_content"><!--------------------------inner_content------------------------------------------->
         
