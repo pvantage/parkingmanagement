@@ -134,7 +134,7 @@ jQuery(document).ready(function(){
 	 jQuery('#edituser').submit(function(){
 		
 		var error=false;
-		jQuery('#edituser input, #edituser textarea').each(function(){
+		jQuery('#edituser input, #edituser textarea, #edituser select').each(function(){
 			if(jQuery(this).hasClass('error'))
 			{
 				error=true;

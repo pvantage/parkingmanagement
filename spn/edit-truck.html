@@ -4,13 +4,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Add Truck</title>
+<title>Editar Camión</title>
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,100italic,300,100,300italic,400italic,500,500italic,700,700italic,900italic,900' rel='stylesheet' type='text/css'>
 <link href="../css/bootstrap.min.css" rel="stylesheet">
 <link href="../css/font-awesome.css" rel="stylesheet">
 <link href="../css/offcanvas.min.css" rel="stylesheet" type="text/css">
 <link href="../css/jquery-ui.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" type="text/css" href="../style.css">
+
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 <!--[if lt IE 9]>
@@ -18,9 +19,10 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 
+
 <script type="text/javascript" src="../js/jquery.js"></script>
 <script type="text/javascript" src="../js/validate.js"></script>
-<script type="text/javascript" src="../js/config.js"></script>
+<script type="text/javascript" src="../js/config_es.js"></script>
 <script src="../js/jquery-ui.js"></script>
 <script type="text/javascript">
 jQuery(document).ready(function(){
@@ -36,16 +38,15 @@ jQuery(document).ready(function(){
 	var contentType ="application/x-www-form-urlencoded; charset=utf-8";
     if(window.XDomainRequest){contentType = "text/plain";}
 	jQuery.support.cors = true;
-	
-	var url=siteurl+'/api/trucks';
-    var uid=gup('uid');
-	var usertype=gup('usertype');
+	var v=gup('v');
+	var uid=gup('uid');
 	checkloggedin(uid);
+	var url=siteurl+'/api/trucks';
 	jQuery.ajax({ 
 		 type: 'POST',  
 		 url: url,  
 		 dataType: 'json',  
-		 data: {uid:uid, listtypes:1},  
+		 data: {uid:uid, listtypes:1,lang:'es'},  
 		 crossDomain: true,  
 		 beforeSend: function() {
 			jQuery('body .bodyoverlay').remove();
@@ -73,7 +74,7 @@ jQuery(document).ready(function(){
 		 error: function(response, d, a){
 			jQuery('body .bodyoverlay').remove();
 			jQuery('body .popupbox').remove();
-			var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Server Error.</h1><button class="okbox">OK</button></div>';
+			var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Error del Servidor.</h1><button class="okbox">DE ACUERDO</button></div>';
 			jQuery('body').append(html);
 			
 			jQuery('.okbox').click(function(){
@@ -83,9 +84,55 @@ jQuery(document).ready(function(){
 			return false; 
 		 } 
 	   });
+    jQuery.ajax({  
+         type: 'POST',  
+         url: url,  
+         //contentType: contentType,  
+         dataType: 'json',  
+         data: {uid:uid,id:v,lang:'es'},  
+         crossDomain: true,  
+		 beforeSend: function() {
+			jQuery('body .bodyoverlay').remove();
+			jQuery('body .preloader').remove();
+			var html='<div class="bodyoverlay"></div><div class="preloader"></div>';
+			jQuery('body').append(html);					
+		 },		
+		 complete: function() {
+			jQuery('body .bodyoverlay').remove();
+			jQuery('body .preloader').remove();					
+		 },
+         success: function(json) {  
+			 jQuery("#name").val(json['locations']['locationlist'][0]["name"]);
+			 
+			 jQuery("#vin").val(json['locations']['locationlist'][0]["vin"]);
+			 jQuery("#license").val(json['locations']['locationlist'][0]["license"]);
+			 
+			 jQuery("#manufacturer").val(json['locations']['locationlist'][0]["manufacturer"]);
+			 jQuery("#model").val(json['locations']['locationlist'][0]["model"]);
+			 jQuery("#expdate").val(json['locations']['locationlist'][0]["expdate"]);
+			 jQuery("#tdlr").val(json['locations']['locationlist'][0]["tdlr"]);
+			 setTimeout(function(){
+			 	jQuery("#trucktype").val(json['locations']['locationlist'][0]["trucktype"]);
+			 	jQuery("#duty").val(json['locations']['locationlist'][0]["duty"]);
+				jQuery("#year").val(json['locations']['locationlist'][0]["year"]);
+			 },1000);
+         },  
+         error: function(response, d, a){
+            jQuery('body .bodyoverlay').remove();
+			jQuery('body .popupbox').remove();
+			var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Error del Servidor.</h1><button class="okbox">DE ACUERDO</button></div>';
+			jQuery('body').append(html);
+			
+			jQuery('.okbox').click(function(){
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .popupbox').remove();
+			}); 
+         } 
+       });
+	
 	   jQuery('#edituser').validate();
 	 jQuery('#edituser').submit(function(){
-	 	
+		
 		var error=false;
 		jQuery('#edituser input, #edituser textarea, #edituser select').each(function(){
 			if(jQuery(this).hasClass('error'))
@@ -96,7 +143,7 @@ jQuery(document).ready(function(){
 		if(!error)
 		{
 			var formData = jQuery('#edituser').serialize();
-			formData = formData + '&uid=' + uid + '&addnewuser=1';
+			formData = formData + '&uid=' + uid + '&updateuser=1&lang=es&id='+v;
 			jQuery.ajax({  
 			 type: 'POST',  
 			 url: url,  
@@ -123,33 +170,28 @@ jQuery(document).ready(function(){
 						html+=res['users']['error'][k]+'<br />';
 					});
 					
-					html+='</h1><button class="okbox">OK</button></div>';
+					html+='</h1><button class="okbox">DE ACUERDO</button></div>';
 					jQuery('body').append(html);
-					jQuery('.okbox').click(function(){
-						jQuery('body .bodyoverlay').remove();
-						jQuery('body .popupbox').remove();
-					});
 					
 				}
-				else if(res['users']['addeduser'])
+				else if(res['users']['updateuser'])
 				{
 					jQuery('body .bodyoverlay').remove();
 					jQuery('body .popupbox').remove();
-					var html='<div class="bodyoverlay"></div><div class="popupbox"><div class="popupimg"><img src="../images/pop.png" /></div><h1 class="success">SUCCESS</h1><h1>'+res['users']['addeduser']+'.</h1><button class="okbox">OK</button></div>';
+					var html='<div class="bodyoverlay"></div><div class="popupbox"><div class="popupimg"><img src="../images/pop.png" /></div><h1 class="success">ÉXITO</h1><h1>'+res['users']['updateuser']+'.</h1><button class="okbox">DE ACUERDO</button></div>';
 					jQuery('body').append(html);
 					
-					jQuery('.okbox').click(function(){
-						window.location='trucks.html?uid='+uid+'&usertype='+usertype;
-					});
-					
 				}
-				 
+				jQuery('.okbox').click(function(){
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .popupbox').remove();
+				}); 
 				return false;
 			 },  
 			 error: function(response, d, a){
 				jQuery('body .bodyoverlay').remove();
 				jQuery('body .popupbox').remove();
-				var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Server Error.</h1><button class="okbox">OK</button></div>';
+				var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Error del Servidor.</h1><button class="okbox">DE ACUERDO</button></div>';
 				jQuery('body').append(html);
 				
 				jQuery('.okbox').click(function(){
@@ -179,66 +221,67 @@ jQuery(document).ready(function(){
     <!--/.nav-collapse --> 
   </div>
 </nav>
+
 <div class="wrapper">
   <header class="border-header" style="margin-bottom:0px;">
     <div class="container">
       <div class="logo pull-left"> <a href="#"><img src="../images/logo.png"></a> </div>
       <script type="text/javascript">document.write(language_en_menus());</script> 
     </div>
-  </header>
-  <!------------------header close--------------------------------> 
-  <!--------------------------content-div starts------------------------------------------->
-  <div class="content_div manager_search">
-    <h4 style="margin:0px;" class="search_headng">ADD Truck</h4>
-    <div class="container" style="padding-bottom:20px;">
-      <div class="inner_content"><!--------------------------inner_content------------------------------------------->
-        
-        <div class="select_div">
-          <form name="edituser" id="edituser" action="" method="post">
-			<div class="field"> Name
-              <input type="text" name="name" id="name" placeholder="Name" value="" class="form-control required">
-            </div>
-            <div class="field"> Type
-              <select class="form-control required" name="trucktype" id="trucktype">
-                  <option value="">Select Type</option>
-                </select>
-            </div>
-			<div class="field"> Duty
-              <select class="form-control required" name="duty" id="duty">
-                  <option value="">Select Duty</option>
-                </select>
-            </div>
-			<div class="field"> License Plate
-              <input type="text" name="license" id="license" placeholder="License Plate" value="" class="form-control required">
-            </div>
-			<div class="field"> Vin Number
-			  <input type="text" name="vin" id="vin" placeholder="Vin Number" value="" class="form-control required">
+  </header><!------------------header close-------------------------------->
+		<!--------------------------content-div starts------------------------------------------->	
+			<div class="content_div manager_search">
+            <h4 style="margin-top:0px;" class="search_headng">Editar Camión</h4>
+				<div class="container">
+				<div class="inner_content"><!--------------------------inner_content------------------------------------------->
+					
+					   <div class="select_div">
+						  <form name="edituser" id="edituser" action="" method="post">
+							<div class="field"> Nombre
+							  <input type="text" name="name" id="name" placeholder="Nombre" value="" class="form-control required">
+							</div>
+							<div class="field"> Tipo
+							  <select class="form-control required" name="trucktype" id="trucktype">
+								  <option value="">Seleccione tipo</option>
+								</select>
+							</div>
+							<div class="field"> Deber
+							  <select class="form-control required" name="duty" id="duty">
+								  <option value="">Seleccione deber</option>
+								</select>
+							</div>
+							<div class="field"> Placa
+							  <input type="text" name="license" id="license" placeholder="Placa" value="" class="form-control required">
+							</div>
+							<div class="field"> Número VIN
+							  <input type="text" name="vin" id="vin" placeholder="Número VIN" value="" class="form-control required">
+							</div>
+							<div class="field"> Fabricante
+							  <input type="text" name="manufacturer" id="manufacturer" placeholder="Fabricante" value="" class="form-control required">
+							</div>
+							
+							<div class="field"> Modelo
+							  <input type="text" name="model" id="model" placeholder="Modelo" value="" class="form-control required">
+							</div>
+							<div class="field"> Año
+							  <select class="form-control required" name="year" id="year">
+								  <option value="">Seleccionar año</option>
+								</select>
+							</div>
+							<div class="field"> Placa Fecha de caducidad
+							  <input type="text" name="expdate" id="expdate" placeholder="Placa Fecha de caducidad" value="" class="form-control required">
+							</div>
+							<div class="field"> Camión TDLR
+							  <input type="text" name="tdlr" id="tdlr" placeholder="Camión TDLR" value="" class="form-control required">
+							</div>
+							<div class="clr"></div>
+							<button class="btn btn-primary" name="update" type="submit">Actualizar</button>
+						  </form>
+					   </div>
+				</div>
 			</div>
-            <div class="field"> Manufacturer
-              <input type="text" name="manufacturer" id="manufacturer" placeholder="Manufacturer" value="" class="form-control required">
-            </div>
-			
-            <div class="field"> Model
-              <input type="text" name="model" id="model" placeholder="Model" value="" class="form-control required">
-            </div>
-			<div class="field"> Year
-              <select class="form-control required" name="year" id="year">
-                  <option value="">Select Year</option>
-                </select>
-            </div>
-			<div class="field"> Plate Expiry Date
-              <input type="text" name="expdate" id="expdate" placeholder="Plate Expiry Date" value="" class="form-control required">
-            </div>
-			<div class="field"> Truck TDLR
-              <input type="text" name="tdlr" id="tdlr" placeholder="Truck TDLR" value="" class="form-control required">
-            </div>
-            <div class="clr"></div>
-            <button class="btn btn-primary" name="update" type="submit">Add</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
+		
+	</div>
 </div>
 <script src="../js/offcanvas.js"></script>
 </body>

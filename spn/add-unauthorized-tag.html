@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Add Unauthorized Tag</title>
+<title>Añadir etiqueta Autorizado</title>
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,100italic,300,100,300italic,400italic,500,500italic,700,700italic,900italic,900' rel='stylesheet' type='text/css'>
 <link href="../css/bootstrap.min.css" rel="stylesheet">
 <link href="../css/font-awesome.css" rel="stylesheet">
@@ -23,7 +23,7 @@
 <script src="../js/jquery-ui.js"></script>
 <script src="../js/zelect.js"></script>
 <link href="../css/zelect.css" rel="stylesheet">
-<script type="text/javascript" src="../js/config.js"></script>
+<script type="text/javascript" src="../js/config_es.js"></script>
 <script type="text/javascript" src="../cordova.js"></script>
 <script type="text/javascript">
 var uid=gup('uid');
@@ -41,7 +41,7 @@ function savetotow()
 {
 	var url=siteurl+'/api/towvehicle';
 	var formData = jQuery('#edituser').serialize();
-	formData = formData + '&uid=' + uid + '&unauthtagsubmit=1';
+	formData = formData + '&uid=' + uid + '&unauthtagsubmit=1&lang=es';
 	jQuery.ajax({  
 		 type: 'POST',  
 		 url: url,  
@@ -68,7 +68,7 @@ function savetotow()
 					html+=res['vehicles']['error'][k]+'<br />';
 				});
 				
-				html+='</h1><button class="okbox">OK</button></div>';
+				html+='</h1><button class="okbox">DE ACUERDO</button></div>';
 				jQuery('body').append(html);
 				
 				jQuery('.okbox').click(function(){
@@ -81,7 +81,7 @@ function savetotow()
 				jQuery('#edituser .vphotos').remove();
 				jQuery('body .bodyoverlay').remove();
 				jQuery('body .popupbox').remove();
-				var html='<div class="bodyoverlay"></div><div class="popupbox"><div class="popupimg"><img src="../images/pop.png" /></div><h1 class="success">SUCCESS</h1><h1>'+res['vehicles']['updatevehicle']+'.</h1><button class="okbox">OK</button></div>';
+				var html='<div class="bodyoverlay"></div><div class="popupbox"><div class="popupimg"><img src="../images/pop.png" /></div><h1 class="success">ÉXITO</h1><h1>'+res['vehicles']['updatevehicle']+'.</h1><button class="okbox">DE ACUERDO</button></div>';
 				jQuery('body').append(html);
 				jQuery('#edituser')[0].reset();
 				jQuery("#images").html('');
@@ -97,7 +97,7 @@ function savetotow()
 		 error: function(response, d, a){
 			jQuery('body .bodyoverlay').remove();
 			jQuery('body .popupbox').remove();
-			var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Server Error.</h1><button class="okbox">OK</button></div>';
+			var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Error del Servidor.</h1><button class="okbox">DE ACUERDO</button></div>';
 			jQuery('body').append(html);
 			
 			jQuery('.okbox').click(function(){
@@ -226,7 +226,7 @@ function uploadPics() {
    {
    		jQuery('body .bodyoverlay').remove();
 		jQuery('body .preloader').remove();
-		var html='<div class="bodyoverlay"></div><div class="preloader"><br /><br /><br /><br /><br /><br /><br />Please wait while <br />uploading form</div>';
+		var html='<div class="bodyoverlay"></div><div class="preloader"><br /><br /><br /><br /><br /><br /><br />Please wait while <br />formulario de carga</div>';
 		jQuery('body').append(html);
    }
 
@@ -286,7 +286,7 @@ jQuery(document).ready(function(){
 			 error: function(response, d, a){
 				jQuery('body .bodyoverlay').remove();
 				jQuery('body .popupbox').remove();
-				var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Server Error.</h1><button class="okbox">OK</button></div>';
+				var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Error del Servidor.</h1><button class="okbox">DE ACUERDO</button></div>';
 				jQuery('body').append(html);
 				
 				jQuery('.okbox').click(function(){
@@ -363,7 +363,7 @@ jQuery(document).ready(function(){
   <!------------------header close--------------------------------> 
   <!--------------------------content-div starts------------------------------------------->
   <div class="content_div manager_search">
-    <h4 class="search_headng">Add Unauthorized Tag</h4>
+    <h4 class="search_headng">Añadir etiqueta Autorizado</h4>
     <div class="container" style="padding-bottom:15px;">
       <div class="inner_content"><!--------------------------inner_content------------------------------------------->
         
@@ -372,35 +372,35 @@ jQuery(document).ready(function(){
             
               <div class="field" id="intro">
                 <select class="form-control" name="vechileid2" id="vechileid2">
-                  <option value="">Type and select vehicle</option>
+                  <option value="">Tipo de vehículo y seleccione</option>
                 </select>
               </div>
 			 <div class="unauthorized">
               <div class="field">
-                <input type="text" name="vinnumber" placeholder="Vin Number" class="form-control">
+                <input type="text" name="vinnumber" placeholder="Número VIN" class="form-control">
               </div>
               <div class="field">
-                <input type="text" name="tagnumber" placeholder="License No" class="form-control required">
+                <input type="text" name="tagnumber" placeholder="Sin Licencia" class="form-control required">
               </div>
               <div class="field">
-                <input type="text" name="make" placeholder="Make" class="form-control required">
+                <input type="text" name="make" placeholder="Hacer" class="form-control required">
               </div>
               <div class="field">
-                <input type="text" name="model" placeholder="Model" class="form-control required">
+                <input type="text" name="model" placeholder="Modelo" class="form-control required">
               </div>
               <div class="field">
                 <input type="text" name="color" placeholder="Color" class="form-control required">
               </div>
               <div class="field locations" id="intro">
                 <select class="form-control required" name="location_id" id="location_id">
-                  <option value="">Select Location</option>
+                  <option value="">Seleccionar ubicación</option>
                 </select>
               </div>
             </div>
             
             <div class="clr"></div>
             <div>
-              <label>Towing Reasons</label>
+              <label>Razones de remolque</label>
               <div class="field unauthorized" id="intro">
               	<textarea name="notes" rows="3" cols="100" class="form-control required"></textarea>
 			  </div>
@@ -415,7 +415,7 @@ jQuery(document).ready(function(){
               </tr>
             </table>
             <div class="clr"></div>
-            <button class="btn btn-primary" name="update" type="submit">Add</button>
+            <button class="btn btn-primary" name="update" type="submit">Añadir</button>
           </form>
         </div>
       </div>

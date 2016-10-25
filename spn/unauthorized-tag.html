@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TAG no autorizada</title>
+<link href='https://fonts.googleapis.com/css?family=Roboto:400,100italic,300,100,300italic,400italic,500,500italic,700,700italic,900italic,900' rel='stylesheet' type='text/css'>
+<link href="../css/bootstrap.min.css" rel="stylesheet">
+<link href="../css/font-awesome.css" rel="stylesheet">
+<link href="../css/offcanvas.min.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="../style.css">
+
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<script type="text/javascript" src="../js/jquery.js"></script>
+<script type="text/javascript" src="../js/validate.js"></script>
+<script type="text/javascript" src="../js/config_es.js"></script>
+<script type="text/javascript">
+jQuery(document).ready(function(){
+	
+	
+	jQuery( document ).on( "mobileinit", function() {
+		jQuery.mobile.allowCrossDomainPages = true;
+	});
+	var contentType ="application/x-www-form-urlencoded; charset=utf-8";
+    if(window.XDomainRequest){contentType = "text/plain";}
+	jQuery.support.cors = true;
+	
+	var url=siteurl+'/api/unauthorized-tag';
+    
+	var uid=gup('uid');
+	checkloggedin(uid);
+	var usertype=gup('usertype');
+	var selectoption=gup('selectoption');
+	if(jQuery.trim(selectoption)==''){selectoption='all';}
+	jQuery('select[name="selectoption"]').val(selectoption);
+	var vtype=gup('vtype');
+	jQuery('select[name="vtype"]').val(vtype);
+	var searcht=gup('searcht');
+	jQuery('input[name="searcht"]').val(searcht);
+	
+	jQuery('#usid').val(uid);
+	if(usertype=='driver' || usertype=='user' || usertype=='admin')
+	{
+		jQuery('.select_div').prepend('<a href="add-unauthorized-tag.html?uid='+uid+'&usertype='+usertype+'" id="addnewuser" class="add-new"><i aria-hidden="true" class="fa fa-truck"></i> Añadir etiqueta Autorizado</a>');
+	}
+	jQuery('#usertype').val(usertype);
+	jQuery.ajax({  
+         type: 'POST',  
+         url: url,  
+         //contentType: contentType,  
+         dataType: 'json',  
+         data: {uid:uid,selectoption:selectoption,vtype:vtype,searcht:searcht,lang:'es'},  
+         crossDomain: true,  
+		 beforeSend: function() {
+			jQuery('body .bodyoverlay').remove();
+			jQuery('body .preloader').remove();
+			var html='<div class="bodyoverlay"></div><div class="preloader"></div>';
+			jQuery('body').append(html);					
+		 },		
+		 complete: function() {
+			jQuery('body .bodyoverlay').remove();
+			jQuery('body .preloader').remove();					
+		 },
+         success: function(res) {  
+           if(res['vehicles']['vehiclelist'])
+		   {
+            	var html='';
+				jQuery(res['vehicles']['vehiclelist']).each(function(index){
+					html+='<div><div class="list vlist"><table class="table table-bordered table-striped"><tr class="vdetail"> <td colspan="2">'+res['vehicles']['vehiclelist'][index]['year']+' '+res['vehicles']['vehiclelist'][index]['make']+' '+res['vehicles']['vehiclelist'][index]['model']+' ('+res['vehicles']['vehiclelist'][index]['color']+')</td></tr> <tr><td>Sin Licencia: </td><td>'+res['vehicles']['vehiclelist'][index]['tagnumber']+'</td></tr> <tr><td>Número VIN:</td><td> '+res['vehicles']['vehiclelist'][index]['vinnumber']+'</td></tr></td></tr><tr class="addetail"> <td colspan="2">'+res['vehicles']['vehiclelist'][index]['address']['Address']+'</td></tr>';
+					if(typeof res['vehicles']['vehiclelist'][index]['towing']['locationto'] != 'undefined'){
+						html+='<tr class="towdetail"><td>Para remolcado:</td> <td> '+res['vehicles']['vehiclelist'][index]['towing']['locationto']+'</td></tr>';
+					}
+					html+='<tr class="overlay_div"><td colspan="2"><a href="unauthorized-tag-detail.html?uid='+uid+'&v='+res['vehicles']['vehiclelist'][index]['id']+'&usertype='+usertype+'"><i class="fa fa-eye"></i></a>';
+					if(res['vehicles']['usertype']=='driver' && res['vehicles']['vehiclelist'][index]['status']=='25'){
+						html+='<a href="add-violation-towing.html?uid='+uid+'&v='+res['vehicles']['vehiclelist'][index]['id']+'&usertype='+usertype+'"> &nbsp;&nbsp;<i class="fa fa-truck"></i></a>';
+					}
+					html+='</td></tr></table></div> </div>';
+			   });
+			   if(parseInt(res['vehicles']['total'])>(parseInt(res['vehicles']['pageid'])*parseInt(res['vehicles']['vehiclelist'].length)))
+			   {
+			   		var pageid=parseInt(res['vehicles']['pageid'])+1;
+			   		html+='<a href="javascript:;" class="btn btn-danger loadmore" pageid="'+pageid+'">Carga más</a>';
+			   }
+			   jQuery('.vehiclelisting').html(html);
+				   
+			}
+			else
+			{
+				//window.location='index.html';
+			}
+         },  
+         error: function(response, d, a){
+            jQuery('body .bodyoverlay').remove();
+			jQuery('body .popupbox').remove();
+			var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Error del Servidor.</h1><button class="okbox">DE ACUERDO</button></div>';
+			jQuery('body').append(html);
+			
+			jQuery('.okbox').click(function(){
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .popupbox').remove();
+			}); 
+         } 
+       });
+	  
+	  jQuery('a.loadmore').live('click',function(){
+		var pageid=jQuery(this).attr('pageid');
+		var $this=jQuery(this);
+		jQuery.ajax({ 
+			 type: 'POST',  
+			 url: url,  
+			 //contentType: contentType,  
+			 dataType: 'json',  
+			 data: {uid:uid,selectoption:selectoption,vtype:vtype,searcht:searcht,show:pageid,lang:'es'},  
+			 crossDomain: true,  
+			 beforeSend: function() {
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .preloader').remove();
+				var html='<div class="bodyoverlay"></div><div class="preloader"></div>';
+				jQuery('body').append(html);					
+			 },		
+			 complete: function() {
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .preloader').remove();					
+			 },
+			 success: function(res) {  
+			   if(res['vehicles']['vehiclelist'])
+			   {
+					var html='';
+					
+					jQuery(res['vehicles']['vehiclelist']).each(function(index){
+						html+='<div><div class="list vlist"><table class="table table-bordered table-striped"><tr class="vdetail"> <td colspan="2">'+res['vehicles']['vehiclelist'][index]['year']+' '+res['vehicles']['vehiclelist'][index]['make']+' '+res['vehicles']['vehiclelist'][index]['model']+' ('+res['vehicles']['vehiclelist'][index]['color']+')</td></tr> <tr><td>License No: </td><td>'+res['vehicles']['vehiclelist'][index]['tagnumber']+'</td></tr> <tr><td>Vin Number:</td><td> '+res['vehicles']['vehiclelist'][index]['vinnumber']+'</td></tr></td></tr><tr class="addetail"> <td colspan="2">'+res['vehicles']['vehiclelist'][index]['address']['Address']+'</td></tr>';
+					if(typeof res['vehicles']['vehiclelist'][index]['towing']['locationto'] != 'undefined'){
+						html+='<tr class="towdetail"><td>Para remolcado:</td> <td> '+res['vehicles']['vehiclelist'][index]['towing']['locationto']+'</td></tr>';
+					}
+					html+='<tr class="overlay_div"><td colspan="2"><a href="unauthorized-tag-detail.html?uid='+uid+'&v='+res['vehicles']['vehiclelist'][index]['id']+'&usertype='+usertype+'"><i class="fa fa-eye"></i></a>';
+					if(res['vehicles']['usertype']=='driver' && res['vehicles']['vehiclelist'][index]['status']=='25'){
+						html+='<a href="add-violation-towing.html?uid='+uid+'&v='+res['vehicles']['vehiclelist'][index]['id']+'&usertype='+usertype+'"> &nbsp;&nbsp;<i class="fa fa-truck"></i></a>';
+					}
+					html+='</td></tr></table></div> </div>';
+				   });
+				   if(parseInt(res['vehicles']['total'])>(parseInt(res['vehicles']['pageid'])*parseInt(res['vehicles']['vehiclelist'].length)))
+				   {
+						var pageid=parseInt(res['vehicles']['pageid'])+1;
+						html+='<a href="javascript:;" class="btn btn-danger loadmore" pageid="'+pageid+'">Carga más</a>';
+				   }
+				   jQuery('.vehiclelisting').append(html);
+				   
+				}
+				jQuery($this).remove();
+				
+			 },  
+			 error: function(response, d, a){
+				jQuery('body .bodyoverlay').remove();
+				jQuery('body .popupbox').remove();
+				var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Error del Servidor.</h1><button class="okbox">DE ACUERDO</button></div>';
+				jQuery('body').append(html);
+				
+				jQuery('.okbox').click(function(){
+					jQuery('body .bodyoverlay').remove();
+					jQuery('body .popupbox').remove();
+				}); 
+			 } 
+		   });
+	});
+});		
+</script>
+</head>
+<body>
+<div class="overlay"></div>
+<nav class="navbar navbar-inverse navbar-static-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed pull-left" data-toggle="offcanvas"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+    </div>
+    <div id="navbar" class="menu_div collapse navbar-collapse sidebar-offcanvas">
+      <ul class="menus nav navbar-nav"></ul>
+    </div>
+    <!--/.nav-collapse --> 
+  </div>
+</nav>
+<div class="wrapper">
+  <header class="border-header" style="margin-bottom:0px;">
+    <div class="container">
+      <div class="logo pull-left"> <a href="#"><img src="../images/logo.png"></a> </div>
+      <script type="text/javascript">document.write(language_en_menus());</script> 
+    </div>
+  </header>
+  <!------------------header close--------------------------------> 
+  <!--------------------------content-div starts------------------------------------------->
+  <h4 class="search_headng" style="margin-top:0px;">TAG NO AUTORIZADA</h4>
+  <div class="container" style="padding-bottom:20px;">
+    <div class="content_div manager_search">
+      <div class="inner_content"><!--------------------------inner_content------------------------------------------->
+        
+        <div class="select_div" style="padding-bottom:20px;">
+          <form class="searchbox" action="violations-tag.html" method="get">
+            <input type="hidden" name="uid" id="usid" />
+            <input type="hidden" name="usertype" id="usertype" />
+            <div class="field">
+              <select name="selectoption" class="form-control">
+                <option value="all">Todas</option>
+                <option value="tag"> Placa </option>
+                <option value="vin">Número VIN </option>
+                <option value="location">Ubicación</option>
+                <option value="company">Propiedad</option>
+              </select>
+            </div>
+            <div class="field">
+              <select name="vtype" class="form-control" >
+                <option value="">Tipo</option>
+                <option value="remove"> Ser eliminado </option>
+                <option value="removed">Remoto </option>
+              </select>
+            </div>
+            <div class="field">
+              <input type="text" class="form-control" id="vehicle_search" placeholder="Buscar" value="" name="searcht">
+            </div>
+            <div class="field">
+              <input class="btn btn-primary" type="submit" value="Buscar">
+            </div>
+          </form>
+        </div>
+        <div class="detail_div">
+          <div class="vehiclelisting"></div>
+        </div>
+      </div>
+      <!--------------------------inner_content-------------------------------------------> 
+    </div>
+  </div>
+</div>
+<script src="../js/offcanvas.js"></script>
+</body>
+</html>

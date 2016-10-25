@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Add Unauthorized Tag</title>
+<title>Agregar comando de Violación</title>
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,100italic,300,100,300italic,400italic,500,500italic,700,700italic,900italic,900' rel='stylesheet' type='text/css'>
 <link href="../css/bootstrap.min.css" rel="stylesheet">
 <link href="../css/font-awesome.css" rel="stylesheet">
@@ -23,7 +23,7 @@
 <script src="../js/jquery-ui.js"></script>
 <script src="../js/zelect.js"></script>
 <link href="../css/zelect.css" rel="stylesheet">
-<script type="text/javascript" src="../js/config.js"></script>
+<script type="text/javascript" src="../js/config_es.js"></script>
 <script type="text/javascript" src="../cordova.js"></script>
 <script type="text/javascript">
 var uid=gup('uid');
@@ -41,7 +41,8 @@ function savetotow()
 {
 	var url=siteurl+'/api/towvehicle';
 	var formData = jQuery('#edituser').serialize();
-	formData = formData + '&uid=' + uid + '&unauthtagsubmit=1';
+	
+	formData = formData + '&uid=' + uid + '&authtagsubmit=1&lang=es';
 	jQuery.ajax({  
 		 type: 'POST',  
 		 url: url,  
@@ -68,7 +69,7 @@ function savetotow()
 					html+=res['vehicles']['error'][k]+'<br />';
 				});
 				
-				html+='</h1><button class="okbox">OK</button></div>';
+				html+='</h1><button class="okbox">DE ACUERDO</button></div>';
 				jQuery('body').append(html);
 				
 				jQuery('.okbox').click(function(){
@@ -81,13 +82,13 @@ function savetotow()
 				jQuery('#edituser .vphotos').remove();
 				jQuery('body .bodyoverlay').remove();
 				jQuery('body .popupbox').remove();
-				var html='<div class="bodyoverlay"></div><div class="popupbox"><div class="popupimg"><img src="../images/pop.png" /></div><h1 class="success">SUCCESS</h1><h1>'+res['vehicles']['updatevehicle']+'.</h1><button class="okbox">OK</button></div>';
+				var html='<div class="bodyoverlay"></div><div class="popupbox"><div class="popupimg"><img src="../images/pop.png" /></div><h1 class="success">ÉXITO</h1><h1>'+res['vehicles']['updatevehicle']+'.</h1><button class="okbox">DE ACUERDO</button></div>';
 				jQuery('body').append(html);
 				jQuery('#edituser')[0].reset();
 				jQuery("#images").html('');
 				navigator.notification.beep(1);
 				jQuery('.okbox').click(function(){
-					window.location='add-unauthorized-tag.html?uid='+uid+'&usertype='+usertype;
+					window.location='add-violation-tag.html?uid='+uid+'&usertype='+usertype;
 				}); 
 				
 			}
@@ -97,7 +98,7 @@ function savetotow()
 		 error: function(response, d, a){
 			jQuery('body .bodyoverlay').remove();
 			jQuery('body .popupbox').remove();
-			var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Server Error.</h1><button class="okbox">OK</button></div>';
+			var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Error del Servidor.</h1><button class="okbox">DE ACUERDO</button></div>';
 			jQuery('body').append(html);
 			
 			jQuery('.okbox').click(function(){
@@ -177,7 +178,7 @@ function fail(error) {
 	//def.resolve(0);
 }
 function uploadPics() {
-	var vechileid=jQuery('#vechileid2').val();
+	var vechileid=jQuery('#vechileid').val();
 	
     jQuery(images).each(function(i) {
         var filetrasfer=images[i];
@@ -203,9 +204,6 @@ function uploadPics() {
 	
    if(parseInt(images.length)<=0)
    {
-   		if(usertype!='driver'){
-			jQuery('.locations').remove();
-		}
    		var error=false;
 		jQuery('#edituser input, #edituser textarea, #edituser select').each(function(){
 			if(jQuery(this).hasClass('error'))
@@ -226,7 +224,7 @@ function uploadPics() {
    {
    		jQuery('body .bodyoverlay').remove();
 		jQuery('body .preloader').remove();
-		var html='<div class="bodyoverlay"></div><div class="preloader"><br /><br /><br /><br /><br /><br /><br />Please wait while <br />uploading form</div>';
+		var html='<div class="bodyoverlay"></div><div class="preloader"><br /><br /><br /><br /><br /><br /><br />Please wait while <br />formulario de carga</div>';
 		jQuery('body').append(html);
    }
 
@@ -246,11 +244,11 @@ jQuery(document).ready(function(){
 	checkloggedin(uid);
 	var url=siteurl+'/api/towvehicle';
     var v=gup('v');
-		jQuery.ajax({ 
+		jQuery.ajax({  
 			 type: 'POST',  
 			 url: url,  
 			 dataType: 'json',  
-			 data: {uid:uid, unauthorisedvehicles:1},  
+			 data: {uid:uid, authorisedvehicles:1},  
 			 crossDomain: true,  
 			 beforeSend: function() {
 				jQuery('body .bodyoverlay').remove();
@@ -259,34 +257,29 @@ jQuery(document).ready(function(){
 				jQuery('body').append(html);					
 			 },		
 			 complete: function() {
+				//jQuery('body .bodyoverlay').remove();
 				jQuery('body .preloader').remove();					
 			 },
 			 success: function(res) {  
 				
 				jQuery('body .bodyoverlay').remove();
 				jQuery(res['vehiclelist']).each(function(k){
-					jQuery('#vechileid2').append('<option value="'+res['vehiclelist'][k]['id']+'">'+res['vehiclelist'][k]['name']+'</option>');
+					if(res['vehiclelist'][k]['id']==v){
+						jQuery('#vechileid').append('<option value="'+res['vehiclelist'][k]['id']+'" selected="selected">'+res['vehiclelist'][k]['name']+'</option>');
+					}
+					else
+					{
+						jQuery('#vechileid').append('<option value="'+res['vehiclelist'][k]['id']+'">'+res['vehiclelist'][k]['name']+'</option>');
+					}
 				});
 				
-				jQuery('#vechileid2').val(v);
-				jQuery('#vechileid2').zelect();
-				if(usertype=='driver'){
-				jQuery(res['locationlist']).each(function(k){
-					jQuery('#location_id').append('<option value="'+res['locationlist'][k]['id']+'">'+res['locationlist'][k]['name']+'</option>');
-				});
-				
-					jQuery('#location_id').zelect();
-				}
-				else
-				{
-					jQuery('.locations').remove();
-				}
+				jQuery('#vechileid').zelect();
 				jQuery('body .popupbox').remove();
 			 },  
 			 error: function(response, d, a){
 				jQuery('body .bodyoverlay').remove();
 				jQuery('body .popupbox').remove();
-				var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Server Error.</h1><button class="okbox">OK</button></div>';
+				var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Error del Servidor.</h1><button class="okbox">DE ACUERDO</button></div>';
 				jQuery('body').append(html);
 				
 				jQuery('.okbox').click(function(){
@@ -315,27 +308,6 @@ jQuery(document).ready(function(){
 	   }
 	   return false;
 	 });
-	 
-	 jQuery('#vechileid2').change(function(){
-		var vechileid2=jQuery(this).val();
-		if(jQuery.trim(vechileid2)==''){
-			jQuery('.unauthorized input,.unauthorized select').attr('disabled',false);
-			jQuery('.unauthorized input,.unauthorized select').addClass('required');
-			jQuery('.locations #location_id').hide();
-			jQuery('.locations .zelect').show();
-		}
-		else
-		{
-			jQuery('.unauthorized input,.unauthorized select').attr('disabled',true);
-			jQuery('.unauthorized input,.unauthorized select').removeClass('required');
-			jQuery('.locations #location_id').show();
-			jQuery('.locations .zelect').hide();
-			
-		}
-		jQuery(this).attr('disabled',false);
-		jQuery(this).removeClass('required');
-	});
-	//setTimeout(function(){jQuery('#vechileid2').trigger('change');},500);
 });		
 </script>
 </head>
@@ -363,50 +335,25 @@ jQuery(document).ready(function(){
   <!------------------header close--------------------------------> 
   <!--------------------------content-div starts------------------------------------------->
   <div class="content_div manager_search">
-    <h4 class="search_headng">Add Unauthorized Tag</h4>
+    <h4 class="search_headng">Agregar comando de Violación</h4>
     <div class="container" style="padding-bottom:15px;">
       <div class="inner_content"><!--------------------------inner_content------------------------------------------->
         
         <div class="select_div">
           <form name="edituser" id="edituser" action="" method="post">
-            
-              <div class="field" id="intro">
-                <select class="form-control" name="vechileid2" id="vechileid2">
-                  <option value="">Type and select vehicle</option>
-                </select>
-              </div>
-			 <div class="unauthorized">
-              <div class="field">
-                <input type="text" name="vinnumber" placeholder="Vin Number" class="form-control">
-              </div>
-              <div class="field">
-                <input type="text" name="tagnumber" placeholder="License No" class="form-control required">
-              </div>
-              <div class="field">
-                <input type="text" name="make" placeholder="Make" class="form-control required">
-              </div>
-              <div class="field">
-                <input type="text" name="model" placeholder="Model" class="form-control required">
-              </div>
-              <div class="field">
-                <input type="text" name="color" placeholder="Color" class="form-control required">
-              </div>
-              <div class="field locations" id="intro">
-                <select class="form-control required" name="location_id" id="location_id">
-                  <option value="">Select Location</option>
-                </select>
-              </div>
+            <div class="field unauthorized" id="intro">
+              <select class="form-control required" name="vechileid" id="vechileid">
+                <option value="">Tipo de vehículo y seleccione</option>
+              </select>
             </div>
-            
             <div class="clr"></div>
             <div>
-              <label>Towing Reasons</label>
+              <h4 style="margin:10px 0 20px; clear:both;">Razón</h4>
               <div class="field unauthorized" id="intro">
               	<textarea name="notes" rows="3" cols="100" class="form-control required"></textarea>
 			  </div>
             </div>
-            
-            <div class="clr"></div>
+           
             <table class="table table-bordered">
 			  <tr><td colspan="2"><div class="cmra" id="images"></div></td></tr>
               <tr>
@@ -415,7 +362,7 @@ jQuery(document).ready(function(){
               </tr>
             </table>
             <div class="clr"></div>
-            <button class="btn btn-primary" name="update" type="submit">Add</button>
+            <button class="btn btn-primary" name="update" type="submit">Añadir</button>
           </form>
         </div>
       </div>

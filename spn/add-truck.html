@@ -4,14 +4,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Add Parking Lot Owner</title>
+<title>Añadir Camión</title>
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,100italic,300,100,300italic,400italic,500,500italic,700,700italic,900italic,900' rel='stylesheet' type='text/css'>
 <link href="../css/bootstrap.min.css" rel="stylesheet">
 <link href="../css/font-awesome.css" rel="stylesheet">
 <link href="../css/offcanvas.min.css" rel="stylesheet" type="text/css">
-<link href="../css/bootstrap-select.min.css" rel="stylesheet" type="text/css">
+<link href="../css/jquery-ui.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" type="text/css" href="../style.css">
-
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 <!--[if lt IE 9]>
@@ -21,13 +20,16 @@
 
 <script type="text/javascript" src="../js/jquery.js"></script>
 <script type="text/javascript" src="../js/validate.js"></script>
-<script type="text/javascript" src="../js/config.js"></script>
-<script src="../js/bootstrap.js" type="text/javascript"></script>
-<script type="text/javascript" src="../js/bootstrap-select.min.js"></script>
+<script type="text/javascript" src="../js/config_es.js"></script>
+<script src="../js/jquery-ui.js"></script>
 <script type="text/javascript">
 jQuery(document).ready(function(){
 	
-	
+	jQuery( "#expdate" ).datepicker({
+	  changeMonth: true,
+	  changeYear: true,
+	  dateFormat:'yy-mm-dd'
+	});
 	jQuery( document ).on( "mobileinit", function() {
 		jQuery.mobile.allowCrossDomainPages = true;
 	});
@@ -35,7 +37,7 @@ jQuery(document).ready(function(){
     if(window.XDomainRequest){contentType = "text/plain";}
 	jQuery.support.cors = true;
 	
-	var url=siteurl+'/api/parking-lot-manager';
+	var url=siteurl+'/api/trucks';
     var uid=gup('uid');
 	var usertype=gup('usertype');
 	checkloggedin(uid);
@@ -43,7 +45,7 @@ jQuery(document).ready(function(){
 		 type: 'POST',  
 		 url: url,  
 		 dataType: 'json',  
-		 data: {uid:uid, listlocations:1},  
+		 data: {uid:uid, listtypes:1,lang:'es'},  
 		 crossDomain: true,  
 		 beforeSend: function() {
 			jQuery('body .bodyoverlay').remove();
@@ -57,17 +59,21 @@ jQuery(document).ready(function(){
 		 success: function(res) {  
 			
 			jQuery('body .bodyoverlay').remove();
-			jQuery(res['locationlist']).each(function(k){
-				jQuery('#location_id').append('<option value="'+res['locationlist'][k]['id']+'">'+res['locationlist'][k]['name']+'</option>');
+			jQuery(res['tucktypes']).each(function(k){
+				jQuery('#trucktype').append('<option value="'+res['tucktypes'][k]+'">'+res['tucktypes'][k]+'</option>');
 			});
-			jQuery('#location_id').selectpicker();
-			
+			jQuery(res['dutytypes']).each(function(k){
+				jQuery('#duty').append('<option value="'+res['dutytypes'][k]+'">'+res['dutytypes'][k]+'</option>');
+			});
+			jQuery(res['years']).each(function(k){
+				jQuery('#year').append('<option value="'+res['years'][k]+'">'+res['years'][k]+'</option>');
+			});
 			jQuery('body .popupbox').remove();
 		 },  
 		 error: function(response, d, a){
 			jQuery('body .bodyoverlay').remove();
 			jQuery('body .popupbox').remove();
-			var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Server Error.</h1><button class="okbox">OK</button></div>';
+			var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Error del Servidor.</h1><button class="okbox">DE ACUERDO</button></div>';
 			jQuery('body').append(html);
 			
 			jQuery('.okbox').click(function(){
@@ -80,13 +86,8 @@ jQuery(document).ready(function(){
 	   jQuery('#edituser').validate();
 	 jQuery('#edituser').submit(function(){
 	 	
-		var email=jQuery('#email').val();
-		var name=jQuery('#name').val();
-		var username=jQuery('#username').val();
-		var phone=jQuery('#phone').val();
-		var password=jQuery('#password').val();
 		var error=false;
-		jQuery('#edituser input, #edituser textarea').each(function(){
+		jQuery('#edituser input, #edituser textarea, #edituser select').each(function(){
 			if(jQuery(this).hasClass('error'))
 			{
 				error=true;
@@ -95,7 +96,7 @@ jQuery(document).ready(function(){
 		if(!error)
 		{
 			var formData = jQuery('#edituser').serialize();
-			formData = formData + '&uid=' + uid + '&user_type=parkinglotowner&addnewuser=1';
+			formData = formData + '&uid=' + uid + '&addnewuser=1&lang=es';
 			jQuery.ajax({  
 			 type: 'POST',  
 			 url: url,  
@@ -122,7 +123,7 @@ jQuery(document).ready(function(){
 						html+=res['users']['error'][k]+'<br />';
 					});
 					
-					html+='</h1><button class="okbox">OK</button></div>';
+					html+='</h1><button class="okbox">DE ACUERDO</button></div>';
 					jQuery('body').append(html);
 					jQuery('.okbox').click(function(){
 						jQuery('body .bodyoverlay').remove();
@@ -134,11 +135,11 @@ jQuery(document).ready(function(){
 				{
 					jQuery('body .bodyoverlay').remove();
 					jQuery('body .popupbox').remove();
-					var html='<div class="bodyoverlay"></div><div class="popupbox"><div class="popupimg"><img src="../images/pop.png" /></div><h1 class="success">SUCCESS</h1><h1>'+res['users']['addeduser']+'.</h1><button class="okbox">OK</button></div>';
+					var html='<div class="bodyoverlay"></div><div class="popupbox"><div class="popupimg"><img src="../images/pop.png" /></div><h1 class="success">ÉXITO</h1><h1>'+res['users']['addeduser']+'.</h1><button class="okbox">DE ACUERDO</button></div>';
 					jQuery('body').append(html);
 					
 					jQuery('.okbox').click(function(){
-						window.location='parking-lot-manager.html?uid='+uid+'&usertype='+usertype;
+						window.location='trucks.html?uid='+uid+'&usertype='+usertype;
 					});
 					
 				}
@@ -148,7 +149,7 @@ jQuery(document).ready(function(){
 			 error: function(response, d, a){
 				jQuery('body .bodyoverlay').remove();
 				jQuery('body .popupbox').remove();
-				var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Server Error.</h1><button class="okbox">OK</button></div>';
+				var html='<div class="bodyoverlay"></div><div class="popupbox errorbox"><div class="popupimg"><img src="../images/error.png" /></div><h1 class="success">ERROR</h1><h1>Error del Servidor.</h1><button class="okbox">DE ACUERDO</button></div>';
 				jQuery('body').append(html);
 				
 				jQuery('.okbox').click(function(){
@@ -188,37 +189,51 @@ jQuery(document).ready(function(){
   <!------------------header close--------------------------------> 
   <!--------------------------content-div starts------------------------------------------->
   <div class="content_div manager_search">
-    <h4 style="margin:0px;" class="search_headng">ADD Parking Lot Owner</h4>
+    <h4 style="margin:0px;" class="search_headng">Añadir Camión</h4>
     <div class="container" style="padding-bottom:20px;">
       <div class="inner_content"><!--------------------------inner_content------------------------------------------->
         
         <div class="select_div">
           <form name="edituser" id="edituser" action="" method="post">
-		  	 <div class="field" id="intro"> Location
-				<select class="required form-control" name="locations[]" id="location_id" data-live-search="true" multiple="multiple">
-				</select>
+			<div class="field"> Nombre
+              <input type="text" name="name" id="name" placeholder="Nombre" value="" class="form-control required">
+            </div>
+            <div class="field"> Tipo
+              <select class="form-control required" name="trucktype" id="trucktype">
+                  <option value="">Seleccione tipo</option>
+                </select>
+            </div>
+			<div class="field"> Deber
+              <select class="form-control required" name="duty" id="duty">
+                  <option value="">Seleccione deber</option>
+                </select>
+            </div>
+			<div class="field"> Placa
+              <input type="text" name="license" id="license" placeholder="Placa" value="" class="form-control required">
+            </div>
+			<div class="field"> Número VIN
+			  <input type="text" name="vin" id="vin" placeholder="Número VIN" value="" class="form-control required">
 			</div>
-			<div class="field"> Name
-              <input type="text" name="name" id="name" placeholder="Name" value="" class="form-control required">
-            </div>
-            <div class="field"> Email
-              <input type="text" id="email" value="" placeholder="Email" class="form-control required email" name="email">
-            </div>
-			<div class="field"> Phone
-              <input type="text" name="phone" id="phone" placeholder="Phone" value="" class="form-control required">
-            </div>
-            <div class="field"> Username
-              <input type="text" name="username" id="username" placeholder="Username" value="" class="form-control required">
+            <div class="field"> Fabricante
+              <input type="text" name="manufacturer" id="manufacturer" placeholder="Fabricante" value="" class="form-control required">
             </div>
 			
-            <div class="field"> Password
-              <input type="password" name="password" id="password" placeholder="Password" value="" class="form-control required">
+            <div class="field"> Modelo
+              <input type="text" name="model" id="model" placeholder="Modelo" value="" class="form-control required">
             </div>
-			<div class="field"> Notes
-              <textarea name="notes" placeholder="Notes" class="form-control required"></textarea>
+			<div class="field"> Año
+              <select class="form-control required" name="year" id="year">
+                  <option value="">Seleccionar año</option>
+                </select>
+            </div>
+			<div class="field"> Placa Fecha de caducidad
+              <input type="text" name="expdate" id="expdate" placeholder="Placa Fecha de caducidad" value="" class="form-control required">
+            </div>
+			<div class="field"> Camión TDLR
+              <input type="text" name="tdlr" id="tdlr" placeholder="Camión TDLR" value="" class="form-control required">
             </div>
             <div class="clr"></div>
-            <button class="btn btn-primary" name="update" type="submit">Add</button>
+            <button class="btn btn-primary" name="update" type="submit">Añadir</button>
           </form>
         </div>
       </div>
