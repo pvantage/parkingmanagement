@@ -30,8 +30,8 @@ var uid=gup('uid');
 document.addEventListener("deviceready", init, false);
 function init() {
 	//document.querySelector("#startScan").addEventListener("touchend", startScan, false);
-	jQuery("#addPicture").on("touchend", selPic);
-	jQuery("#addPicture2").on("touchend", selPic2);
+	jQuery("#addPicture").on("click", selPic);
+	jQuery("#addPicture2").on("click", selPic2);
     $imagesDiv = jQuery("#images");  
     //jQuery("#uploadPictures").on("touchend", uploadPics);
 }
@@ -110,7 +110,6 @@ function savetotow()
 	   });
 }
 function selPic() {
-	alert('select pic');
     navigator.camera.getPicture(function(f) {
 		//alert(f);
         var newHtml = '<div class="img"><img src="'+f+'"><a href="javascript:;" class="closeimg" data="'+f+'">X</a></div>';
@@ -133,7 +132,6 @@ function selPic() {
     
 }
 function selPic2() {
-	alert('capture pic');
 	var captureSuccess = function(mediaFiles) {
 		var i, path, len;
 		for (i = 0, len = mediaFiles.length; i < len; i += 1) {
