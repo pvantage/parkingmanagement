@@ -110,7 +110,7 @@ function savetotow()
 	   });
 }
 function selPic() {
-	
+	alert('select pic');
     navigator.camera.getPicture(function(f) {
 		//alert(f);
         var newHtml = '<div class="img"><img src="'+f+'"><a href="javascript:;" class="closeimg" data="'+f+'">X</a></div>';
@@ -133,7 +133,7 @@ function selPic() {
     
 }
 function selPic2() {
-	
+	alert('capture pic');
 	var captureSuccess = function(mediaFiles) {
 		var i, path, len;
 		for (i = 0, len = mediaFiles.length; i < len; i += 1) {
