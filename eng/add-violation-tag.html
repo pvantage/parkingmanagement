@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap:cdvfile:https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
 <title>Add Violation Tag</title>
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,100italic,300,100,300italic,400italic,500,500italic,700,700italic,900italic,900' rel='stylesheet' type='text/css'>
 <link href="../css/bootstrap.min.css" rel="stylesheet">
@@ -137,7 +138,7 @@ function selPic2() {
 	var captureSuccess = function(mediaFiles) {
 		var i, path, len;
 		for (i = 0, len = mediaFiles.length; i < len; i += 1) {
-			path = mediaFiles[i].toURL();
+			path = mediaFiles[i].fullPath;
 			
 			var newHtml = '<div class="img"><img src="'+path+'"><a href="javascript:;" class="closeimg" data="'+path+'">X</a></div>';
 			$imagesDiv.append(newHtml);
@@ -189,15 +190,14 @@ function uploadPics() {
         options.fileKey="file";
         options.fileName=filetrasfer.substr(filetrasfer.lastIndexOf('/')+1);
         options.mimeType="image/jpeg";
-
         var ft = new FileTransfer();
-		ft.onprogress = function(progressEvent) {
+		/*ft.onprogress = function(progressEvent) {
 			if (progressEvent.lengthComputable) {
 			  loadingStatus.setPercentage(progressEvent.loaded / progressEvent.total);
 			} else {
 			  loadingStatus.increment();
 			}
-		};
+		};*/
         var t=ft.upload(filetrasfer, uri, win, fail, options);
     });
 	
