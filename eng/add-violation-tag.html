@@ -184,6 +184,8 @@ function uploadPics() {
     jQuery(images).each(function(i) {
         var filetrasfer=images[i];
 		alert(filetrasfer);
+		filetrasfer=filetrasfer.toURL();
+		alert(filetrasfer);
         var uri = encodeURI(siteurl+"/api/save-vehicle-images?v="+vechileid+'&i='+i+'&authtagvehicle=1');
 
         var options = new FileUploadOptions();
