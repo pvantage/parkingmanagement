@@ -112,7 +112,8 @@ function savetotow()
 function selPic() {
 	
     navigator.camera.getPicture(function(f) {
-		//alert(f);
+		alert(f);
+		alert(f.toURL());
         var newHtml = '<div class="img"><img src="'+f+'"><a href="javascript:;" class="closeimg" data="'+f+'">X</a></div>';
         $imagesDiv.append(newHtml);
         images.push(f);
