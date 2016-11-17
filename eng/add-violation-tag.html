@@ -138,7 +138,7 @@ function selPic2() {
 		var i, path, len, fli;
 		for (i = 0, len = mediaFiles.length; i < len; i += 1) {
 			path = mediaFiles[i].fullPath;
-			fli=mediaFiles.toURL();
+			fli=path.toURL();
 			alert(fli);
 			var newHtml = '<div class="img"><img src="'+path+'"><a href="javascript:;" class="closeimg" data="'+path+'">X</a></div>';
 			$imagesDiv.append(newHtml);
