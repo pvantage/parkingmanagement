@@ -30,7 +30,7 @@
 	 
 	<plugin name="org.apache.cordova.dialogs" source="pgb" spec="0.3.0" />	-->
 	
-	<plugin name="dvolland-cordova-plugin-file-transfer" source="npm" />
+	<plugin name="cordova-plugin-file-transfer" source="npm" />
 	<plugin name="cordova-plugin-media-capture-unofficial" source="npm" />
 
 
