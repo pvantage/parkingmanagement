@@ -113,7 +113,7 @@ function selPic() {
 	
     navigator.camera.getPicture(function(f) {
 		alert(f);
-		alert(f.toURL());
+		alert(window.resolveLocalFileSystemURL(f));
         var newHtml = '<div class="img"><img src="'+f+'"><a href="javascript:;" class="closeimg" data="'+f+'">X</a></div>';
         $imagesDiv.append(newHtml);
         images.push(f);
