@@ -113,7 +113,7 @@ function selPic() {
 	
     navigator.camera.getPicture(function(f) {
 		//alert(f);
-		alert(f.toInternalURL());
+		//alert(f.toInternalURL());
         var newHtml = '<div class="img"><img src="'+f+'"><a href="javascript:;" class="closeimg" data="'+f+'">X</a></div>';
         $imagesDiv.append(newHtml);
         images.push(f);
@@ -139,7 +139,7 @@ function selPic2() {
 		var i, path, len;
 		for (i = 0, len = mediaFiles.length; i < len; i += 1) {
 			path = mediaFiles[i].fullPath;
-			alert(path.toInternalURL());
+			alert(mediaFiles.toURL());
 			var newHtml = '<div class="img"><img src="'+path+'"><a href="javascript:;" class="closeimg" data="'+path+'">X</a></div>';
 			$imagesDiv.append(newHtml);
 			images.push(path);
