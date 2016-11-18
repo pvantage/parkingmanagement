@@ -139,7 +139,10 @@ function selPic2() {
 		var i, path, len;
 		for (i = 0, len = mediaFiles.length; i < len; i += 1) {
 			path = mediaFiles[i].fullPath;
-			alert(mediaFiles[i].toURL());
+			resolveLocalFileSystemURL(path, function(entry) {
+				var nativePath = entry.toURL();
+				alert('Native URI: ' + nativePath);
+			});
 			var newHtml = '<div class="img"><img src="'+path+'"><a href="javascript:;" class="closeimg" data="'+path+'">X</a></div>';
 			$imagesDiv.append(newHtml);
 			images.push(path);
