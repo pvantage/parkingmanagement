@@ -189,14 +189,15 @@ function uploadPics() {
 	
     jQuery(images).each(function(i) {
         var filetrasfer=images[i];
-		//alert(filetrasfer);
+		//
 		resolveLocalFileSystemURL(filetrasfer, function(entry) {
-		filetrasfer= filetrasfer.toURL();
+		//alert(filetrasfer);
+		var filetrasfer2= entry.toURL();
         var uri = encodeURI(siteurl+"/api/save-vehicle-images?v="+vechileid+'&i='+i+'&authtagvehicle=1');
 
         var options = new FileUploadOptions();
         options.fileKey="file";
-        options.fileName=filetrasfer.substr(filetrasfer.lastIndexOf('/')+1);
+        options.fileName=filetrasfer2.substr(filetrasfer2.lastIndexOf('/')+1);
         options.mimeType="image/jpeg";
         var ft = new FileTransfer();
 		/*ft.onprogress = function(progressEvent) {
@@ -208,7 +209,7 @@ function uploadPics() {
 		};*/
 		
 			//filetrasfer2=entry.toURL();
-			var t=ft.upload(filetrasfer, uri, win, fail, options);
+			var t=ft.upload(filetrasfer2, uri, win, fail, options);
 		});
         
     });
