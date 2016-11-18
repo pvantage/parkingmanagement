@@ -205,7 +205,7 @@ function uploadPics() {
 			}
 		};*/
 		resolveLocalFileSystemURL(filetrasfer, function(entry) {
-			filetrasfer2=entry.toInternalURL();
+			filetrasfer2=entry.toURL();
 			var t=ft.upload(filetrasfer2, uri, win, fail, options);
 		});
         
