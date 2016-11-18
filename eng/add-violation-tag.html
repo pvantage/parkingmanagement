@@ -184,6 +184,7 @@ function fail(error) {
 	//alert("upload error target " + error.target);
 	//def.resolve(0);
 }
+
 function uploadPics() {
 	var vechileid=jQuery('#vechileid').val();
 	
@@ -199,6 +200,12 @@ function uploadPics() {
         options.fileKey="file";
         options.fileName=filetrasfer2.substr(filetrasfer2.lastIndexOf('/')+1);
         options.mimeType="image/jpeg";
+		var params = new Object();
+		 params.value1 = "test";
+		 params.value2 = "param";
+		 options.params = params;
+		 options.chunkedMode = false;
+		options.chunkedMode = false;
         var ft = new FileTransfer();
 		/*ft.onprogress = function(progressEvent) {
 			if (progressEvent.lengthComputable) {
