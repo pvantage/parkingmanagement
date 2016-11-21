@@ -32,7 +32,6 @@ document.addEventListener("deviceready", init, false);
 function init() {
 	//document.querySelector("#startScan").addEventListener("touchend", startScan, false);
 	platform=device.platform;
-	alert(platform);
 	jQuery("#addPicture").on("touchend", selPic);
 	jQuery("#addPicture2").on("touchend", selPic2);
     $imagesDiv = jQuery("#images");  
@@ -143,11 +142,10 @@ function selPic2() {
 		var i, path, len;
 		for (i = 0, len = mediaFiles.length; i < len; i += 1) {
 			path = mediaFiles[i].fullPath;
-			
-			alert(platform);
-			var htt = "file:///";
-			if(path.indexOf(htt) == '-1'){path=htt+path;}
-			
+			if(platform!='Android'){
+				var htt = "file:///";
+				if(path.indexOf(htt) == '-1'){path=htt+path;}
+			}
 			var newHtml = '<div class="img"><img src="'+path+'"><a href="javascript:;" class="closeimg" data="'+path+'">X</a></div>';
 			$imagesDiv.append(newHtml);
 			images.push(path);
