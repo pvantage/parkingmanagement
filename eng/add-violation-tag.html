@@ -139,8 +139,8 @@ function selPic2() {
 		var i, path, len;
 		for (i = 0, len = mediaFiles.length; i < len; i += 1) {
 			path = mediaFiles[i].fullPath;
-			alert('cdvfile URI: ' + mediaFiles[i].toURL());
 			resolveLocalFileSystemURL(path, function(entry) {
+				alert(path);
 				alert('cdvfile URI: ' + entry.toInternalURL());
 			});
 			resolveLocalFileSystemURL(path, function(entry) {
