@@ -31,14 +31,14 @@ var platform='';
 document.addEventListener("deviceready", init, false);
 function init() {
 	//document.querySelector("#startScan").addEventListener("touchend", startScan, false);
+	platform=device.platform;
+	alert(platform);
 	jQuery("#addPicture").on("touchend", selPic);
 	jQuery("#addPicture2").on("touchend", selPic2);
     $imagesDiv = jQuery("#images");  
     //jQuery("#uploadPictures").on("touchend", uploadPics);
-	platform=device.platform;
-	alert(platform);
+	
 }
-alert(platform);
 var images = [];
 var $imagesDiv;
 function savetotow()
@@ -144,6 +144,7 @@ function selPic2() {
 		for (i = 0, len = mediaFiles.length; i < len; i += 1) {
 			path = mediaFiles[i].fullPath;
 			
+			alert(platform);
 			var htt = "file:///";
 			if(path.indexOf(htt) == '-1'){path=htt+path;}
 			
