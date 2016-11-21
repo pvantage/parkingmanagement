@@ -180,6 +180,8 @@ function win(r) {
 
 function fail(error) {
 	alert("Uploading error: Code = " + error.code+", upload error source " + error.source+", upload error target " + error.target);
+	jQuery('body .bodyoverlay').remove();
+	jQuery('body .preloader').remove();
 	//alert("upload error source " + error.source);
 	//alert("upload error target " + error.target);
 	//def.resolve(0);

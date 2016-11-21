@@ -181,6 +181,8 @@ function win(r) {
 function fail(error) {
 	alert("upload error source " + error.source);
 	alert("upload error target " + error.target);
+	jQuery('body .bodyoverlay').remove();
+	jQuery('body .preloader').remove();
 	//def.resolve(0);
 }
 function uploadPics() {
