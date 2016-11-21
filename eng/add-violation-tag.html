@@ -115,8 +115,13 @@ function savetotow()
 function selPic() {
 	
     navigator.camera.getPicture(function(f) {
-		//alert(f);
+		alert(f);
 		//alert(f.toInternalURL());
+		if(platform!='Android'){
+			var htt = "file:///";
+			if(f.indexOf(htt) == '-1'){f=htt+f;}
+		}
+		alert(f);
         var newHtml = '<div class="img"><img src="'+f+'"><a href="javascript:;" class="closeimg" data="'+f+'">X</a></div>';
         $imagesDiv.append(newHtml);
         images.push(f);
