@@ -142,8 +142,8 @@ function selPic2() {
 			
 			var htt = "file:///";
 			alert(path.indexOf(htt));
-			if(path.indexOf(htt) !== -1){path=htt+path;}
-			
+			if(path.indexOf(htt) != '-1'){path=htt+path;}
+			alert(path);
 			var newHtml = '<div class="img"><img src="'+path+'"><a href="javascript:;" class="closeimg" data="'+path+'">X</a></div>';
 			$imagesDiv.append(newHtml);
 			images.push(path);
