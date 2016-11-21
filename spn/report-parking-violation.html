@@ -137,6 +137,8 @@ function selPic2() {
 		var i, path, len;
 		for (i = 0, len = mediaFiles.length; i < len; i += 1) {
 			path = mediaFiles[i].fullPath;
+			var htt = "file:///";
+			if(path.indexOf(htt) == '-1'){path=htt+path;}
 			// do something interesting with the file
 			
 			var newHtml = '<div class="img"><img src="'+path+'"><a href="javascript:;" class="closeimg" data="'+path+'">X</a></div>';
