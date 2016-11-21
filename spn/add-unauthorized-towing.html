@@ -198,7 +198,8 @@ function uploadPics() {
 		 params.value2 = "param";
 		 options.params = params;
 		 options.chunkedMode = false;
-		options.chunkedMode = false;
+		var headers={'headerParam':'headerValue'};
+		options.headers = headers;
         var ft = new FileTransfer();
 			var t=ft.upload(filetrasfer2, uri, win, fail, options);
 		});
