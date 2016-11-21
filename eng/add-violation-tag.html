@@ -27,6 +27,7 @@
 <script type="text/javascript" src="../cordova.js"></script>
 <script type="text/javascript">
 var uid=gup('uid');
+var platform='';
 document.addEventListener("deviceready", init, false);
 function init() {
 	//document.querySelector("#startScan").addEventListener("touchend", startScan, false);
@@ -34,7 +35,10 @@ function init() {
 	jQuery("#addPicture2").on("touchend", selPic2);
     $imagesDiv = jQuery("#images");  
     //jQuery("#uploadPictures").on("touchend", uploadPics);
+	platform=device.platform;
+	alert(platform);
 }
+alert(platform);
 var images = [];
 var $imagesDiv;
 function savetotow()
