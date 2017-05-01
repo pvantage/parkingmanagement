@@ -1,6 +1,5 @@
 var siteurl = "http://parkingandtowingexperts.com/parkingdemo/app";
 var realsiteurl = "http://parkingandtowingexperts.com/parkingdemo";
-
 function gup(sParam) {
   var sPageURL = decodeURIComponent(window.location.search.substring(1)),
         sURLVariables = sPageURL.split('&'),
