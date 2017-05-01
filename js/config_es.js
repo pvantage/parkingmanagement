@@ -1,5 +1,5 @@
-var siteurl = "http://vantageappspro.com/parking/parkingmanagement/app";
-var realsiteurl = "http://vantageappspro.com/parking/parkingmanagement";
+var siteurl = "http://parkingandtowingexperts.com/parkingdemo/app";
+var realsiteurl = "http://parkingandtowingexperts.com/parkingdemo";
 
 function gup(sParam) {
   var sPageURL = decodeURIComponent(window.location.search.substring(1)),
